@@ -2,163 +2,480 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-<meta name="theme-color" content="#080604">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#05080f">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Ore Gacha</title>
+<meta name="apple-mobile-web-app-title" content="Nodnalb">
+<title>Nodnalb</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Exo+2:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#080604;--surf:#111009;--brd:#2a2016;--gold:#c9a227;--txt:#d4b896;--dim:#6b5a42;}
-*{box-sizing:border-box;margin:0;padding:0;}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'Georgia','Times New Roman',serif;}
-body{display:flex;flex-direction:column;height:100dvh;}
+:root{
+  --bg:#05080f;--surf:#090d17;--surf2:#0d1220;--brd:#1a2035;--brd2:#243050;
+  --gold:#e8b84b;--golddim:#7a5f1e;--acc:#4dc4ff;--accdim:#1a4a6a;
+  --green:#4dff9a;--red:#ff4d6a;--purple:#c47dff;
+  --txt:#c8d8f0;--dim:#4a5878;--dimmer:#2a3348;
+  --r0:#787878;--r1:#60a860;--r2:#4a8adc;--r3:#b060e8;--r4:#ff9a30;--r5:#ff3060;--r6:#ffe040;
+  --font:'Rajdhani',sans-serif;--font2:'Exo 2',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:var(--font);}
+body{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;position:relative;}
 
-#hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
-  background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
-#ttl{font-size:1rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);text-shadow:0 0 12px rgba(201,162,39,.4);}
-#cred-box{display:flex;align-items:center;gap:6px;font-size:.85rem;}
-#cred-count{color:var(--gold);font-size:1rem;}
-#tmr{font-size:.65rem;color:var(--dim);min-width:60px;text-align:right;}
+/* ── HEADER ── */
+#hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 14px;padding-top:max(8px,env(safe-area-inset-top));
+  background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;
+  gap:8px;
+}
+#logo{font-size:1.1rem;letter-spacing:5px;font-weight:700;color:var(--gold);
+  text-shadow:0 0 16px rgba(232,184,75,.5);text-transform:uppercase;}
+.hbar{display:flex;align-items:center;gap:10px;}
+.hstat{display:flex;flex-direction:column;align-items:center;line-height:1;}
+.hstat-lbl{font-size:.55rem;letter-spacing:1px;color:var(--dim);text-transform:uppercase;}
+.hstat-val{font-size:.95rem;font-weight:700;}
+.hstat-val.gold{color:var(--gold);}
+.hstat-val.acc{color:var(--acc);}
+.hstat-val.grn{color:var(--green);}
+#lvl-bar-wrap{width:40px;height:4px;background:var(--dimmer);border-radius:2px;margin-top:2px;}
+#lvl-bar{height:4px;background:var(--acc);border-radius:2px;transition:width .4s;}
 
+/* ── TABS ── */
 #tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
-.tab{flex:1;padding:9px;text-align:center;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;color:var(--dim);transition:color .2s;border-bottom:2px solid transparent;}
+.tab{flex:1;padding:8px 4px;text-align:center;font-size:.7rem;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;color:var(--dim);transition:color .2s,border-color .2s;
+  border-bottom:2px solid transparent;font-family:var(--font);font-weight:600;position:relative;}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold);}
+.tab-badge{position:absolute;top:4px;right:6px;background:var(--red);color:#fff;
+  font-size:.5rem;border-radius:10px;padding:1px 4px;font-weight:700;}
 
-#game{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
-#gal-view{flex:1;overflow-y:auto;padding:14px;display:none;}
+/* ── VIEWS ── */
+.view{display:none;flex:1;overflow:hidden;flex-direction:column;min-height:0;}
+.view.on{display:flex;}
+.scroll-view{flex:1;overflow-y:auto;padding:10px 12px;overscroll-behavior:contain;}
+.scroll-view::-webkit-scrollbar{width:4px;}
+.scroll-view::-webkit-scrollbar-track{background:var(--bg);}
+.scroll-view::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
 
+/* ── GAME VIEW ── */
 #cwrap{flex:1;position:relative;min-height:0;}
-#c{position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;}
+#c{position:absolute;top:0;left:0;width:100%;height:100%;}
+#hint-overlay{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);
+  font-size:.6rem;color:var(--dim);pointer-events:none;white-space:nowrap;
+  font-family:var(--font2);font-style:italic;}
 
-#rollbar{padding:10px 14px;background:var(--surf);border-top:1px solid var(--brd);
-  display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;}
-#rbtn{background:linear-gradient(135deg,#5a3c0e,#c9a227 45%,#8a6010 55%,#5a3c0e);
-  border:none;color:#0a0603;padding:11px 36px;font-size:.95rem;font-family:inherit;
-  letter-spacing:3px;text-transform:uppercase;font-weight:bold;cursor:pointer;border-radius:3px;
-  box-shadow:0 0 18px rgba(201,162,39,.3);transition:box-shadow .2s,opacity .2s;}
-#rbtn:hover:not(:disabled){box-shadow:0 0 30px rgba(201,162,39,.6);}
-#rbtn:disabled{opacity:.35;cursor:not-allowed;}
-#rcost{font-size:.75rem;color:var(--dim);}
+/* ── ROLL BAR ── */
+#rollbar{
+  padding:8px 12px;background:var(--surf);border-top:1px solid var(--brd);
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
+}
+#rbtn{
+  flex:1;background:linear-gradient(135deg,#3a2c08,var(--gold) 45%,#5a4010 55%,#3a2c08);
+  border:none;color:#04060a;padding:12px;font-size:.95rem;font-family:var(--font);
+  letter-spacing:3px;text-transform:uppercase;font-weight:700;cursor:pointer;border-radius:6px;
+  box-shadow:0 0 20px rgba(232,184,75,.25);transition:box-shadow .2s,opacity .2s,transform .1s;}
+#rbtn:hover:not(:disabled){box-shadow:0 0 35px rgba(232,184,75,.5);}
+#rbtn:active:not(:disabled){transform:scale(.97);}
+#rbtn:disabled{opacity:.3;cursor:not-allowed;}
+.roll-info{display:flex;flex-direction:column;align-items:flex-end;min-width:60px;}
+.roll-cost{font-size:.7rem;color:var(--dim);letter-spacing:1px;}
+.roll-timer{font-size:.65rem;color:var(--golddim);}
 
-/* Gallery */
-.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;}
-.gi{background:var(--surf);border-radius:8px;padding:7px;text-align:center;
-  cursor:pointer;border:1px solid;transition:transform .15s;}
-.gi:hover{transform:scale(1.05);}
+/* ── SECTION HEADERS ── */
+.sec-hdr{font-size:.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--dim);
+  padding:8px 0 5px;border-bottom:1px solid var(--brd);margin-bottom:8px;font-weight:600;}
+
+/* ── CARDS ── */
+.card{background:var(--surf);border:1px solid var(--brd);border-radius:8px;padding:10px;margin-bottom:8px;}
+.card-title{font-size:.8rem;font-weight:700;letter-spacing:1px;margin-bottom:4px;}
+
+/* ── GALLERY ── */
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:7px;}
+.gi{background:var(--surf);border-radius:8px;padding:6px 4px;text-align:center;
+  cursor:pointer;border:1px solid;transition:transform .15s,box-shadow .15s;}
+.gi:active{transform:scale(.95);}
 .gi canvas{display:block;margin:0 auto;}
-.gi .gn{font-size:.6rem;color:var(--dim);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.gi .gc{font-size:.72rem;color:var(--gold);}
-.r0{border-color:#444;}
-.r1{border-color:#888;}
-.r2{border-color:#3a9;}
-.r3{border-color:#58f;}
-.r4{border-color:#f5a;box-shadow:0 0 6px rgba(255,80,180,.3);}
-.r5{border-color:#fd0;box-shadow:0 0 10px rgba(255,210,0,.4);}
+.gi .gn{font-size:.58rem;color:var(--dim);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--font2);}
+.gi .gc{font-size:.7rem;color:var(--gold);font-weight:700;}
+.gi .gv{font-size:.58rem;color:var(--green);}
+.r0{border-color:#444;}.r1{border-color:#4a784a;}.r2{border-color:#2a5aaa;}
+.r3{border-color:#7040b0;}.r4{border-color:#c07020;}.r5{border-color:#c02050;box-shadow:0 0 6px rgba(255,48,96,.2);}
+.r6{border-color:#d0b000;box-shadow:0 0 10px rgba(255,224,64,.3);}
 
-#hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  font-size:.65rem;color:var(--dim);pointer-events:none;white-space:nowrap;opacity:.7;}
+/* ── WORKSHOP ── */
+.recipe-card{background:var(--surf);border:1px solid var(--brd);border-radius:8px;
+  padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;}
+.recipe-card.can{border-color:var(--accdim);cursor:pointer;transition:border-color .2s,background .2s;}
+.recipe-card.can:hover{border-color:var(--acc);background:var(--surf2);}
+.recipe-card:active{transform:scale(.98);}
+.rec-inputs{display:flex;align-items:center;gap:4px;flex-wrap:wrap;flex:1;}
+.rec-arrow{font-size:1rem;color:var(--dim);flex-shrink:0;}
+.rec-out{text-align:center;min-width:52px;}
+.rec-out canvas{display:block;margin:0 auto;}
+.rec-out .rec-name{font-size:.58rem;color:var(--txt);margin-top:2px;}
+.rec-item{text-align:center;}
+.rec-item canvas{display:block;margin:0 auto;}
+.rec-item .ri-name{font-size:.52rem;color:var(--dim);}
+.rec-item .ri-cnt{font-size:.6rem;font-weight:700;}
+.ri-cnt.ok{color:var(--green);}
+.ri-cnt.no{color:var(--red);}
+.craft-btn{background:var(--accdim);color:var(--acc);border:1px solid var(--acc);
+  border-radius:5px;padding:6px 10px;font-size:.7rem;font-family:var(--font);
+  letter-spacing:1px;cursor:pointer;font-weight:700;flex-shrink:0;transition:background .2s;}
+.craft-btn:hover{background:var(--acc);color:#000;}
+.craft-btn:disabled{opacity:.3;cursor:not-allowed;}
 
-/* Rarity popup */
-#popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
-  background:var(--surf);border:1px solid var(--brd);border-radius:12px;
-  padding:20px 32px;text-align:center;z-index:100;
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+/* ── SHOP / UPGRADES ── */
+.upg-card{background:var(--surf);border:1px solid var(--brd);border-radius:8px;
+  padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;
+  transition:border-color .2s,background .2s;}
+.upg-card:hover{border-color:var(--brd2);background:var(--surf2);}
+.upg-card.maxed{opacity:.4;cursor:default;}
+.upg-icon{font-size:1.4rem;width:36px;text-align:center;flex-shrink:0;}
+.upg-body{flex:1;}
+.upg-name{font-size:.85rem;font-weight:700;letter-spacing:.5px;}
+.upg-desc{font-size:.65rem;color:var(--dim);margin-top:2px;font-family:var(--font2);}
+.upg-lvl{font-size:.6rem;color:var(--acc);}
+.upg-cost{text-align:right;flex-shrink:0;}
+.upg-cost-val{font-size:.82rem;font-weight:700;color:var(--gold);}
+.upg-cost-lbl{font-size:.55rem;color:var(--dim);}
+
+.powerup-card{background:var(--surf);border:1px solid var(--brd);border-radius:8px;
+  padding:10px;margin-bottom:8px;display:flex;align-items:center;gap:10px;cursor:pointer;
+  transition:border-color .2s;}
+.powerup-card:hover{border-color:var(--purple);}
+.pu-active{border-color:var(--purple);background:rgba(196,125,255,.08);}
+
+/* ── MISSIONS ── */
+.miss-card{background:var(--surf);border:1px solid var(--brd);border-radius:8px;
+  padding:10px;margin-bottom:8px;}
+.miss-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px;}
+.miss-name{font-size:.82rem;font-weight:700;}
+.miss-rew{font-size:.72rem;color:var(--gold);font-weight:700;}
+.miss-desc{font-size:.65rem;color:var(--dim);margin-bottom:6px;font-family:var(--font2);}
+.miss-bar-wrap{background:var(--dimmer);border-radius:3px;height:5px;margin-bottom:4px;}
+.miss-bar{height:5px;border-radius:3px;transition:width .4s;background:var(--acc);}
+.miss-prog{font-size:.6rem;color:var(--dim);display:flex;justify-content:space-between;}
+.miss-claim{background:var(--green);color:#001a0a;border:none;border-radius:4px;
+  padding:5px 12px;font-size:.72rem;font-family:var(--font);font-weight:700;cursor:pointer;
+  letter-spacing:1px;margin-top:5px;}
+.miss-done{color:var(--dim);font-size:.65rem;font-style:italic;}
+
+/* ── POPUP ── */
+#popup{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:var(--surf2);border:1px solid var(--brd2);border-radius:14px;
+  padding:20px 28px;text-align:center;z-index:200;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;
+  min-width:180px;box-shadow:0 0 40px rgba(0,0,0,.6);}
 #popup.show{transform:translate(-50%,-50%) scale(1);}
 #pop-canvas{display:block;margin:0 auto 8px;}
-#pop-name{font-size:1.2rem;letter-spacing:2px;color:var(--gold);}
-#pop-rar{font-size:.75rem;color:var(--dim);margin-top:4px;letter-spacing:1px;}
+#pop-name{font-size:1.15rem;font-weight:700;letter-spacing:2px;}
+#pop-rar{font-size:.7rem;color:var(--dim);margin-top:3px;letter-spacing:2px;text-transform:uppercase;font-family:var(--font2);}
+#pop-val{font-size:.8rem;color:var(--green);margin-top:4px;}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--surf2);border:1px solid var(--brd2);border-radius:20px;
+  padding:8px 18px;font-size:.75rem;color:var(--txt);opacity:0;transition:all .3s;
+  pointer-events:none;z-index:300;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* ── ACTIVE BUFFS BAR ── */
+#buffs-bar{display:flex;gap:5px;padding:4px 12px;background:var(--surf);
+  border-bottom:1px solid var(--brd);flex-shrink:0;min-height:0;overflow:hidden;
+  transition:max-height .3s;}
+#buffs-bar:empty{padding:0;border-bottom:none;}
+.buff-chip{background:rgba(196,125,255,.15);border:1px solid var(--purple);
+  border-radius:20px;padding:2px 8px;font-size:.6rem;color:var(--purple);white-space:nowrap;}
+
+/* ── MISC ── */
+.empty-state{text-align:center;padding:40px 20px;color:var(--dim);font-size:.8rem;font-family:var(--font2);}
+.dd-color{color:var(--green);}
+.credit-color{color:var(--gold);}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.6rem;font-weight:700;letter-spacing:1px;}
+.pill-r0{background:rgba(120,120,120,.2);color:#aaa;}
+.pill-r1{background:rgba(96,168,96,.2);color:#6c8;}
+.pill-r2{background:rgba(74,138,220,.2);color:#6af;}
+.pill-r3{background:rgba(176,96,232,.2);color:#c8f;}
+.pill-r4{background:rgba(255,154,48,.2);color:#fb8;}
+.pill-r5{background:rgba(255,48,96,.2);color:#f68;}
+.pill-r6{background:rgba(255,224,64,.2);color:#fe8;}
+
+/* ── SELL ROW ── */
+.sell-row{display:flex;align-items:center;justify-content:space-between;
+  background:var(--surf2);border-radius:6px;padding:6px 8px;margin-bottom:5px;}
+.sell-row canvas{display:block;}
+.sell-row-info{flex:1;padding:0 8px;}
+.sell-row-name{font-size:.78rem;font-weight:700;}
+.sell-row-sub{font-size:.6rem;color:var(--dim);font-family:var(--font2);}
+.sell-btn{background:rgba(77,255,154,.15);color:var(--green);border:1px solid rgba(77,255,154,.3);
+  border-radius:5px;padding:5px 10px;font-size:.68rem;font-family:var(--font);font-weight:700;
+  cursor:pointer;transition:background .2s;white-space:nowrap;}
+.sell-btn:hover{background:rgba(77,255,154,.3);}
+.sell-all-btn{background:rgba(232,184,75,.15);color:var(--gold);border:1px solid rgba(232,184,75,.3);
+  border-radius:5px;padding:5px 10px;font-size:.68rem;font-family:var(--font);font-weight:700;
+  cursor:pointer;transition:background .2s;}
+.sell-all-btn:hover{background:rgba(232,184,75,.3);}
 </style>
 </head>
 <body>
 
 <div id="hdr">
-  <div id="ttl">⛏ Ore Gacha</div>
-  <div id="cred-box">
-    <span style="color:var(--gold)">◈</span>
-    <span id="cred-count">10</span>
-    <span id="tmr"></span>
+  <div id="logo">Nodnalb</div>
+  <div class="hbar">
+    <div class="hstat">
+      <span class="hstat-lbl">Credits</span>
+      <span class="hstat-val gold" id="hcreds">10</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-lbl">DD</span>
+      <span class="hstat-val grn" id="hdd">0</span>
+    </div>
+    <div class="hstat">
+      <span class="hstat-lbl">Level</span>
+      <span class="hstat-val acc" id="hlvl">1</span>
+      <div id="lvl-bar-wrap"><div id="lvl-bar" style="width:0%"></div></div>
+    </div>
   </div>
 </div>
+
+<div id="buffs-bar"></div>
 
 <div id="tabs">
-  <div class="tab on" id="tab-game" onclick="switchTab('game')">Dispenser</div>
-  <div class="tab"    id="tab-gal"  onclick="switchTab('gal')">Collection</div>
+  <div class="tab on" id="tab-mine" onclick="switchTab('mine')">⛏ Mine</div>
+  <div class="tab" id="tab-col" onclick="switchTab('col')">💎 Vault</div>
+  <div class="tab" id="tab-work" onclick="switchTab('work')">⚗️ Forge</div>
+  <div class="tab" id="tab-shop" onclick="switchTab('shop')">🏪 Shop</div>
+  <div class="tab" id="tab-miss" onclick="switchTab('miss')">📋 Goals<span class="tab-badge" id="miss-badge" style="display:none">!</span></div>
 </div>
 
-<div id="game">
-  <div id="cwrap">
-    <canvas id="c"></canvas>
-    <div id="hint">Tap a ball to collect it</div>
-  </div>
+<!-- MINE -->
+<div class="view on" id="view-mine">
+  <div id="cwrap"><canvas id="c"></canvas><div id="hint-overlay">tap a ball to collect</div></div>
   <div id="rollbar">
-    <span id="rcost">◈ 1 credit per roll</span>
     <button id="rbtn" onclick="roll()">ROLL</button>
+    <div class="roll-info">
+      <span class="roll-cost credit-color">◈ 1 per roll</span>
+      <span class="roll-timer" id="roll-timer">+1 in 30s</span>
+    </div>
   </div>
 </div>
 
-<div id="gal-view">
-  <div class="ggrid" id="ggrid"></div>
+<!-- VAULT / GALLERY -->
+<div class="view" id="view-col">
+  <div class="scroll-view">
+    <div class="sec-hdr">Your Collection</div>
+    <div id="sell-all-row" style="display:flex;justify-content:flex-end;gap:6px;margin-bottom:8px;"></div>
+    <div class="ggrid" id="ggrid"></div>
+  </div>
 </div>
 
+<!-- FORGE / WORKSHOP -->
+<div class="view" id="view-work">
+  <div class="scroll-view">
+    <div class="sec-hdr">Ore Processing</div>
+    <div id="recipe-list"></div>
+  </div>
+</div>
+
+<!-- SHOP -->
+<div class="view" id="view-shop">
+  <div class="scroll-view">
+    <div class="sec-hdr">Upgrades</div>
+    <div id="upg-list"></div>
+    <div class="sec-hdr" style="margin-top:8px">Power-ups</div>
+    <div id="pu-list"></div>
+    <div class="sec-hdr" style="margin-top:8px">Level Up</div>
+    <div id="lvlup-card"></div>
+  </div>
+</div>
+
+<!-- MISSIONS -->
+<div class="view" id="view-miss">
+  <div class="scroll-view">
+    <div class="sec-hdr">Active Goals</div>
+    <div id="miss-list"></div>
+  </div>
+</div>
+
+<!-- POPUP -->
 <div id="popup">
-  <canvas id="pop-canvas" width="80" height="80"></canvas>
+  <canvas id="pop-canvas" width="90" height="90"></canvas>
   <div id="pop-name"></div>
   <div id="pop-rar"></div>
+  <div id="pop-val"></div>
 </div>
+<div id="toast"></div>
 
 <script>
-// ─── TYPES ────────────────────────────────────────────────────────────
-const RNAMES = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
-const TYPES = [
-  {id:'coal',     name:'Coal',      r:0, w:40},
-  {id:'iron',     name:'Iron',      r:1, w:25},
-  {id:'copper',   name:'Copper',    r:1, w:20},
-  {id:'gold',     name:'Gold',      r:2, w:12},
-  {id:'lapis',    name:'Lapis',     r:2, w:10},
-  {id:'redstone', name:'Redstone',  r:2, w:10},
-  {id:'quartz',   name:'Quartz',    r:2, w:8 },
-  {id:'obsidian', name:'Obsidian',  r:2, w:7 },
-  {id:'topaz',    name:'Topaz',     r:2, w:6 },
-  {id:'pyrite',   name:'Pyrite',    r:2, w:8 },
-  {id:'amethyst', name:'Amethyst',  r:3, w:6 },
-  {id:'emerald',  name:'Emerald',   r:3, w:5 },
-  {id:'diamond',  name:'Diamond',   r:3, w:4 },
-  {id:'ruby',     name:'Ruby',      r:3, w:3 },
-  {id:'sapphire', name:'Sapphire',  r:3, w:3 },
-  {id:'titanium', name:'Titanium',  r:3, w:4 },
-  {id:'opal',     name:'Opal',      r:4, w:2 },
-  {id:'netherite',name:'Netherite', r:4, w:2 },
-  {id:'plutonium',name:'Plutonium', r:4, w:1 },
-  {id:'void',     name:'Void',      r:5, w:.5},
-  {id:'celestial',name:'Celestial', r:5, w:.3},
-];
-const TOT_W = TYPES.reduce((s,t)=>s+t.w,0);
-function pick(){let v=Math.random()*TOT_W;for(const t of TYPES){v-=t.w;if(v<=0)return t;}return TYPES[0];}
+// ══════════════════════════════════════════════
+//  ORE DEFINITIONS  (rarity 0-6)
+//  Weight at level 1; higher levels boost rare weights
+// ══════════════════════════════════════════════
+const RNAMES = ['Common','Uncommon','Rare','Epic','Legendary','Mythic','Cosmic'];
+const RCOLS  = ['#888','#60c870','#5090e0','#b060e8','#e09030','#ff3060','#ffe040'];
 
-// ─── DRAW ─────────────────────────────────────────────────────────────
+const ALL_ORES = [
+  // r0 - Common
+  {id:'coal',      name:'Coal',          r:0, baseW:80,  val:1,   unlockLvl:1},
+  {id:'dirt',      name:'Dirt',          r:0, baseW:70,  val:1,   unlockLvl:1},
+  {id:'gravel',    name:'Gravel',        r:0, baseW:60,  val:1,   unlockLvl:1},
+  {id:'flint',     name:'Flint',         r:0, baseW:50,  val:2,   unlockLvl:1},
+  {id:'limestone', name:'Limestone',     r:0, baseW:45,  val:2,   unlockLvl:2},
+  {id:'pumice',    name:'Pumice',        r:0, baseW:40,  val:2,   unlockLvl:3},
+  // r1 - Uncommon
+  {id:'iron',      name:'Iron',          r:1, baseW:30,  val:5,   unlockLvl:1},
+  {id:'copper',    name:'Copper',        r:1, baseW:28,  val:5,   unlockLvl:1},
+  {id:'tin',       name:'Tin',           r:1, baseW:22,  val:4,   unlockLvl:2},
+  {id:'sulfur',    name:'Sulfur',        r:1, baseW:18,  val:6,   unlockLvl:2},
+  {id:'bauxite',   name:'Bauxite',       r:1, baseW:16,  val:6,   unlockLvl:3},
+  {id:'magnetite', name:'Magnetite',     r:1, baseW:14,  val:7,   unlockLvl:4},
+  {id:'galena',    name:'Galena',        r:1, baseW:12,  val:8,   unlockLvl:5},
+  // r2 - Rare
+  {id:'gold',      name:'Gold',          r:2, baseW:10,  val:20,  unlockLvl:1},
+  {id:'quartz',    name:'Quartz',        r:2, baseW:9,   val:18,  unlockLvl:1},
+  {id:'lapis',     name:'Lapis',         r:2, baseW:8,   val:22,  unlockLvl:2},
+  {id:'redstone',  name:'Redstone',      r:2, baseW:7,   val:25,  unlockLvl:2},
+  {id:'obsidian',  name:'Obsidian',      r:2, baseW:7,   val:28,  unlockLvl:3},
+  {id:'pyrite',    name:'Pyrite',        r:2, baseW:8,   val:15,  unlockLvl:3},
+  {id:'topaz',     name:'Topaz',         r:2, baseW:6,   val:35,  unlockLvl:4},
+  {id:'fluorite',  name:'Fluorite',      r:2, baseW:6,   val:30,  unlockLvl:4},
+  {id:'zircon',    name:'Zircon',        r:2, baseW:5,   val:40,  unlockLvl:5},
+  // r3 - Epic
+  {id:'amethyst',  name:'Amethyst',      r:3, baseW:3,   val:80,  unlockLvl:1},
+  {id:'emerald',   name:'Emerald',       r:3, baseW:2.5, val:120, unlockLvl:2},
+  {id:'diamond',   name:'Diamond',       r:3, baseW:2,   val:200, unlockLvl:2},
+  {id:'ruby',      name:'Ruby',          r:3, baseW:2,   val:180, unlockLvl:3},
+  {id:'sapphire',  name:'Sapphire',      r:3, baseW:2,   val:180, unlockLvl:3},
+  {id:'titanium',  name:'Titanium',      r:3, baseW:2.5, val:150, unlockLvl:4},
+  {id:'tanzanite', name:'Tanzanite',     r:3, baseW:1.5, val:220, unlockLvl:5},
+  {id:'alexandrite',name:'Alexandrite',  r:3, baseW:1.2, val:280, unlockLvl:6},
+  // r4 - Legendary
+  {id:'opal',      name:'Opal',          r:4, baseW:.8,  val:500, unlockLvl:3},
+  {id:'netherite', name:'Netherite',     r:4, baseW:.7,  val:600, unlockLvl:4},
+  {id:'plutonium', name:'Plutonium',     r:4, baseW:.5,  val:800, unlockLvl:5},
+  {id:'painite',   name:'Painite',       r:4, baseW:.4,  val:1000,unlockLvl:6},
+  {id:'benitoite', name:'Benitoite',     r:4, baseW:.5,  val:900, unlockLvl:7},
+  {id:'grandidierite',name:'Grandidierite',r:4,baseW:.35,val:1200,unlockLvl:8},
+  // r5 - Mythic
+  {id:'void',      name:'Void Shard',    r:5, baseW:.15, val:3000,unlockLvl:5},
+  {id:'dragonite', name:'Dragonite',     r:5, baseW:.12, val:4000,unlockLvl:7},
+  {id:'starcore',  name:'Star Core',     r:5, baseW:.10, val:5000,unlockLvl:8},
+  {id:'darkmatter',name:'Dark Matter',   r:5, baseW:.08, val:6000,unlockLvl:9},
+  // r6 - Cosmic
+  {id:'celestial', name:'Celestial',     r:6, baseW:.04, val:15000,unlockLvl:6},
+  {id:'singularity',name:'Singularity',  r:6, baseW:.02, val:25000,unlockLvl:8},
+  {id:'chronosite',name:'Chronosite',    r:6, baseW:.015,val:35000,unlockLvl:10},
+  // Crafted - these don't drop, only crafted
+  {id:'steel',        name:'Steel',         r:2, baseW:0, val:60,  unlockLvl:1, crafted:true},
+  {id:'ccoal',        name:'Compressed Coal',r:1,baseW:0,val:15,  unlockLvl:1, crafted:true},
+  {id:'bronze',       name:'Bronze',         r:2, baseW:0, val:50,  unlockLvl:1, crafted:true},
+  {id:'gear',         name:'Gear',           r:3, baseW:0, val:300, unlockLvl:1, crafted:true},
+  {id:'circuitboard', name:'Circuit Board',  r:4, baseW:0, val:800, unlockLvl:1, crafted:true},
+  {id:'stardust',     name:'Stardust',       r:5, baseW:0, val:8000,unlockLvl:1, crafted:true},
+  {id:'alloy',        name:'Refined Alloy',  r:3, baseW:0, val:400, unlockLvl:1, crafted:true},
+];
+
+const ORE_MAP = Object.fromEntries(ALL_ORES.map(o=>[o.id,o]));
+
+// ── RECIPES ──
+const RECIPES = [
+  {id:'ccoal',   out:'ccoal',   qty:1, inputs:[{id:'coal',n:5}],   desc:'Compress coal into dense fuel'},
+  {id:'steel',   out:'steel',   qty:1, inputs:[{id:'iron',n:3},{id:'coal',n:2}],   desc:'Smelt iron with carbon'},
+  {id:'bronze',  out:'bronze',  qty:1, inputs:[{id:'copper',n:3},{id:'tin',n:2}],  desc:'Alloy copper and tin'},
+  {id:'alloy',   out:'alloy',   qty:1, inputs:[{id:'steel',n:2},{id:'titanium',n:1}], desc:'Combine steel with titanium'},
+  {id:'gear',    out:'gear',    qty:1, inputs:[{id:'steel',n:4},{id:'copper',n:2}], desc:'Machine a precision gear'},
+  {id:'circuitboard',out:'circuitboard',qty:1,inputs:[{id:'gear',n:2},{id:'gold',n:3},{id:'quartz',n:2}],desc:'Build an advanced circuit'},
+  {id:'stardust',out:'stardust',qty:1, inputs:[{id:'celestial',n:1},{id:'void',n:1},{id:'diamond',n:5}],desc:'Distill cosmic essence'},
+];
+
+// ── UPGRADES ──
+const UPGRADES = [
+  {id:'drop_speed',   name:'Drop Speed',    icon:'⚡',maxLvl:5,
+   desc:lvl=>`Drop rate ×${(1+lvl*.2).toFixed(1)} (current)`,
+   cost:lvl=>[0,50,150,400,1000,2500][lvl]||9999, type:'dd'},
+  {id:'luck',         name:'Lucky Vein',    icon:'🍀',maxLvl:6,
+   desc:lvl=>`Rare weight ×${(1+lvl*.25).toFixed(2)} (current)`,
+   cost:lvl=>[0,100,300,800,2000,5000,12000][lvl]||9999, type:'dd'},
+  {id:'credit_rate',  name:'Credit Miner',  icon:'⛏',maxLvl:4,
+   desc:lvl=>`Credit every ${[30,24,18,12,8][lvl]}s (current)`,
+   cost:lvl=>[0,80,250,700,2000][lvl]||9999, type:'dd'},
+  {id:'ball_cap',     name:'Ore Capacity',  icon:'🪣',maxLvl:4,
+   desc:lvl=>`Max ${[5,8,12,18,25][lvl]} balls on tray (current)`,
+   cost:lvl=>[0,60,200,600,1800][lvl]||9999, type:'dd'},
+  {id:'sell_bonus',   name:'Market Expert', icon:'📈',maxLvl:5,
+   desc:lvl=>`Sell value ×${(1+lvl*.2).toFixed(1)} (current)`,
+   cost:lvl=>[0,120,400,1000,2500,6000][lvl]||9999, type:'dd'},
+  {id:'auto_collect', name:'Auto Collector', icon:'🤖',maxLvl:1,
+   desc:lvl=>lvl===0?'Auto-collect balls after 8s on tray':'Active – balls auto-collected',
+   cost:lvl=>[0,5000][lvl]||9999, type:'dd'},
+];
+
+const POWERUPS = [
+  {id:'double_drop',  name:'Double Drop',   icon:'×2',  desc:'2 balls per roll for 3 min', dur:180, cost:200, color:'#4dc4ff'},
+  {id:'mega_luck',    name:'Mega Luck',      icon:'★',   desc:'3× rare weights for 5 min',  dur:300, cost:400, color:'#b060e8'},
+  {id:'credit_burst', name:'Credit Burst',   icon:'◈×5', desc:'+5 credits instantly',        dur:0,   cost:80,  color:'#e8b84b'},
+  {id:'gold_rush',    name:'Gold Rush',       icon:'💰',  desc:'2× sell value for 4 min',     dur:240, cost:350, color:'#4dff9a'},
+];
+
+// ── MISSIONS ──
+function makeMissions(S){
+  return [
+    {id:'m_first',  name:'First Strike',    desc:'Roll your first ore',             reward:{dd:10},  target:{type:'roll',n:1}},
+    {id:'m_c10',    name:'Common Hoard',    desc:'Collect 10 Common ores',          reward:{dd:30},  target:{type:'rarity',r:0,n:10}},
+    {id:'m_u5',     name:'Uncommon Finds',  desc:'Collect 5 Uncommon ores',         reward:{dd:50},  target:{type:'rarity',r:1,n:5}},
+    {id:'m_rare1',  name:'First Rare',      desc:'Find any Rare ore',               reward:{dd:100, credits:5},  target:{type:'rarity',r:2,n:1}},
+    {id:'m_epic1',  name:'Epic Discovery',  desc:'Find any Epic ore',               reward:{dd:300, credits:10}, target:{type:'rarity',r:3,n:1}},
+    {id:'m_craft1', name:'Craftsman',       desc:'Craft any item in the Forge',     reward:{dd:80},  target:{type:'craft',n:1}},
+    {id:'m_sell50', name:'Merchant',        desc:'Earn 50 DD from selling',         reward:{credits:10},target:{type:'earned_dd',n:50}},
+    {id:'m_lvl2',   name:'Rising Miner',    desc:'Reach Level 2',                   reward:{dd:200}, target:{type:'level',n:2}},
+    {id:'m_col20',  name:'Collector',       desc:'Collect 20 unique ore types',     reward:{dd:400}, target:{type:'unique',n:20}},
+    {id:'m_leg1',   name:'Legend Touched',  desc:'Find a Legendary ore',            reward:{dd:1000,credits:20},target:{type:'rarity',r:4,n:1}},
+    {id:'m_craft5', name:'Master Crafter',  desc:'Craft 5 items',                   reward:{dd:250}, target:{type:'craft',n:5}},
+    {id:'m_coal20', name:'Coal Baron',      desc:'Collect 20 Coal',                 reward:{dd:40},  target:{type:'ore',id:'coal',n:20}},
+    {id:'m_lvl5',   name:'Veteran',         desc:'Reach Level 5',                   reward:{dd:2000,credits:50},target:{type:'level',n:5}},
+    {id:'m_mythic1',name:'Beyond Legend',   desc:'Find a Mythic ore',               reward:{dd:5000,credits:50},target:{type:'rarity',r:5,n:1}},
+    {id:'m_cosmic1',name:'Cosmic Touch',    desc:'Find a Cosmic ore',               reward:{dd:20000,credits:100},target:{type:'rarity',r:6,n:1}},
+  ];
+}
+
+// ══════════════════════════════════════════════
+//  DRAW ENGINE
+// ══════════════════════════════════════════════
 function drawBall(ctx, id, cx, cy, R, t=0){
   ctx.save();
   ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.clip();
-  (D[id]||D.coal)(ctx,cx,cy,R,t);
-  // specular
-  if(id!=='void'){
-    const h=ctx.createRadialGradient(cx-R*.3,cy-R*.38,0,cx-R*.15,cy-R*.2,R*.6);
-    h.addColorStop(0,'rgba(255,255,255,.38)');h.addColorStop(1,'rgba(255,255,255,0)');
-    ctx.fillStyle=h;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
-  }
+  const fn = DRAWFNS[id] || DRAWFNS._default;
+  fn(ctx,cx,cy,R,t,id);
+  // universal specular highlight
+  const h=ctx.createRadialGradient(cx-R*.3,cy-R*.38,0,cx-R*.1,cy-R*.18,R*.65);
+  h.addColorStop(0,'rgba(255,255,255,.35)');h.addColorStop(1,'rgba(255,255,255,0)');
+  ctx.fillStyle=h;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  // bottom shadow
+  const bs=ctx.createRadialGradient(cx+R*.2,cy+R*.35,0,cx,cy+R*.2,R*.8);
+  bs.addColorStop(0,'rgba(0,0,0,.3)');bs.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=bs;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   ctx.restore();
-  // glow ring for rare+
-  const tp=TYPES.find(x=>x.id===id);
-  if(tp&&tp.r>=3){
-    const rc=['','','','rgba(80,110,255,.7)','rgba(255,60,200,.8)','rgba(255,215,0,.9)'][tp.r];
-    ctx.save();ctx.strokeStyle=rc;ctx.lineWidth=1.5;
-    ctx.shadowColor=rc;ctx.shadowBlur=10;
+  // glow ring for r3+
+  const ore=ORE_MAP[id];
+  if(ore&&ore.r>=3){
+    const rcs=['','','','rgba(176,96,232,.7)','rgba(255,154,48,.8)','rgba(255,48,96,.9)','rgba(255,224,64,1)'];
+    ctx.save();ctx.strokeStyle=rcs[ore.r]||'';ctx.lineWidth=1.5;
+    ctx.shadowColor=rcs[ore.r];ctx.shadowBlur=ore.r>=5?18:10;
     ctx.beginPath();ctx.arc(cx,cy,R+1,0,Math.PI*2);ctx.stroke();ctx.restore();
   }
 }
 
-const D = {
+const DRAWFNS = {
+  _default(ctx,cx,cy,R,t,id){
+    const ore=ORE_MAP[id]; const c=ore?RCOLS[ore.r]:'#888';
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,c);g.addColorStop(1,'#111');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  },
   coal(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.3,cy-R*.3,R*.05,cx,cy,R);
     g.addColorStop(0,'#4a4540');g.addColorStop(.5,'#1e1a16');g.addColorStop(1,'#0d0b09');
@@ -167,19 +484,92 @@ const D = {
     ctx.beginPath();ctx.moveTo(cx-R*.1,cy-R*.2);ctx.lineTo(cx+R*.2,cy+R*.1);ctx.stroke();
     ctx.beginPath();ctx.moveTo(cx+R*.1,cy-R*.1);ctx.lineTo(cx-R*.15,cy+R*.25);ctx.stroke();
   },
+  dirt(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#8B5E3C');g.addColorStop(.5,'#6B4226');g.addColorStop(1,'#4a2c18');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<6;i++){const a=i*1.05;const d=R*.3*Math.random()+R*.1;
+      ctx.fillStyle='rgba(100,70,30,.4)';ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.08,0,Math.PI*2);ctx.fill();}
+  },
+  gravel(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#909090');g.addColorStop(.5,'#606060');g.addColorStop(1,'#383838');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<8;i++){const a=i*.785;const d=R*(.15+.3*(i%3)/3);
+      ctx.fillStyle=`rgba(${80+i*8},${80+i*8},${80+i*8},.35)`;
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.06,0,Math.PI*2);ctx.fill();}
+  },
+  flint(ctx,cx,cy,R){
+    const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    g.addColorStop(0,'#5a5060');g.addColorStop(.5,'#3a3044');g.addColorStop(1,'#1a1520');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(180,160,200,.3)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx-R*.4,cy-R*.2);ctx.lineTo(cx+R*.35,cy+R*.3);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-R*.2,cy+R*.1);ctx.lineTo(cx+R*.1,cy-R*.3);ctx.stroke();
+  },
+  limestone(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#e8dcc8');g.addColorStop(.5,'#c0a880');g.addColorStop(1,'#806040');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(100,80,50,.2)';ctx.lineWidth=1;
+    for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(cx-R,cy+i*R*.3);ctx.lineTo(cx+R,cy+i*R*.3);ctx.stroke();}
+  },
+  pumice(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#d0c8c0');g.addColorStop(.5,'#a0988c');g.addColorStop(1,'#706860');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<10;i++){const a=i*.628;const d=R*(.1+.55*(i%4)/4);
+      ctx.fillStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.05,0,Math.PI*2);ctx.fill();}
+  },
   iron(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
     g.addColorStop(0,'#d4cdc4');g.addColorStop(.4,'#9a9590');g.addColorStop(.8,'#6e6a65');g.addColorStop(1,'#4a4642');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='rgba(200,196,190,.25)';ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(200,196,190,.2)';ctx.lineWidth=1;
     for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(cx-R,cy+i*R*.28);ctx.lineTo(cx+R,cy+i*R*.28);ctx.stroke();}
   },
-  copper(ctx,cx,cy,R,t){
+  copper(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
     g.addColorStop(0,'#e8855a');g.addColorStop(.5,'#b85c30');g.addColorStop(1,'#7a3318');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='rgba(40,140,80,.28)';
-    for(let i=0;i<4;i++){const a=i*1.8;const d=R*.3;ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.13,0,Math.PI*2);ctx.fill();}
+    for(let i=0;i<4;i++){const a=i*1.8;const d=R*.3;
+      ctx.fillStyle='rgba(40,140,80,.28)';ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.12,0,Math.PI*2);ctx.fill();}
+  },
+  tin(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#e0e8f0');g.addColorStop(.5,'#90a0b0');g.addColorStop(1,'#405060');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.15)';
+    for(let i=0;i<5;i++){const a=i*1.257;ctx.beginPath();ctx.arc(cx+Math.cos(a)*R*.45,cy+Math.sin(a)*R*.45,R*.07,0,Math.PI*2);ctx.fill();}
+  },
+  sulfur(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#f0e040');g.addColorStop(.5,'#c0a000');g.addColorStop(1,'#806000');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,100,.3)';
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.arc(cx+Math.cos(i*2.1)*R*.3,cy+Math.sin(i*2.1)*R*.3,R*.15,0,Math.PI*2);ctx.fill();}
+  },
+  bauxite(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#c87050');g.addColorStop(.5,'#903828');g.addColorStop(1,'#601810');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(200,120,80,.3)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,R*.55,0,Math.PI*2);ctx.stroke();
+  },
+  magnetite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#606880');g.addColorStop(.5,'#303848');g.addColorStop(1,'#101520');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(100,160,255,.45)';ctx.lineWidth=1;
+    for(let i=0;i<3;i++){const a=i*Math.PI/3+t*.5;
+      ctx.beginPath();ctx.arc(cx,cy,R*(.3+i*.2),a,a+Math.PI*.6);ctx.stroke();}
+  },
+  galena(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#909098');g.addColorStop(.5,'#505560');g.addColorStop(1,'#202228');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(160,160,180,.5)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(cx-R*.4,cy-R*.4);ctx.lineTo(cx+R*.4,cy-R*.4);ctx.lineTo(cx+R*.4,cy+R*.4);ctx.lineTo(cx-R*.4,cy+R*.4);ctx.closePath();ctx.stroke();
   },
   gold(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx-R*.25,cy-R*.25,0,cx,cy,R);
@@ -188,12 +578,21 @@ const D = {
     ctx.strokeStyle='rgba(255,240,100,.4)';ctx.lineWidth=1.5;
     for(let i=0;i<3;i++){const a=i*2.1+t;ctx.beginPath();ctx.arc(cx,cy,R*.55,a,a+.5);ctx.stroke();}
   },
+  quartz(ctx,cx,cy,R){
+    const g=ctx.createLinearGradient(cx-R*.3,cy-R*.4,cx+R*.2,cy+R*.4);
+    g.addColorStop(0,'#fff5f8');g.addColorStop(.35,'#f0d0dc');g.addColorStop(.7,'#d0a0b8');g.addColorStop(1,'#a07090');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.45)';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.moveTo(cx,cy-R*.65);ctx.lineTo(cx+R*.42,cy+R*.3);
+    ctx.moveTo(cx,cy-R*.65);ctx.lineTo(cx-R*.35,cy+R*.3);ctx.stroke();
+  },
   lapis(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
     g.addColorStop(0,'#4a7af0');g.addColorStop(.5,'#1a3aaa');g.addColorStop(1,'#0a1a5a');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='rgba(200,160,30,.85)';
-    for(let i=0;i<6;i++){const a=i*1.05+.3;const d=R*(.2+i*.07);ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.065,0,Math.PI*2);ctx.fill();}
+    for(let i=0;i<6;i++){const a=i*1.05+.3;const d=R*(.2+i*.06);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.065,0,Math.PI*2);ctx.fill();}
   },
   redstone(ctx,cx,cy,R,t){
     const p=.7+.3*Math.sin(t*3);
@@ -204,14 +603,6 @@ const D = {
     ig.addColorStop(0,`rgba(255,120,60,${p*.55})`);ig.addColorStop(1,'rgba(200,0,0,0)');
     ctx.fillStyle=ig;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
-  quartz(ctx,cx,cy,R){
-    const g=ctx.createLinearGradient(cx-R*.3,cy-R*.4,cx+R*.2,cy+R*.4);
-    g.addColorStop(0,'#fff5f8');g.addColorStop(.35,'#f0d0dc');g.addColorStop(.7,'#d0a0b8');g.addColorStop(1,'#a07090');
-    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
-    ctx.strokeStyle='rgba(255,255,255,.45)';ctx.lineWidth=1.2;
-    ctx.beginPath();ctx.moveTo(cx,cy-R*.65);ctx.lineTo(cx+R*.42,cy+R*.3);
-    ctx.moveTo(cx,cy-R*.65);ctx.lineTo(cx-R*.35,cy+R*.3);ctx.stroke();
-  },
   obsidian(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
     g.addColorStop(0,'#2a1a3a');g.addColorStop(.5,'#0d0814');g.addColorStop(1,'#050308');
@@ -219,6 +610,14 @@ const D = {
     const eg=ctx.createRadialGradient(cx,cy,R*.55,cx,cy,R);
     eg.addColorStop(0,'rgba(80,20,120,0)');eg.addColorStop(1,'rgba(150,60,220,.5)');
     ctx.fillStyle=eg;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  },
+  pyrite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#d4c060');g.addColorStop(.5,'#a08820');g.addColorStop(1,'#606010');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,240,100,.72)';
+    for(let i=0;i<8;i++){const a=i*.785+t*.5;const d=R*(.15+.3*((i%3)/3));
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();}
   },
   topaz(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
@@ -228,19 +627,29 @@ const D = {
     gw.addColorStop(0,`rgba(255,200,60,${.35+.1*Math.sin(t*2)})`);gw.addColorStop(1,'rgba(255,140,0,0)');
     ctx.fillStyle=gw;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
-  pyrite(ctx,cx,cy,R,t){
+  fluorite(ctx,cx,cy,R,t){
+    const h=(t*20)%360;
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
-    g.addColorStop(0,'#d4c060');g.addColorStop(.5,'#a08820');g.addColorStop(1,'#606010');
+    g.addColorStop(0,`hsl(${h},70%,75%)`);g.addColorStop(.5,`hsl(${(h+60)%360},60%,45%)`);g.addColorStop(1,`hsl(${(h+120)%360},50%,25%)`);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
-    ctx.fillStyle='rgba(255,240,100,.72)';
-    for(let i=0;i<8;i++){const a=i*.785+t*.5;const d=R*(.15+.3*((i%3)/3));ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='rgba(255,255,255,.2)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx-R*.3,cy-R*.3);ctx.lineTo(cx+R*.3,cy+R*.3);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx+R*.3,cy-R*.3);ctx.lineTo(cx-R*.3,cy+R*.3);ctx.stroke();
+  },
+  zircon(ctx,cx,cy,R){
+    const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    g.addColorStop(0,'#f8f0ff');g.addColorStop(.3,'#d0a0ff');g.addColorStop(.7,'#a060e0');g.addColorStop(1,'#502090');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<4;i++){const a=i*.785;ctx.strokeStyle='rgba(255,240,255,.4)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.8,cy+Math.sin(a)*R*.8);ctx.stroke();}
   },
   amethyst(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.3,0,cx+R*.1,cy+R*.2,R);
     g.addColorStop(0,'#e0b0ff');g.addColorStop(.4,'#9040d0');g.addColorStop(.8,'#5010a0');g.addColorStop(1,'#2a0060');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(220,160,255,.38)';ctx.lineWidth=1;
-    for(let i=0;i<3;i++){const a=i*2.1;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.72,cy+Math.sin(a)*R*.72);ctx.stroke();}
+    for(let i=0;i<3;i++){const a=i*2.1;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.72,cy+Math.sin(a)*R*.72);ctx.stroke();}
   },
   emerald(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.15,cy-R*.15,0,cx,cy,R);
@@ -275,7 +684,8 @@ const D = {
     g.addColorStop(0,'#90b0ff');g.addColorStop(.4,'#2050e0');g.addColorStop(.8,'#0820a0');g.addColorStop(1,'#020840');
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(180,210,255,.58)';ctx.lineWidth=1.5;
-    for(let i=0;i<3;i++){const a=i*Math.PI/3+t*.15;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*R*.8,cy+Math.sin(a)*R*.8);ctx.lineTo(cx+Math.cos(a+Math.PI)*R*.8,cy+Math.sin(a+Math.PI)*R*.8);ctx.stroke();}
+    for(let i=0;i<3;i++){const a=i*Math.PI/3+t*.15;
+      ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*R*.8,cy+Math.sin(a)*R*.8);ctx.lineTo(cx+Math.cos(a+Math.PI)*R*.8,cy+Math.sin(a+Math.PI)*R*.8);ctx.stroke();}
   },
   titanium(ctx,cx,cy,R){
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
@@ -284,6 +694,25 @@ const D = {
     ctx.strokeStyle='rgba(200,220,240,.18)';ctx.lineWidth=1;
     for(let i=-3;i<=3;i++){ctx.beginPath();ctx.moveTo(cx-R,cy+i*R*.26);ctx.lineTo(cx+R,cy+i*R*.26);ctx.stroke();}
   },
+  tanzanite(ctx,cx,cy,R,t){
+    const h=(t*15+200)%360;
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,`hsl(${h},80%,70%)`);g.addColorStop(.5,`hsl(${h+40},70%,35%)`);g.addColorStop(1,`hsl(${h+80},60%,15%)`);
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(180,140,255,.5)';ctx.lineWidth=1.2;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.7,cy+Math.sin(a)*R*.7);ctx.stroke();}
+  },
+  alexandrite(ctx,cx,cy,R,t){
+    const phase=Math.sin(t*.4);
+    const r=Math.floor(180+75*phase),gb=Math.floor(40-20*phase);
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,`rgb(${r},${gb+80},${gb})`);g.addColorStop(.5,`rgb(${r*.6|0},${gb+40},${gb+60})`);g.addColorStop(1,'#100820');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=`rgba(${r},${gb},${gb+80},.25)`;
+    for(let i=0;i<4;i++){const a=i*Math.PI/2+t*.1;
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*R*.4,cy+Math.sin(a)*R*.4,R*.2,0,Math.PI*2);ctx.fill();}
+  },
   opal(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx-R*.1,cy-R*.1,0,cx,cy,R);
     g.addColorStop(0,'#fff8f2');g.addColorStop(.5,'#f0e8f8');g.addColorStop(1,'#d8d0e8');
@@ -291,8 +720,7 @@ const D = {
     for(let i=0;i<5;i++){
       const a=i*1.257+t*.4;const d=R*.32;const h=(i*72+t*28)%360;
       ctx.fillStyle=`hsla(${h},80%,62%,.35)`;
-      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.32,0,Math.PI*2);ctx.fill();
-    }
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.32,0,Math.PI*2);ctx.fill();}
   },
   netherite(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx-R*.1,cy-R*.1,0,cx,cy,R);
@@ -314,6 +742,32 @@ const D = {
     ctx.beginPath();ctx.arc(cx,cy,R*.4,0,Math.PI*2);ctx.stroke();
     ctx.beginPath();ctx.arc(cx,cy,R*.72,0,Math.PI*2);ctx.stroke();
   },
+  painite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#ff9060');g.addColorStop(.4,'#c04020');g.addColorStop(.8,'#801000');g.addColorStop(1,'#300500');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=`rgba(255,160,80,${.3+.15*Math.sin(t*1.5)})`;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*R*.5,cy+Math.sin(a)*R*.5,R*.1,0,Math.PI*2);ctx.fill();}
+  },
+  benitoite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.25,0,cx,cy,R);
+    g.addColorStop(0,'#a0e0ff');g.addColorStop(.4,'#1060c0');g.addColorStop(.8,'#082060');g.addColorStop(1,'#020810');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=`rgba(160,220,255,${.35+.15*Math.sin(t*2.5)})`;
+    ctx.beginPath();
+    for(let i=0;i<3;i++){const a=i*2.094-Math.PI/2;
+      i===0?ctx.moveTo(cx+Math.cos(a)*R*.68,cy+Math.sin(a)*R*.68):ctx.lineTo(cx+Math.cos(a)*R*.68,cy+Math.sin(a)*R*.68);}
+    ctx.closePath();ctx.fill();
+  },
+  grandidierite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#80ffe0');g.addColorStop(.4,'#1090a0');g.addColorStop(.8,'#084050');g.addColorStop(1,'#021820');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=`rgba(100,255,200,${.4+.15*Math.sin(t*2)})`;ctx.lineWidth=1.2;
+    for(let i=0;i<4;i++){const a=i*Math.PI/4+t*.05;
+      ctx.beginPath();ctx.arc(cx,cy,R*(.35+i*.1),a,a+Math.PI*.4);ctx.stroke();}
+  },
   void(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
     g.addColorStop(0,'#200035');g.addColorStop(.4,'#080015');g.addColorStop(1,'#000000');
@@ -322,8 +776,42 @@ const D = {
       const a=i*.698+t*.75;const d=R*(.18+.33*(i/9));
       const al=.35+.25*Math.sin(t+i);
       ctx.fillStyle=`rgba(${50+i*8},0,${90+i*14},${al})`;
-      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*(.045+.025*(i%3)),0,Math.PI*2);ctx.fill();
-    }
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*(.045+.025*(i%3)),0,Math.PI*2);ctx.fill();}
+  },
+  dragonite(ctx,cx,cy,R,t){
+    const p=.7+.3*Math.sin(t*2.5);
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    g.addColorStop(0,`rgba(255,${120+80*p|0},40,1)`);g.addColorStop(.4,'#c03000');g.addColorStop(1,'#200800');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=`rgba(255,180,60,${.5*p})`;ctx.lineWidth=1.5;
+    for(let i=0;i<5;i++){const a=i*1.257+t*.3;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.8,cy+Math.sin(a)*R*.8);ctx.stroke();}
+    const gw=ctx.createRadialGradient(cx,cy,R*.3,cx,cy,R);
+    gw.addColorStop(0,'rgba(255,120,20,0)');gw.addColorStop(1,`rgba(255,60,0,${.4*p})`);
+    ctx.fillStyle=gw;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  },
+  starcore(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    g.addColorStop(0,'#ffffa0');g.addColorStop(.3,'#ffcc40');g.addColorStop(.6,'#e06000');g.addColorStop(1,'#400a00');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    const wg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.55);
+    wg.addColorStop(0,`rgba(255,255,200,${.6+.3*Math.sin(t*3)})`);wg.addColorStop(1,'rgba(255,200,50,0)');
+    ctx.fillStyle=wg;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle=`rgba(255,240,100,${.3+.2*Math.sin(t*4)})`;ctx.lineWidth=1;
+    for(let i=0;i<5;i++){const a=i*1.257+t*.4;
+      ctx.beginPath();ctx.arc(cx,cy,R*(.4+i*.08),a,a+.35);ctx.stroke();}
+  },
+  darkmatter(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    g.addColorStop(0,'#150018');g.addColorStop(.5,'#050010');g.addColorStop(1,'#000000');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<12;i++){
+      const a=i*.524+t*.2;const d=R*(.1+.7*(i/12));const al=.15+.4*Math.abs(Math.sin(t*1.5+i*.5));
+      const hue=(i*30+t*15)%360;
+      ctx.fillStyle=`hsla(${hue},80%,50%,${al})`;
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.06,0,Math.PI*2);ctx.fill();}
+    ctx.strokeStyle='rgba(100,0,200,.4)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,R*.7,t*.3,t*.3+Math.PI*1.5);ctx.stroke();
   },
   celestial(ctx,cx,cy,R,t){
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
@@ -333,85 +821,250 @@ const D = {
       const a=i*.449+t*.08;const d=R*(.08+.6*((i*7%10)/10));
       const tw=.25+.75*Math.abs(Math.sin(t*1.8+i));
       ctx.fillStyle=`rgba(255,255,255,${tw})`;
-      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();
-    }
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();}
     const ng=ctx.createRadialGradient(cx+R*.2,cy-R*.2,0,cx,cy,R*.8);
     ng.addColorStop(0,'rgba(100,40,200,.28)');ng.addColorStop(.5,'rgba(200,60,100,.12)');ng.addColorStop(1,'rgba(40,80,200,0)');
     ctx.fillStyle=ng;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
+  singularity(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.4);
+    g.addColorStop(0,'#000000');g.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle='#030208';ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<20;i++){
+      const a=i*.314+t*.15;const d=R*(.1+.85*(i/20));const al=.4-i*.018;const h=(i*18+t*10)%360;
+      ctx.strokeStyle=`hsla(${h},90%,60%,${al})`;ctx.lineWidth=.8;
+      ctx.beginPath();ctx.arc(cx,cy,d,a,a+.2);ctx.stroke();}
+  },
+  chronosite(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx-R*.1,cy-R*.1,0,cx,cy,R);
+    g.addColorStop(0,'#d0f8ff');g.addColorStop(.3,'#70c0e8');g.addColorStop(.7,'#2040a0');g.addColorStop(1,'#000a20');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let ring=0;ring<3;ring++){
+      const r2=R*(.3+ring*.22);const spd=[1,.7,.4][ring];
+      ctx.strokeStyle=`rgba(200,240,255,${.5-.1*ring})`;ctx.lineWidth=1.2-ring*.2;
+      ctx.beginPath();ctx.arc(cx,cy,r2,t*spd,t*spd+Math.PI*1.6);ctx.stroke();}
+    ctx.fillStyle=`rgba(255,255,255,${.5+.3*Math.sin(t*5)})`;
+    ctx.beginPath();ctx.arc(cx,cy,R*.12,0,Math.PI*2);ctx.fill();
+  },
+  // crafted items
+  steel(ctx,cx,cy,R){
+    const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    g.addColorStop(0,'#c8d8e8');g.addColorStop(.35,'#7090a8');g.addColorStop(.65,'#405868');g.addColorStop(1,'#1a2838');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(200,220,240,.25)';ctx.lineWidth=1.2;
+    for(let i=-3;i<=3;i++){ctx.beginPath();ctx.moveTo(cx-R,cy+i*R*.23);ctx.lineTo(cx+R,cy+i*R*.23);ctx.stroke();}
+  },
+  ccoal(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#302820');g.addColorStop(.6,'#080604');g.addColorStop(1,'#020100');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(60,48,30,.7)';ctx.lineWidth=1;
+    for(let i=0;i<6;i++){const a=i*Math.PI/3;
+      ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.7,cy+Math.sin(a)*R*.7);ctx.stroke();}
+  },
+  bronze(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#d48050');g.addColorStop(.5,'#a05020');g.addColorStop(1,'#602800');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(200,140,80,.3)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,R*.6,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,R*.3,0,Math.PI*2);ctx.stroke();
+  },
+  gear(ctx,cx,cy,R){
+    const g=ctx.createRadialGradient(cx-R*.2,cy-R*.2,0,cx,cy,R);
+    g.addColorStop(0,'#c8c0b0');g.addColorStop(.5,'#808070');g.addColorStop(1,'#404030');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(220,210,180,.55)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.arc(cx,cy,R*.55,0,Math.PI*2);ctx.stroke();
+    for(let i=0;i<8;i++){const a=i*Math.PI/4;ctx.beginPath();ctx.moveTo(cx+Math.cos(a)*R*.55,cy+Math.sin(a)*R*.55);ctx.lineTo(cx+Math.cos(a)*R*.88,cy+Math.sin(a)*R*.88);ctx.stroke();}
+    ctx.fillStyle='rgba(60,55,40,.8)';ctx.beginPath();ctx.arc(cx,cy,R*.22,0,Math.PI*2);ctx.fill();
+  },
+  circuitboard(ctx,cx,cy,R,t){
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    g.addColorStop(0,'#0a2010');g.addColorStop(.5,'#051008');g.addColorStop(1,'#020504');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    const p=.5+.5*Math.sin(t*3);
+    ctx.strokeStyle=`rgba(40,255,120,${.4+.2*p})`;ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(cx-R*.6,cy-R*.4);ctx.lineTo(cx-R*.1,cy-R*.4);ctx.lineTo(cx-R*.1,cy);ctx.lineTo(cx+R*.4,cy);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx-R*.6,cy+R*.1);ctx.lineTo(cx+R*.2,cy+R*.1);ctx.lineTo(cx+R*.2,cy-.R*.2);ctx.stroke();
+    ctx.fillStyle=`rgba(40,255,120,${.8+.2*p})`;
+    for(const [dx,dy] of [[-R*.6,-R*.4],[cx-cx-R*.1,cy-cy],[R*.4,0],[R*.2,R*.1]]){
+      ctx.beginPath();ctx.arc(cx+dx,cy+dy,R*.055,0,Math.PI*2);ctx.fill();}
+  },
+  alloy(ctx,cx,cy,R,t){
+    const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
+    g.addColorStop(0,'#e0d0b0');g.addColorStop(.25,'#a09070');g.addColorStop(.5,'#c0b080');g.addColorStop(.75,'#808060');g.addColorStop(1,'#404030');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,230,150,.3)';ctx.lineWidth=1.5;
+    for(let i=0;i<4;i++){const a=i*Math.PI/4+t*.05;ctx.beginPath();ctx.arc(cx,cy,R*(.4+i*.1),a,a+Math.PI*.35);ctx.stroke();}
+  },
+  stardust(ctx,cx,cy,R,t){
+    ctx.fillStyle='#000008';ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<18;i++){
+      const a=i*.349+t*.12;const d=R*(.05+.8*(i/18));const tw=.2+.8*Math.abs(Math.sin(t*2+i*.4));
+      const h=(i*20+t*30)%360;
+      ctx.fillStyle=`hsla(${h},90%,70%,${tw})`;
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.05,0,Math.PI*2);ctx.fill();}
+    const eg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.5);
+    eg.addColorStop(0,`rgba(255,255,200,${.3+.2*Math.sin(t*4)})`);eg.addColorStop(1,'rgba(100,50,200,0)');
+    ctx.fillStyle=eg;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  },
 };
 
-// ─── PHYSICS ──────────────────────────────────────────────────────────
-const GR=0.46, BNC=0.46, FRC=0.984, BR=26;
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+let S = {
+  credits: 10, dd: 0, xp: 0, level: 1,
+  col: {},       // {oreId: count}
+  upgrades: {},  // {upgradeId: level}
+  powerups: {},  // {puId: endTimestamp}
+  missions: {},  // {missionId: {progress, claimed}}
+  totalRolls: 0, totalCrafts: 0, totalEarnedDD: 0,
+  lastSeen: Date.now(),
+};
+
+function getUpgLvl(id){ return S.upgrades[id]||0; }
+function getUpg(id){ return UPGRADES.find(u=>u.id===id); }
+
+// ── XP / LEVEL ──
+const XP_PER_LEVEL = lvl => Math.floor(100 * Math.pow(1.4, lvl - 1));
+function addXP(amt){
+  S.xp += amt;
+  let needed = XP_PER_LEVEL(S.level);
+  while(S.xp >= needed){ S.xp -= needed; S.level++; needed = XP_PER_LEVEL(S.level); toast(`Level Up! Now Level ${S.level}! 🎉`); }
+  updateUI();
+}
+
+// ── WEIGHT CALC ──
+function getOreWeight(ore){
+  if(ore.crafted) return 0;
+  if(ore.unlockLvl > S.level) return 0;
+  let w = ore.baseW;
+  // Scale rare weight up as level increases
+  const luckMult = 1 + getUpgLvl('luck') * 0.25;
+  const puLuck = isPowerupActive('mega_luck') ? 3 : 1;
+  if(ore.r >= 1) w *= luckMult * puLuck;
+  // Level scaling: each level above unlock adds bonus
+  const lvlBonus = Math.max(0, S.level - ore.unlockLvl);
+  if(ore.r >= 2) w *= (1 + lvlBonus * 0.15);
+  // At very high levels, rare ores become more accessible
+  if(ore.r >= 4 && S.level >= 5) w *= (1 + (S.level - 5) * 0.1);
+  return Math.max(0, w);
+}
+
+function pickOre(){
+  const available = ALL_ORES.filter(o=>!o.crafted && getOreWeight(o)>0);
+  const totW = available.reduce((s,o)=>s+getOreWeight(o),0);
+  let v = Math.random()*totW;
+  for(const o of available){ v -= getOreWeight(o); if(v<=0) return o; }
+  return available[0];
+}
+
+// ── POWERUPS ──
+function isPowerupActive(id){ return S.powerups[id] && S.powerups[id] > Date.now(); }
+function activatePowerup(id){
+  const pu = POWERUPS.find(p=>p.id===id);
+  if(!pu) return;
+  if(pu.id==='credit_burst'){ S.credits+=5; toast('+5 Credits!'); updateUI(); return; }
+  S.powerups[id] = Date.now() + pu.dur * 1000;
+  updateBuffsBar();
+}
+
+function updateBuffsBar(){
+  const bar = document.getElementById('buffs-bar');
+  bar.innerHTML = '';
+  for(const pu of POWERUPS){
+    if(isPowerupActive(pu.id)){
+      const rem = Math.ceil((S.powerups[pu.id]-Date.now())/1000);
+      const chip = document.createElement('div');
+      chip.className='buff-chip';chip.textContent=`${pu.icon} ${pu.name} ${rem}s`;
+      bar.appendChild(chip);
+    }
+  }
+}
+
+// ══════════════════════════════════════════════
+//  PHYSICS & CANVAS
+// ══════════════════════════════════════════════
+const GR=0.44, BNC=0.44, FRC=0.984;
+const BALL_R = 24;
 let balls=[], gtime=0;
+let autoCollectTimers = {};
 
-const cv=document.getElementById('c');
-function logW(){return cv.width/(window.devicePixelRatio||1);}
-function logH(){return cv.height/(window.devicePixelRatio||1);}
+const cv = document.getElementById('c');
+function logW(){ return cv.width/(window.devicePixelRatio||1); }
+function logH(){ return cv.height/(window.devicePixelRatio||1); }
 
-function mkBall(type){
-  return {type,x:logW()/2+(Math.random()-.5)*8,y:88,vx:(Math.random()-.5)*1.5,vy:.5,r:BR,collected:false};
+function maxBalls(){ return [5,8,12,18,25][getUpgLvl('ball_cap')]; }
+function dropSpeed(){ return 1 + getUpgLvl('drop_speed') * 0.2; }
+
+function mkBall(ore){
+  return {ore, x: logW()/2 + (Math.random()-.5)*8, y:90,
+    vx:(Math.random()-.5)*1.5*dropSpeed(), vy:0.5*dropSpeed(),
+    r:BALL_R, id: Math.random().toString(36).slice(2)};
 }
 
 function step(){
-  const W=logW(), H=logH(), floor=H-BR-8;
+  const W=logW(), H=logH(), floor=H-BALL_R-8;
   for(const b of balls){
-    if(b.collected)continue;
     b.vy+=GR; b.x+=b.vx; b.y+=b.vy;
     if(b.y>=floor){b.y=floor;b.vy*=-BNC;b.vx*=FRC;if(Math.abs(b.vy)<0.8)b.vy=0;}
     if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx)*.65;}
     if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx)*.65;}
     if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy)*.5;}
     for(const b2 of balls){
-      if(b2===b||b2.collected)continue;
+      if(b2===b) continue;
       const dx=b2.x-b.x, dy=b2.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
       if(dist<b.r+b2.r&&dist>0){
         const nx=dx/dist, ny=dy/dist, ov=(b.r+b2.r-dist)/2;
-        b.x-=nx*ov;b.y-=ny*ov;b2.x+=nx*ov;b2.y+=ny*ov;
+        b.x-=nx*ov; b.y-=ny*ov; b2.x+=nx*ov; b2.y+=ny*ov;
         const rv=(b.vx-b2.vx)*nx+(b.vy-b2.vy)*ny;
         if(rv>0){b.vx-=rv*nx*.5;b.vy-=rv*ny*.5;b2.vx+=rv*nx*.5;b2.vy+=rv*ny*.5;}
       }
     }
   }
-  balls=balls.filter(b=>!b.collected);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────
+// Auto-collect after 8s
+function checkAutoCollect(){
+  if(getUpgLvl('auto_collect')===0) return;
+  const now = Date.now();
+  for(const b of balls){
+    if(!autoCollectTimers[b.id]) autoCollectTimers[b.id]=now+8000;
+    if(now >= autoCollectTimers[b.id]){ collectBall(b); }
+  }
+}
+
 function render(){
   const ctx=cv.getContext('2d');
   const dpr=window.devicePixelRatio||1;
   const W=logW(), H=logH();
   ctx.save(); ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
-
-  // bg
-  ctx.fillStyle='#080604'; ctx.fillRect(0,0,W,H);
-
-  // subtle grid
-  ctx.strokeStyle='rgba(50,38,20,.4)'; ctx.lineWidth=1;
-  for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
-  for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
+  ctx.fillStyle='#05080f'; ctx.fillRect(0,0,W,H);
+  // subtle hex grid
+  ctx.strokeStyle='rgba(30,45,80,.3)'; ctx.lineWidth=1;
+  const gs=38;
+  for(let x=-gs;x<W+gs;x+=gs*1.5){for(let y=-gs;y<H+gs;y+=gs){
+    const row=Math.floor(y/gs);const ox=row%2?gs*.75:0;
+    ctx.beginPath();ctx.moveTo(x+ox+gs*.5,y);ctx.lineTo(x+ox+gs,y+gs*.5);ctx.lineTo(x+ox+gs*.5,y+gs);ctx.lineTo(x+ox,y+gs);ctx.lineTo(x+ox-gs*.5,y+gs*.5);ctx.lineTo(x+ox,y);ctx.closePath();ctx.stroke();}}
   // floor glow
-  const fg=ctx.createLinearGradient(0,H-50,0,H);
-  fg.addColorStop(0,'rgba(201,162,39,0)'); fg.addColorStop(1,'rgba(201,162,39,.12)');
-  ctx.fillStyle=fg; ctx.fillRect(0,H-50,W,50);
-  ctx.strokeStyle='rgba(201,162,39,.3)'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(0,H-8); ctx.lineTo(W,H-8); ctx.stroke();
-
-  // dispenser chute
+  const fg=ctx.createLinearGradient(0,H-60,0,H);
+  fg.addColorStop(0,'rgba(77,196,255,0)');fg.addColorStop(1,'rgba(77,196,255,.08)');
+  ctx.fillStyle=fg;ctx.fillRect(0,H-60,W,60);
+  ctx.strokeStyle='rgba(77,196,255,.25)';ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,H-8);ctx.lineTo(W,H-8);ctx.stroke();
+  // dispenser
   const dx=W/2;
-  ctx.strokeStyle='#3a2e1a'; ctx.lineWidth=4;
-  ctx.beginPath(); ctx.moveTo(dx-18,0); ctx.lineTo(dx-18,88); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(dx+18,0); ctx.lineTo(dx+18,88); ctx.stroke();
-  ctx.fillStyle='#1a1208';
-  ctx.fillRect(dx-22,-4,44,20);
-  ctx.strokeStyle='#4a3a1c'; ctx.lineWidth=2;
-  ctx.strokeRect(dx-22,-4,44,20);
-
+  ctx.fillStyle='#0a1020';ctx.fillRect(dx-20,-4,40,20);
+  ctx.strokeStyle='#1a2840';ctx.lineWidth=2;ctx.strokeRect(dx-20,-4,40,20);
+  ctx.strokeStyle='#243050';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(dx-14,0);ctx.lineTo(dx-14,90);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(dx+14,0);ctx.lineTo(dx+14,90);ctx.stroke();
   // balls
-  for(const b of balls) drawBall(ctx, b.type.id, b.x, b.y, b.r, gtime);
-
+  for(const b of balls) drawBall(ctx, b.ore.id, b.x, b.y, b.r, gtime);
   ctx.restore();
   gtime+=0.016;
 }
@@ -423,157 +1076,498 @@ function resizeCv(){
   if(cv.width!==W*dpr||cv.height!==H*dpr){cv.width=W*dpr;cv.height=H*dpr;}
 }
 
-function loop(){resizeCv();step();render();requestAnimationFrame(loop);}
+function loop(){ resizeCv(); step(); checkAutoCollect(); render(); requestAnimationFrame(loop); }
 
-// ─── INTERACTION ──────────────────────────────────────────────────────
-function getXY(e,rect){
+// ── INTERACTION ──
+function getXY(e, rect){
   const dpr=window.devicePixelRatio||1;
-  const sx=cv.width/rect.width, sy=cv.height/rect.height;
-  return[(e.clientX-rect.left)*sx/dpr, (e.clientY-rect.top)*sy/dpr];
+  return [(e.clientX-rect.left)*cv.width/rect.width/dpr, (e.clientY-rect.top)*cv.height/rect.height/dpr];
 }
 
-cv.addEventListener('click',e=>{
+cv.addEventListener('click', e=>{
   const rect=cv.getBoundingClientRect();
-  const[x,y]=getXY(e,rect);
+  const [x,y]=getXY(e,rect);
   for(let i=balls.length-1;i>=0;i--){
     const b=balls[i];
-    if(!b.collected){
-      const dx=b.x-x, dy=b.y-y;
-      if(dx*dx+dy*dy<b.r*b.r){
-        b.collected=true;
-        addToCollection(b.type);
-        showPopup(b.type, b.x, b.y);
-        break;
-      }
-    }
+    const dx=b.x-x, dy=b.y-y;
+    if(dx*dx+dy*dy<b.r*b.r){ collectBall(b); break; }
   }
 });
-cv.addEventListener('touchstart',e=>{
+cv.addEventListener('touchstart', e=>{
   e.preventDefault();
   const t=e.changedTouches[0];
   cv.dispatchEvent(new MouseEvent('click',{clientX:t.clientX,clientY:t.clientY}));
 },{passive:false});
 
-// ─── POPUP ────────────────────────────────────────────────────────────
+function collectBall(b){
+  const idx=balls.indexOf(b);
+  if(idx===-1) return;
+  balls.splice(idx,1);
+  delete autoCollectTimers[b.id];
+  addToCollection(b.ore);
+  showPopup(b.ore);
+  trackMission('roll_collect', b.ore);
+}
+
+// ── POPUP ──
 let popTimer=null;
-function showPopup(type, bx, by){
+function showPopup(ore){
   const pop=document.getElementById('popup');
   const pc=document.getElementById('pop-canvas');
   const ctx=pc.getContext('2d');
-  ctx.clearRect(0,0,80,80);
-  drawBall(ctx,type.id,40,40,36,gtime);
-  document.getElementById('pop-name').textContent=type.name.toUpperCase();
-  document.getElementById('pop-name').style.color=['#888','#bbb','#4ac','#88f','#f5a','#fd0'][type.r];
-  document.getElementById('pop-rar').textContent=RNAMES[type.r];
+  ctx.clearRect(0,0,90,90);
+  drawBall(ctx, ore.id, 45, 45, 38, gtime);
+  document.getElementById('pop-name').textContent=ore.name.toUpperCase();
+  document.getElementById('pop-name').style.color=RCOLS[ore.r];
+  document.getElementById('pop-rar').textContent=RNAMES[ore.r];
+  const sv = Math.floor(ore.val * (1+getUpgLvl('sell_bonus')*.2) * (isPowerupActive('gold_rush')?2:1));
+  document.getElementById('pop-val').textContent=`Worth ${sv} DD`;
   pop.classList.add('show');
   clearTimeout(popTimer);
-  popTimer=setTimeout(()=>pop.classList.remove('show'),1600);
+  popTimer=setTimeout(()=>pop.classList.remove('show'),1800);
 }
 
-// ─── STATE & CREDITS ──────────────────────────────────────────────────
-let S={credits:10,col:{},lastSeen:Date.now()};
-
-function save(){S.lastSeen=Date.now();try{localStorage.setItem('ore_g1',JSON.stringify(S));}catch(e){}}
-function load(){
-  try{
-    const raw=localStorage.getItem('ore_g1');
-    if(raw){S={...S,...JSON.parse(raw)};
-    const secs=(Date.now()-S.lastSeen)/1000;
-    const earn=Math.floor(secs/30);
-    if(earn>0){S.credits+=earn;S.lastSeen=Date.now();}
-  }}catch(e){}
-}
-
-function addToCollection(type){
-  S.col[type.id]=(S.col[type.id]||0)+1;
-  save(); updateUI();
-}
-
-function updateUI(){
-  document.getElementById('cred-count').textContent=S.credits;
-  document.getElementById('rbtn').disabled=S.credits<1;
-}
-
-// Credit timer
-let nextIn=30;
-setInterval(()=>{
-  nextIn--;
-  if(nextIn<=0){nextIn=30;S.credits++;save();updateUI();}
-  document.getElementById('tmr').textContent=`+1 in ${nextIn}s`;
-  updateUI();
-},1000);
-
-// ─── ROLL ─────────────────────────────────────────────────────────────
+// ── ROLL ──
 function roll(){
-  if(S.credits<1)return;
-  S.credits--;save();updateUI();
-  balls.push(mkBall(pick()));
+  if(S.credits<1) return;
+  if(balls.length >= maxBalls()){ toast('Tray is full! Collect some balls first.'); return; }
+  S.credits--; save();
+  const count = isPowerupActive('double_drop') ? 2 : 1;
+  for(let i=0;i<count;i++){
+    if(balls.length < maxBalls()) balls.push(mkBall(pickOre()));
+  }
+  S.totalRolls++;
+  trackMission('roll',null);
+  updateUI();
 }
 
-// ─── GALLERY ──────────────────────────────────────────────────────────
+// ── COLLECTION ──
+function addToCollection(ore){
+  S.col[ore.id]=(S.col[ore.id]||0)+1;
+  addXP(ore.r*2+1);
+  save(); updateUI();
+  checkMissBadge();
+}
+
+function sellOre(id, qty=1){
+  if(!S.col[id]||S.col[id]<qty) return;
+  const ore=ORE_MAP[id];
+  const mult=(1+getUpgLvl('sell_bonus')*.2)*(isPowerupActive('gold_rush')?2:1);
+  const earned=Math.floor(ore.val*mult*qty);
+  S.col[id]-=qty;
+  if(S.col[id]<=0) delete S.col[id];
+  S.dd+=earned;
+  S.totalEarnedDD+=earned;
+  toast(`Sold ${qty}× ${ore.name} for ${earned} DD`);
+  trackMission('sell_dd',null,{amount:earned});
+  save(); updateUI(); buildGallery();
+}
+
+function sellAll(){
+  let total=0;
+  const mult=(1+getUpgLvl('sell_bonus')*.2)*(isPowerupActive('gold_rush')?2:1);
+  for(const [id,cnt] of Object.entries(S.col)){
+    const ore=ORE_MAP[id];
+    if(!ore) continue;
+    total+=Math.floor(ore.val*mult*cnt);
+  }
+  if(!total){toast('Nothing to sell!');return;}
+  if(!confirm(`Sell EVERYTHING for ${total} DD?`)) return;
+  const earned=total;
+  S.col={};
+  S.dd+=earned;
+  S.totalEarnedDD+=earned;
+  toast(`Sold all ores for ${earned} DD!`);
+  save(); updateUI(); buildGallery();
+}
+
+// ── CRAFT ──
+function craft(recipeId){
+  const rec=RECIPES.find(r=>r.id===recipeId);
+  if(!rec) return;
+  for(const inp of rec.inputs){
+    if((S.col[inp.id]||0)<inp.n){toast('Not enough materials!');return;}
+  }
+  for(const inp of rec.inputs){ S.col[inp.id]-=inp.n; if(S.col[inp.id]<=0) delete S.col[inp.id]; }
+  S.col[rec.out]=(S.col[rec.out]||0)+rec.qty;
+  S.totalCrafts++;
+  const ore=ORE_MAP[rec.out];
+  addXP(ore.r*5+5);
+  toast(`Crafted ${rec.qty}× ${ore.name}!`);
+  trackMission('craft',null);
+  save(); updateUI(); buildRecipes(); buildGallery();
+}
+
+// ── UPGRADES / SHOP ──
+function buyUpgrade(id){
+  const upg=getUpg(id);
+  if(!upg) return;
+  const lvl=getUpgLvl(id);
+  if(lvl>=upg.maxLvl){toast('Already maxed!');return;}
+  const cost=upg.cost(lvl);
+  if(S[upg.type]<cost){toast(`Not enough ${upg.type==='dd'?'DD':'credits'}!`);return;}
+  S[upg.type]-=cost;
+  S.upgrades[id]=(lvl+1);
+  toast(`${upg.name} upgraded to level ${lvl+1}!`);
+  save(); updateUI(); buildShop();
+}
+
+function buyPowerup(id){
+  const pu=POWERUPS.find(p=>p.id===id);
+  if(!pu) return;
+  if(S.dd<pu.cost){toast('Not enough DD!');return;}
+  S.dd-=pu.cost;
+  activatePowerup(id);
+  save(); updateUI(); buildShop();
+}
+
+function levelUp(){
+  const cost = S.level * 500;
+  if(S.dd < cost){toast('Not enough DD!');return;}
+  S.dd -= cost;
+  S.level++;
+  S.xp = 0;
+  toast(`Welcome to Level ${S.level}! New ores unlocked!`);
+  save(); updateUI(); buildShop();
+}
+
+// ── MISSIONS ──
+function getMissions(){ return makeMissions(S); }
+
+function getMissionProgress(m){
+  const ms=S.missions[m.id]||{progress:0,claimed:false};
+  const t=m.target;
+  let prog=ms.progress;
+  // recompute from live state for some types
+  if(t.type==='rarity') prog=Object.entries(S.col).filter(([id,_])=>ORE_MAP[id]&&ORE_MAP[id].r===t.r).reduce((s,[_,c])=>s+c,0);
+  if(t.type==='unique') prog=Object.keys(S.col).length;
+  if(t.type==='level') prog=S.level;
+  if(t.type==='roll') prog=S.totalRolls;
+  if(t.type==='craft') prog=S.totalCrafts;
+  if(t.type==='earned_dd') prog=S.totalEarnedDD;
+  if(t.type==='ore') prog=S.col[t.id]||0;
+  return {prog:Math.min(prog,t.n), claimed:ms.claimed||false};
+}
+
+function trackMission(event, ore, extra={}){
+  for(const m of getMissions()){
+    const ms=S.missions[m.id]||{progress:0,claimed:false};
+    if(ms.claimed) continue;
+    const t=m.target;
+    // progress-tracked missions
+    if(event==='sell_dd'&&t.type==='earned_dd'){ S.missions[m.id]={...ms,progress:(ms.progress||0)+extra.amount}; }
+  }
+  checkMissBadge(); save();
+}
+
+function claimMission(id){
+  const m=getMissions().find(x=>x.id===id);
+  if(!m) return;
+  const {prog,claimed}=getMissionProgress(m);
+  if(claimed||prog<m.target.n) return;
+  S.missions[id]={...S.missions[id],claimed:true};
+  if(m.reward.dd){S.dd+=m.reward.dd;toast(`Claimed! +${m.reward.dd} DD`);}
+  if(m.reward.credits){S.credits+=m.reward.credits;toast(`+${m.reward.credits} Credits!`);}
+  save(); updateUI(); buildMissions(); checkMissBadge();
+}
+
+function checkMissBadge(){
+  const ready=getMissions().some(m=>{ const {prog,claimed}=getMissionProgress(m); return !claimed&&prog>=m.target.n; });
+  document.getElementById('miss-badge').style.display=ready?'':'none';
+}
+
+// ══════════════════════════════════════════════
+//  BUILD UI
+// ══════════════════════════════════════════════
 function buildGallery(){
   const grid=document.getElementById('ggrid');
+  const row=document.getElementById('sell-all-row');
   grid.innerHTML='';
-  const col=TYPES.filter(t=>S.col[t.id]);
+  row.innerHTML='';
+  const col=ALL_ORES.filter(o=>S.col[o.id]>0);
   if(!col.length){
-    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--dim);font-size:.8rem">No balls collected yet.<br>Roll to get started!</div>';
+    grid.innerHTML='<div class="empty-state">No ores collected yet.<br>Roll to start mining!</div>';
     return;
   }
+  // sell all button
+  const sa=document.createElement('button');sa.className='sell-all-btn';sa.textContent='Sell All';sa.onclick=sellAll;row.appendChild(sa);
   col.sort((a,b)=>b.r-a.r||S.col[b.id]-S.col[a.id]);
-  for(const type of col){
-    const cnt=S.col[type.id];
+  const mult=(1+getUpgLvl('sell_bonus')*.2)*(isPowerupActive('gold_rush')?2:1);
+  for(const ore of col){
+    const cnt=S.col[ore.id];
+    const sv=Math.floor(ore.val*mult);
     const div=document.createElement('div');
-    div.className=`gi r${type.r}`;
-    const c=document.createElement('canvas');
-    c.width=60;c.height=60;c.dataset.tid=type.id;
-    const ctx=c.getContext('2d');
-    drawBall(ctx,type.id,30,30,26,gtime);
+    div.className=`gi r${ore.r}`;
+    const c=document.createElement('canvas');c.width=56;c.height=56;c.dataset.tid=ore.id;
+    drawBall(c.getContext('2d'),ore.id,28,28,24,gtime);
     div.appendChild(c);
-    const nm=document.createElement('div');nm.className='gn';nm.textContent=type.name;
+    const nm=document.createElement('div');nm.className='gn';nm.textContent=ore.name;
     const gc=document.createElement('div');gc.className='gc';gc.textContent=`×${cnt}`;
-    div.appendChild(nm);div.appendChild(gc);
+    const gv=document.createElement('div');gv.className='gv';gv.textContent=`${sv}DD ea`;
+    div.appendChild(nm);div.appendChild(gc);div.appendChild(gv);
+    div.onclick=()=>sellOre(ore.id,1);
     grid.appendChild(div);
   }
 }
 
-// Animate gallery
-setInterval(()=>{
-  if(document.getElementById('gal-view').style.display==='block'){
-    document.querySelectorAll('#ggrid canvas[data-tid]').forEach(c=>{
-      const ctx=c.getContext('2d');
-      ctx.clearRect(0,0,60,60);
-      drawBall(ctx,c.dataset.tid,30,30,26,gtime);
-    });
+function buildRecipes(){
+  const list=document.getElementById('recipe-list');
+  list.innerHTML='';
+  for(const rec of RECIPES){
+    const out=ORE_MAP[rec.out];
+    const canCraft=rec.inputs.every(inp=>(S.col[inp.id]||0)>=inp.n);
+    const div=document.createElement('div');
+    div.className=`recipe-card${canCraft?' can':''}`;
+
+    const ri=document.createElement('div');ri.className='rec-inputs';
+    for(const inp of rec.inputs){
+      const ore=ORE_MAP[inp.id];
+      const have=S.col[inp.id]||0;
+      const item=document.createElement('div');item.className='rec-item';
+      const c=document.createElement('canvas');c.width=36;c.height=36;
+      drawBall(c.getContext('2d'),ore.id,18,18,15,gtime);
+      const cn=document.createElement('div');cn.className='ri-name';cn.textContent=ore.name;
+      const cc=document.createElement('div');cc.className=`ri-cnt ${have>=inp.n?'ok':'no'}`;
+      cc.textContent=`${have}/${inp.n}`;
+      item.appendChild(c);item.appendChild(cn);item.appendChild(cc);ri.appendChild(item);
+    }
+    const arr=document.createElement('div');arr.className='rec-arrow';arr.textContent='→';
+    const ro=document.createElement('div');ro.className='rec-out';
+    const oc=document.createElement('canvas');oc.width=48;oc.height=48;
+    drawBall(oc.getContext('2d'),out.id,24,24,20,gtime);
+    const on=document.createElement('div');on.className='rec-name';on.textContent=out.name;
+    ro.appendChild(oc);ro.appendChild(on);
+    const btn=document.createElement('button');btn.className='craft-btn';btn.textContent='Forge';
+    btn.disabled=!canCraft;btn.onclick=()=>craft(rec.id);
+
+    div.appendChild(ri);div.appendChild(arr);div.appendChild(ro);div.appendChild(btn);
+    const desc=document.createElement('div');
+    desc.style.cssText='font-size:.6rem;color:var(--dim);font-family:var(--font2);width:100%;margin-top:4px;';
+    desc.textContent=rec.desc;div.appendChild(desc);
+    list.appendChild(div);
   }
+}
+
+function buildShop(){
+  // Upgrades
+  const ul=document.getElementById('upg-list');ul.innerHTML='';
+  for(const upg of UPGRADES){
+    const lvl=getUpgLvl(upg.id);
+    const maxed=lvl>=upg.maxLvl;
+    const cost=upg.cost(lvl);
+    const card=document.createElement('div');
+    card.className=`upg-card${maxed?' maxed':''}`;
+    card.innerHTML=`
+      <div class="upg-icon">${upg.icon}</div>
+      <div class="upg-body">
+        <div class="upg-name">${upg.name}</div>
+        <div class="upg-desc">${upg.desc(lvl)}</div>
+        <div class="upg-lvl">Level ${lvl}/${upg.maxLvl}</div>
+      </div>
+      <div class="upg-cost">
+        <div class="upg-cost-val">${maxed?'MAX':cost}</div>
+        <div class="upg-cost-lbl">${maxed?'':upg.type.toUpperCase()}</div>
+      </div>`;
+    if(!maxed) card.onclick=()=>buyUpgrade(upg.id);
+    ul.appendChild(card);
+  }
+  // Powerups
+  const pl=document.getElementById('pu-list');pl.innerHTML='';
+  for(const pu of POWERUPS){
+    const active=isPowerupActive(pu.id);
+    const rem=active?Math.ceil((S.powerups[pu.id]-Date.now())/1000):0;
+    const card=document.createElement('div');
+    card.className=`powerup-card${active?' pu-active':''}`;
+    card.style.borderColor=active?pu.color:'';
+    card.innerHTML=`
+      <div class="upg-icon" style="color:${pu.color}">${pu.icon}</div>
+      <div class="upg-body">
+        <div class="upg-name">${pu.name}</div>
+        <div class="upg-desc">${pu.desc}</div>
+        ${active?`<div class="upg-lvl" style="color:${pu.color}">${rem}s remaining</div>`:''}
+      </div>
+      <div class="upg-cost">
+        <div class="upg-cost-val" style="color:var(--green)">${pu.cost}</div>
+        <div class="upg-cost-lbl">DD</div>
+      </div>`;
+    if(!active) card.onclick=()=>buyPowerup(pu.id);
+    pl.appendChild(card);
+  }
+  // Level up
+  const lc=document.getElementById('lvlup-card');
+  const lvcost=S.level*500;
+  lc.innerHTML=`
+    <div class="card">
+      <div class="card-title">Level ${S.level} → ${S.level+1}</div>
+      <div style="font-size:.68rem;color:var(--dim);font-family:var(--font2);margin-bottom:8px">
+        Unlocks new ores, improves rare drop chances, and increases XP gain.<br>
+        Currently: ${Object.values(ALL_ORES).filter(o=>!o.crafted&&o.unlockLvl<=S.level).length} ore types available.
+        Next level unlocks: ${ALL_ORES.filter(o=>!o.crafted&&o.unlockLvl===S.level+1).map(o=>o.name).join(', ')||'No new ores'}
+      </div>
+      <button class="craft-btn" style="width:100%" onclick="levelUp()">Level Up — ${lvcost} DD</button>
+    </div>`;
+}
+
+function buildMissions(){
+  const list=document.getElementById('miss-list');list.innerHTML='';
+  const missions=getMissions();
+  for(const m of missions){
+    const {prog,claimed}=getMissionProgress(m);
+    const pct=Math.min(100,prog/m.target.n*100);
+    const done=prog>=m.target.n;
+    const card=document.createElement('div');card.className='miss-card';
+    const rewardStr=[m.reward.dd?`${m.reward.dd} DD`:'',m.reward.credits?`${m.reward.credits} Credits`:''].filter(Boolean).join(' + ');
+    card.innerHTML=`
+      <div class="miss-hdr">
+        <div class="miss-name">${m.name}</div>
+        <div class="miss-rew">+${rewardStr}</div>
+      </div>
+      <div class="miss-desc">${m.desc}</div>
+      <div class="miss-bar-wrap"><div class="miss-bar" style="width:${pct}%"></div></div>
+      <div class="miss-prog"><span>${prog}/${m.target.n}</span><span>${Math.floor(pct)}%</span></div>
+      ${done&&!claimed?`<button class="miss-claim" onclick="claimMission('${m.id}')">Claim Reward!</button>`:''}
+      ${claimed?`<div class="miss-done">✓ Completed</div>`:''}`;
+    list.appendChild(card);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════
+function updateUI(){
+  document.getElementById('hcreds').textContent=S.credits;
+  document.getElementById('hdd').textContent=S.dd;
+  document.getElementById('hlvl').textContent=S.level;
+  const needed=XP_PER_LEVEL(S.level);
+  document.getElementById('lvl-bar').style.width=`${Math.min(100,S.xp/needed*100)}%`;
+  document.getElementById('rbtn').disabled=S.credits<1;
+  updateBuffsBar();
+}
+
+let toastTimer=null;
+function toast(msg){
+  const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+let currentTab='mine';
+function switchTab(tab){
+  currentTab=tab;
+  ['mine','col','work','shop','miss'].forEach(t=>{
+    document.getElementById(`view-${t}`).className='view'+(t===tab?' on':'');
+    document.getElementById(`tab-${t}`).className='tab'+(t===tab?' on':'');
+  });
+  if(tab==='col') buildGallery();
+  if(tab==='work') buildRecipes();
+  if(tab==='shop') buildShop();
+  if(tab==='miss') buildMissions();
+}
+
+// Animate gallery canvases
+setInterval(()=>{
+  document.querySelectorAll('#ggrid canvas[data-tid]').forEach(c=>{
+    const ctx=c.getContext('2d');ctx.clearRect(0,0,56,56);
+    drawBall(ctx,c.dataset.tid,28,28,24,gtime);
+  });
 },50);
 
-// ─── TABS ─────────────────────────────────────────────────────────────
-function switchTab(tab){
-  document.getElementById('game').style.display=tab==='game'?'flex':'none';
-  document.getElementById('gal-view').style.display=tab==='gal'?'block':'none';
-  document.getElementById('tab-game').className='tab'+(tab==='game'?' on':'');
-  document.getElementById('tab-gal').className='tab'+(tab==='gal'?' on':'');
-  if(tab==='gal')buildGallery();
+// Refresh forge/shop when tabs are open
+setInterval(()=>{
+  if(currentTab==='work') buildRecipes();
+  if(currentTab==='shop') buildShop();
+},5000);
+
+// ══════════════════════════════════════════════
+//  SAVE / LOAD / OFFLINE CREDIT
+// ══════════════════════════════════════════════
+function save(){
+  try{ localStorage.setItem('nodnalb_v1', JSON.stringify(S)); }catch(e){}
 }
 
-// ─── PWA ──────────────────────────────────────────────────────────────
-// Manifest via blob
-const mf={name:'Ore Gacha',short_name:'OreGacha',start_url:'.',display:'standalone',
-  background_color:'#080604',theme_color:'#080604',
-  icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23c9a227'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E⛏%3C/text%3E%3C/svg%3E",sizes:'any',type:'image/svg+xml'}]};
-const ml=document.createElement('link');
-ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));
-document.head.appendChild(ml);
+function load(){
+  try{
+    const raw=localStorage.getItem('nodnalb_v1');
+    if(!raw) return;
+    const saved=JSON.parse(raw);
+    S={...S,...saved};
+    // offline credit calculation
+    const nowMs=Date.now();
+    const elapsedSec=Math.max(0,(nowMs - (S.lastSeen||nowMs))/1000);
+    const creditInterval=[30,24,18,12,8][getUpgLvl('credit_rate')];
+    const earned=Math.floor(elapsedSec/creditInterval);
+    if(earned>0){
+      S.credits+=earned;
+      if(earned>=1) setTimeout(()=>toast(`Welcome back! +${earned} credits earned while away.`),500);
+    }
+    S.lastSeen=nowMs;
+    save();
+  }catch(e){ console.warn('Load error',e); }
+}
 
-// Service worker
+// Credit timer – robust visibility-aware approach
+let creditAccum=0;
+let lastTickMs=Date.now();
+
+function tickCredit(){
+  const now=Date.now();
+  const delta=(now-lastTickMs)/1000;
+  lastTickMs=now;
+  creditAccum+=delta;
+  const interval=[30,24,18,12,8][getUpgLvl('credit_rate')];
+  while(creditAccum>=interval){
+    creditAccum-=interval;
+    S.credits++;
+    save();
+    updateUI();
+  }
+  const nextIn=Math.ceil(interval-creditAccum);
+  document.getElementById('roll-timer').textContent=`+1 in ${nextIn}s`;
+}
+setInterval(tickCredit, 1000);
+
+// On visibility change, record lastSeen so offline calc is correct next time
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){ S.lastSeen=Date.now(); save(); }
+  else {
+    // Re-apply offline credits for any gap
+    const nowMs=Date.now();
+    const elapsedSec=Math.max(0,(nowMs-(S.lastSeen||nowMs))/1000);
+    const interval=[30,24,18,12,8][getUpgLvl('credit_rate')];
+    const earned=Math.floor(elapsedSec/interval);
+    if(earned>0){ S.credits+=earned; toast(`+${earned} credits earned while away!`); updateUI(); }
+    S.lastSeen=nowMs; lastTickMs=nowMs; creditAccum=0; save();
+  }
+});
+
+// Powerup tick refresh
+setInterval(()=>{ updateBuffsBar(); if(currentTab==='shop') buildShop(); },1000);
+
+// ══════════════════════════════════════════════
+//  PWA
+// ══════════════════════════════════════════════
+const mf={name:'Nodnalb',short_name:'Nodnalb',start_url:'.',display:'standalone',
+  background_color:'#05080f',theme_color:'#05080f',
+  icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%2305080f'/%3E%3Ccircle cx='50' cy='50' r='35' fill='%23e8b84b'/%3E%3Ctext x='50' y='63' font-size='32' text-anchor='middle'%3E⛏%3C/text%3E%3C/svg%3E",sizes:'any',type:'image/svg+xml'}]};
+try{
+  const ml=document.createElement('link');ml.rel='manifest';
+  ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));
+  document.head.appendChild(ml);
+}catch(e){}
+
 if('serviceWorker' in navigator){
-  const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))));`;
-  navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
+  const sw=`
+    const CACHE='nodnalb-v1';
+    self.addEventListener('install',e=>{self.skipWaiting();});
+    self.addEventListener('activate',e=>{self.clients.claim();});
+    self.addEventListener('fetch',e=>{
+      if(e.request.method!=='GET') return;
+      e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{c.put(e.request,res.clone());return res;}))));
+    });`;
+  try{ navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{}); }catch(e){}
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────
-load();updateUI();
-loop();
+// ── INIT ──
+load(); updateUI(); checkMissBadge(); loop();
 </script>
 </body>
 </html>
