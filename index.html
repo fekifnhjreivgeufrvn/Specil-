@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#080604">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Ore Gacha</title>
+<title>nodnalb</title>
 <style>
 :root{--bg:#080604;--surf:#111009;--brd:#2a2016;--gold:#c9a227;--txt:#d4b896;--dim:#6b5a42;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -56,10 +56,10 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   cursor:default;border:1px solid;transition:transform .15s,box-shadow .15s;}
 .gi:hover{transform:translateY(-1px);}
 .gi canvas{display:block;margin:0 auto;}
-.gi .gn{font-size:.76rem;color:var(--txt);margin-top:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.5px;}
 .gi .gr{font-size:.62rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
 .gi .gc{font-size:.72rem;color:var(--gold);margin-top:4px;}
 .gi .cnt{font-size:.72rem;color:#c9f5ff;margin-top:2px;}
+.gi .gname{font-size:.68rem;color:var(--txt);margin-top:4px;letter-spacing:.5px;line-height:1.15;min-height:1.35em;}
 .sellbtn{width:100%;margin-top:8px;padding:7px 8px;border:none;border-radius:6px;
   background:linear-gradient(135deg,#123041,#2f718f 50%,#123041);color:#dff9ff;
   font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
@@ -72,24 +72,106 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 .r4{border-color:#f5a;box-shadow:0 0 6px rgba(255,80,180,.3);}
 .r5{border-color:#fd0;box-shadow:0 0 10px rgba(255,210,0,.4);}
 
-#hint{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
-  font-size:.65rem;color:var(--dim);pointer-events:none;white-space:nowrap;opacity:.7;}
+#inv-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
+#cycle-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#1a140f;border:1px solid #4c3a24;
+  border-radius:999px;padding:8px 12px;color:#eedfc4;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
+#cycle-pill b{font-size:1rem;color:var(--gold);}
+.modebtn{border:none;border-radius:999px;padding:8px 12px;cursor:pointer;
+  background:linear-gradient(135deg,#2d1f12,#5a3c0e 50%,#2d1f12);color:#f8ead0;
+  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;min-width:92px;}
+.modebtn.on{background:linear-gradient(135deg,#173447,#2f718f 50%,#173447);color:#dff9ff;}
+.modebtn:hover{filter:brightness(1.08);}
+
+.shophead{margin:14px 0 10px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:18px;}
+.shopcard{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;}
+.shopcard.locked{opacity:.62;filter:saturate(.75);}
+.shopcard.owned{border-color:#2d8f75;box-shadow:0 0 0 1px rgba(60,255,190,.12) inset;}
+.shopname{font-size:.9rem;letter-spacing:1px;color:var(--txt);}
+.shopmeta{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
+.shopeff{font-size:.72rem;color:#c9f5ff;line-height:1.3;}
+.shopreq{font-size:.68rem;color:var(--dim);line-height:1.35;}
+.shopbadge{display:inline-block;width:max-content;padding:3px 7px;border-radius:999px;
+  background:#0c1620;border:1px solid #2d5672;color:#b9edf6;font-size:.62rem;letter-spacing:1px;text-transform:uppercase;}
+.craftbtn{width:100%;margin-top:4px;padding:8px 10px;border:none;border-radius:6px;
+  background:linear-gradient(135deg,#4b2f09,#c9a227 55%,#4b2f09);color:#0b0603;
+  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;font-weight:bold;cursor:pointer;}
+.craftbtn:hover:not(:disabled){filter:brightness(1.1);}
+.craftbtn:disabled{opacity:.4;cursor:not-allowed;}
+
+.recipe{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.reqs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  align-items:flex-start;
+}
+.reqtok{
+  width:44px;
+  min-height:58px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-start;
+  gap:4px;
+  padding:5px 4px 4px;
+  border-radius:9px;
+  background:#0d0b08;
+  border:1px solid #3c3427;
+  color:#f5ead6;
+  position:relative;
+}
+.reqtok.locked{
+  opacity:.38;
+  filter:grayscale(1);
+}
+.reqtok canvas{
+  display:block;
+}
+.reqtok .qty{
+  font-size:.62rem;
+  line-height:1;
+  letter-spacing:1px;
+  color:var(--gold);
+}
+.reqtok .lbl{
+  font-size:.52rem;
+  line-height:1;
+  color:var(--dim);
+  text-transform:uppercase;
+  letter-spacing:.6px;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.recmeta{
+  font-size:.66rem;
+  color:var(--dim);
+  line-height:1.25;
+}
 
 /* Rarity popup */
 #popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
   background:var(--surf);border:1px solid var(--brd);border-radius:12px;
-  padding:20px 32px;text-align:center;z-index:100;
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+  padding:18px 24px;text-align:center;z-index:9999;
+  min-width:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  box-shadow:0 0 28px rgba(0,0,0,.35);transition:transform .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
 #popup.show{transform:translate(-50%,-50%) scale(1);}
-#pop-canvas{display:block;margin:0 auto 8px;}
-#pop-name{font-size:1.2rem;letter-spacing:2px;color:var(--gold);}
-#pop-rar{font-size:.75rem;color:var(--dim);margin-top:4px;letter-spacing:1px;}
+#pop-canvas{display:block;margin:0;}
+#pop-name{font-size:1.08rem;letter-spacing:1.5px;color:var(--gold);text-align:center;line-height:1.2;}
+#pop-rar{font-size:.75rem;color:var(--dim);margin-top:1px;letter-spacing:1px;text-align:center;}
+
 </style>
 </head>
 <body>
 
 <div id="hdr">
-  <div id="ttl">⛏ Ore Gacha</div>
+  <div id="ttl">⛏ nodnalb</div>
   <div id="cred-box">
     <span style="color:var(--gold)">◈</span>
     <span id="cred-count">10</span>
@@ -121,9 +203,18 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
       <div id="inv-title">Inventory</div>
       <div id="inv-sub">Sell ores for DD. Credits stay separate and keep powering rolls.</div>
     </div>
-    <div id="dd-pill">DD <b id="dd-pill-count">0</b></div>
+    <div id="inv-actions">
+      <div id="dd-pill">DD <b id="dd-pill-count">0</b></div>
+      <div id="cycle-pill">Cycle <b id="cycle-count">30s</b></div>
+      <button id="sellmode-btn" class="modebtn" onclick="toggleSellMode()">Sell 1</button>
+    </div>
   </div>
+
+  <div class="shophead">Ore Inventory</div>
   <div class="ggrid" id="ggrid"></div>
+
+  <div class="shophead">Workshop Upgrades</div>
+  <div class="shopgrid" id="shopgrid"></div>
 </div>
 
 <div id="popup">
@@ -183,6 +274,7 @@ const TYPES = [
   {id:'void',       name:'Void',        r:5, w:0.3, style:'void',   c:['#200035','#080015','#000000']},
   {id:'celestial',  name:'Celestial',   r:5, w:0.25,style:'cosmic', c:['#1a0828','#080420','#020108']},
   {id:'singularity',name:'Singularity', r:5, w:0.2, style:'void',   c:['#0c0015','#040007','#000000']},
+  {id:'mystery',    name:'Mystery',     r:4, w:0.28,style:'mystery', c:['#f2d27a','#9b6c1d','#3c2400']},
   {id:'aeon',       name:'Aeon',        r:5, w:0.15,style:'cosmic', c:['#0d1336','#17082f','#020108']},
   {id:'starcore',   name:'Starcore',    r:5, w:0.1, style:'energy', c:['#ffe8ff','#7cf8ff','#ff7ad9']},
 ];
@@ -367,6 +459,21 @@ const STYLES = {
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     drawSpecks(ctx,cx,cy,R,6,.18,['#ffffff','#ffccff','#a8ffff']);
   },
+  mystery(ctx,cx,cy,R,t,tp){
+    const c=tp.c;
+    const pulse=.78+.22*Math.sin(t*5);
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
+    addStop(g, [[0,`rgba(255,245,180,${pulse})`], [.42,c[0]], [1,c[2]]]);
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(255,235,170,.75)';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(cx,cy,R*.62,0,Math.PI*2);ctx.stroke();
+    ctx.beginPath();ctx.arc(cx,cy,R*.88,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='rgba(255,255,255,.55)';
+    ctx.font=`bold ${Math.max(12,R*.9)}px Georgia, serif`;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText('?',cx,cy+1);
+  },
 };
 function drawBall(ctx, id, cx, cy, R, t=0){
   const tp=TYPES.find(x=>x.id===id) || TYPES[0];
@@ -491,8 +598,17 @@ cv.addEventListener('click',e=>{
       const dx=b.x-x, dy=b.y-y;
       if(dx*dx+dy*dy<b.r*b.r){
         b.collected=true;
-        addToCollection(b.type);
-        showPopup(b.type, b.x, b.y);
+        if(b.type.id === 'mystery'){
+          const gain = 5 + Math.floor(Math.random()*26); // 5-30 inclusive
+          S.credits += gain;
+          S.mysteryLock = {grant: gain, spent: 0};
+          save();
+          updateUI();
+          showPopup(b.type, {title:`BONUS +${gain} CREDITS`, color:'#7cf8ff', sub:'Mystery reward'});
+        }else{
+          addToCollection(b.type);
+          showPopup(b.type);
+        }
         break;
       }
     }
@@ -506,43 +622,145 @@ cv.addEventListener('touchstart',e=>{
 
 // ─── POPUP ────────────────────────────────────────────────────────────
 let popTimer=null;
-function showPopup(type, bx, by){
+function showPopup(type, opts={}){
   const pop=document.getElementById('popup');
   const pc=document.getElementById('pop-canvas');
   const ctx=pc.getContext('2d');
   ctx.clearRect(0,0,80,80);
   drawBall(ctx,type.id,40,40,36,gtime);
-  document.getElementById('pop-name').textContent=type.name.toUpperCase();
-  document.getElementById('pop-name').style.color=['#888','#bbb','#4ac','#88f','#f5a','#fd0'][type.r];
-  document.getElementById('pop-rar').textContent=RNAMES[type.r];
+  const nameEl=document.getElementById('pop-name');
+  const rarEl=document.getElementById('pop-rar');
+  nameEl.textContent=(opts.title || type.name).toUpperCase();
+  nameEl.style.color=opts.color || ['#888','#bbb','#4ac','#88f','#f5a','#fd0'][type.r] || '#d4b896';
+  rarEl.textContent=opts.sub || RNAMES[type.r];
   pop.classList.add('show');
   clearTimeout(popTimer);
   popTimer=setTimeout(()=>pop.classList.remove('show'),1600);
 }
 
 // ─── STATE & CREDITS ──────────────────────────────────────────────────
-let S={credits:10,dd:0,col:{},lastSeen:Date.now()};
+let S={credits:10,dd:0,col:{},upgrades:[],sellAllMode:false,mysteryLock:null,lastSeen:Date.now(),nextIn:30};
+let nextIn=30;
 
-function save(){S.lastSeen=Date.now();try{localStorage.setItem('ore_g1',JSON.stringify(S));}catch(e){}}
+const UPGRADE_ITEMS = [
+  {id:'clockwork',   name:'Clockwork Module',  tier:'I',   reduce:3, dd:25,  mats:{coal:4, iron:2, copper:2}, effect:'Reduces credit wait by 3s.'},
+  {id:'brassgov',    name:'Brass Governor',    tier:'II',  reduce:3, dd:50,  mats:{clockwork:1, tin:10, zinc:10, gold:4}, effect:'Reduces credit wait by 3s.'},
+  {id:'silvercap',   name:'Silver Capacitor',  tier:'III', reduce:4, dd:80,  mats:{brassgov:1, silver:12, quartz:8, lapis:4}, effect:'Reduces credit wait by 4s.'},
+  {id:'arcreg',      name:'Arcane Regulator',  tier:'IV',  reduce:4, dd:140, mats:{silvercap:1, amethyst:6, topaz:4, redstone:12}, effect:'Reduces credit wait by 4s.'},
+  {id:'corestab',    name:'Core Stabilizer',   tier:'V',   reduce:3, dd:260, mats:{arcreg:1, diamond:6, titanium:4, emerald:3}, effect:'Reduces credit wait by 3s.'},
+  {id:'chrono',      name:'Chrono Furnace',    tier:'VI',  reduce:3, dd:500, mats:{corestab:1, opal:3, netherite:2, void:1, celestial:1}, effect:'Reduces credit wait by 3s.'},
+  {id:'singularity', name:'Singularity Engine', tier:'VII',reduce:2, dd:900, mats:{chrono:1, singularity:1, aeon:1, starcore:1, plutonium:4}, effect:'Reduces credit wait by 2s.'},
+];
+
+function getOreLabel(id){
+  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
+  const t=TYPES.find(x=>x.id===id);
+  return t?t.name:id;
+}
+const UPGRADE_INDEX = Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
+
+function getCraftedCount(){ return Array.isArray(S.upgrades) ? S.upgrades.length : 0; }
+
+function getOwnedAmount(id){
+  if(id in UPGRADE_INDEX) return (S.upgrades||[]).includes(id) ? 1 : 0;
+  return S.col[id] || 0;
+}
+
+function hasRequirement(id, amt){
+  return getOwnedAmount(id) >= amt;
+}
+
+function getReqLabel(id){
+  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
+  const t=TYPES.find(x=>x.id===id);
+  return t ? t.name : id;
+}
+
+function getCreditInterval(){
+  const reduce = (S.upgrades||[]).reduce((sum,id)=>sum + (UPGRADE_INDEX[id]?.reduce||0),0);
+  return Math.max(8, 30 - reduce);
+}
+
+
+function getMysteryLock(){
+  if(!S.mysteryLock || typeof S.mysteryLock!=='object') return null;
+  if(!Number.isFinite(S.mysteryLock.grant) || S.mysteryLock.grant<=0) return null;
+  if(!Number.isFinite(S.mysteryLock.spent)) S.mysteryLock.spent = 0;
+  if(S.mysteryLock.spent >= S.mysteryLock.grant){
+    S.mysteryLock = null;
+    return null;
+  }
+  return S.mysteryLock;
+}
+
+function mysteryAllowed(){
+  return !getMysteryLock();
+}
+
+function pickWithoutMystery(){
+  let t = pick();
+  if(t.id==='mystery'){
+    const non = TYPES.filter(x=>x.id!=='mystery');
+    const total = non.reduce((s,x)=>s+x.w,0);
+    let v=Math.random()*total;
+    for(const x of non){ v-=x.w; if(v<=0) return x; }
+    return non[0] || TYPES[0];
+  }
+  return t;
+}
+
+function syncTimerToInterval(){
+  const iv = getCreditInterval();
+  if(!Number.isFinite(nextIn) || nextIn<=0) nextIn = iv;
+  nextIn = Math.min(nextIn, iv);
+  S.nextIn = nextIn;
+}
+
+function save(){
+  S.lastSeen=Date.now();
+  S.nextIn=nextIn;
+  try{localStorage.setItem('ore_g1',JSON.stringify(S));}catch(e){}
+}
+
 function load(){
   try{
     const raw=localStorage.getItem('ore_g1');
     if(raw){
       const parsed=JSON.parse(raw);
       S={...S,...parsed,col:{...S.col,...(parsed.col||{})}};
+      if(!Array.isArray(S.upgrades)) S.upgrades=[];
+      if(typeof S.sellAllMode!=='boolean') S.sellAllMode=false;
       if(typeof S.dd!=='number' || !Number.isFinite(S.dd)) S.dd=0;
       if(typeof S.credits!=='number' || !Number.isFinite(S.credits)) S.credits=10;
       if(typeof S.lastSeen!=='number' || !Number.isFinite(S.lastSeen)) S.lastSeen=Date.now();
+      if(S.mysteryLock && typeof S.mysteryLock==='object'){
+        if(!Number.isFinite(S.mysteryLock.grant) || S.mysteryLock.grant<=0 || S.mysteryLock.spent>=S.mysteryLock.grant){
+          S.mysteryLock = null;
+        }else{
+          if(!Number.isFinite(S.mysteryLock.spent)) S.mysteryLock.spent = 0;
+        }
+      }else{
+        S.mysteryLock = null;
+      }
       const secs=(Date.now()-S.lastSeen)/1000;
-      const earn=Math.floor(secs/30);
+      const earn=Math.floor(secs/Math.max(1,getCreditInterval()));
       if(earn>0){S.credits+=earn;S.lastSeen=Date.now();}
+      nextIn = typeof S.nextIn==='number' && Number.isFinite(S.nextIn) ? S.nextIn : getCreditInterval();
+      syncTimerToInterval();
+    } else {
+      nextIn = getCreditInterval();
+      syncTimerToInterval();
     }
-  }catch(e){}
+  }catch(e){
+    nextIn = getCreditInterval();
+    syncTimerToInterval();
+  }
 }
 
 function addToCollection(type){
   S.col[type.id]=(S.col[type.id]||0)+1;
   save(); updateUI();
+  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); }
 }
 
 function sellOre(id, amount=1){
@@ -554,13 +772,53 @@ function sellOre(id, amount=1){
   S.dd += orePrice(type)*amount;
   save();
   updateUI();
-  buildInventory();
+  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); }
   return true;
 }
 
-function sellAllOre(id){
-  const have=S.col[id]||0;
-  if(have>0) sellOre(id, have);
+function toggleSellMode(){
+  S.sellAllMode=!S.sellAllMode;
+  save(); updateUI();
+  buildInventory();
+}
+
+function canCraftUpgrade(up){
+  const idx = UPGRADE_ITEMS.findIndex(u=>u.id===up.id);
+  if(idx!==getCraftedCount()) return false;
+  if(S.dd < up.dd) return false;
+  for(const [id,amt] of Object.entries(up.mats)){
+    if(id in UPGRADE_INDEX){
+      if(!S.upgrades.includes(id)) return false;
+    }else if((S.col[id]||0) < amt){
+      return false;
+    }
+  }
+  return true;
+}
+
+function consumeMaterials(mats){
+  for(const [id,amt] of Object.entries(mats)){
+    if(id in UPGRADE_INDEX) continue;
+    S.col[id] = (S.col[id]||0) - amt;
+    if(S.col[id] <= 0) delete S.col[id];
+  }
+}
+
+function craftUpgrade(id){
+  const up = UPGRADE_INDEX[id];
+  if(!up) return false;
+  const idx = UPGRADE_ITEMS.findIndex(u=>u.id===id);
+  if(idx!==getCraftedCount()) return false;
+  if(!canCraftUpgrade(up)) return false;
+
+  S.dd -= up.dd;
+  consumeMaterials(up.mats);
+  S.upgrades.push(id);
+  syncTimerToInterval();
+  save(); updateUI();
+  buildInventory();
+  buildWorkshop();
+  return true;
 }
 
 function updateUI(){
@@ -568,26 +826,48 @@ function updateUI(){
   document.getElementById('dd-count').textContent=S.dd;
   const pill=document.getElementById('dd-pill-count');
   if(pill) pill.textContent=S.dd;
+  const cyc=document.getElementById('cycle-count');
+  if(cyc) cyc.textContent=`${getCreditInterval()}s`;
+  const sellBtn=document.getElementById('sellmode-btn');
+  if(sellBtn){
+    sellBtn.textContent=S.sellAllMode?'Sell All':'Sell 1';
+    sellBtn.classList.toggle('on', S.sellAllMode);
+  }
   document.getElementById('rbtn').disabled=S.credits<1;
+  document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
 }
 
 // Credit timer
-let nextIn=30;
 setInterval(()=>{
+  const iv = getCreditInterval();
+  if(nextIn > iv) nextIn = iv;
   nextIn--;
-  if(nextIn<=0){nextIn=30;S.credits++;save();updateUI();}
-  document.getElementById('tmr').textContent=`+1 in ${nextIn}s`;
+  if(nextIn<=0){
+    nextIn=iv;
+    S.credits++;
+    save();
+    updateUI();
+  }else{
+    S.nextIn = nextIn;
+  }
+  document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
   updateUI();
 },1000);
 
 // ─── ROLL ─────────────────────────────────────────────────────────────
 function roll(){
   if(S.credits<1)return;
-  S.credits--;save();updateUI();
-  balls.push(mkBall(pick()));
+  S.credits--;
+  if(getMysteryLock()){
+    S.mysteryLock.spent = Math.min(S.mysteryLock.grant, (S.mysteryLock.spent||0)+1);
+    if(S.mysteryLock.spent >= S.mysteryLock.grant) S.mysteryLock = null;
+  }
+  save();updateUI();
+  const type = mysteryAllowed() ? pick() : pickWithoutMystery();
+  balls.push(mkBall(type));
 }
 
-// ─── INVENTORY ───────────────────────────────────────────────────────
+// ─── INVENTORY / SHOP ────────────────────────────────────────────────
 function buildInventory(){
   const grid=document.getElementById('ggrid');
   grid.innerHTML='';
@@ -608,25 +888,159 @@ function buildInventory(){
     drawBall(ctx,type.id,30,30,26,gtime);
     div.appendChild(c);
 
-    const nm=document.createElement('div');nm.className='gn';nm.textContent=type.name;
     const gr=document.createElement('div');gr.className='gr';gr.textContent=RNAMES[type.r];
     const gc=document.createElement('div');gc.className='gc';gc.textContent=`${price} DD each`;
     const cntEl=document.createElement('div');cntEl.className='cnt';cntEl.textContent=`Owned ×${cnt}`;
+    const nameEl=document.createElement('div');nameEl.className='gname';nameEl.textContent=type.name;
 
     const btn=document.createElement('button');
     btn.className='sellbtn';
-    btn.textContent='Sell 1';
+    btn.textContent=S.sellAllMode ? 'Sell All' : 'Sell 1';
     btn.disabled=cnt<1;
     btn.addEventListener('click',()=>{
-      sellOre(type.id,1);
+      sellOre(type.id, S.sellAllMode ? (S.col[type.id]||0) : 1);
     });
 
-    div.appendChild(nm);
     div.appendChild(gr);
     div.appendChild(gc);
     div.appendChild(cntEl);
+    div.appendChild(nameEl);
     div.appendChild(btn);
     grid.appendChild(div);
+  }
+}
+
+function makeMiniBall(id, size=28){
+  const c=document.createElement('canvas');
+  c.width=size; c.height=size;
+  const ctx=c.getContext('2d');
+  const type = TYPES.find(t=>t.id===id);
+  if(type){
+    drawBall(ctx, id, size/2, size/2, size/2 - 2, gtime);
+  }else{
+    ctx.clearRect(0,0,size,size);
+    const g=ctx.createRadialGradient(size*0.3,size*0.3,0,size/2,size/2,size/2);
+    g.addColorStop(0,'#4b4f57');
+    g.addColorStop(.5,'#2b2f35');
+    g.addColorStop(1,'#111418');
+    ctx.fillStyle=g;
+    ctx.beginPath();ctx.arc(size/2,size/2,size/2-2,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,.75)';
+    ctx.font=`bold ${Math.max(10, size*0.28)}px Georgia, serif`;
+    ctx.textAlign='center';
+    ctx.textBaseline='middle';
+    ctx.fillText('⚙', size/2, size/2+1);
+  }
+  return c;
+}
+
+function makeRecipeToken(id, amt){
+  const tok=document.createElement('div');
+  tok.className='reqtok';
+  const enough = hasRequirement(id, amt);
+  if(!enough) tok.classList.add('locked');
+
+  const icon = makeMiniBall(id, 28);
+  tok.appendChild(icon);
+
+  const qty=document.createElement('div');
+  qty.className='qty';
+  qty.textContent=`×${amt}`;
+  tok.appendChild(qty);
+
+  const lbl=document.createElement('div');
+  lbl.className='lbl';
+  lbl.textContent=getReqLabel(id);
+  tok.appendChild(lbl);
+
+  return tok;
+}
+
+function buildRecipeRow(mats){
+  const wrap=document.createElement('div');
+  wrap.className='recipe';
+  const row=document.createElement('div');
+  row.className='reqs';
+  for(const [id,amt] of Object.entries(mats)){
+    row.appendChild(makeRecipeToken(id, amt));
+  }
+  wrap.appendChild(row);
+  return wrap;
+}
+
+function recipeToText(mats){
+  return Object.entries(mats).map(([id,amt])=>{
+    const name = getOreLabel(id);
+    return `${amt} ${name}`;
+  }).join(' · ');
+}
+
+function buildWorkshop(){
+  const grid=document.getElementById('shopgrid');
+  grid.innerHTML='';
+  const crafted = getCraftedCount();
+
+  for(let i=0;i<UPGRADE_ITEMS.length;i++){
+    const up=UPGRADE_ITEMS[i];
+    const owned = S.upgrades.includes(up.id);
+    const active = i===crafted;
+    const locked = i>crafted;
+
+    const card=document.createElement('div');
+    card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
+
+    const badge=document.createElement('div');
+    badge.className='shopbadge';
+    badge.textContent = owned ? 'Crafted' : (active ? 'Available' : `Tier ${up.tier}`);
+    card.appendChild(badge);
+
+    const name=document.createElement('div');
+    name.className='shopname';
+    name.textContent = up.name;
+    card.appendChild(name);
+
+    const meta=document.createElement('div');
+    meta.className='shopmeta';
+    meta.textContent = `Tier ${up.tier} · -${up.reduce}s credit wait`;
+    card.appendChild(meta);
+
+    const eff=document.createElement('div');
+    eff.className='shopeff';
+    eff.textContent = up.effect;
+    card.appendChild(eff);
+
+    const req=document.createElement('div');
+    req.className='shopreq';
+    if(owned){
+      req.textContent = 'Already installed. The factory cycle bonus is active.';
+    }else if(locked){
+      req.textContent = `Locked. Craft ${UPGRADE_ITEMS[i-1].name} first.`;
+    }else{
+      const recipeWrap = buildRecipeRow(up.mats);
+      req.appendChild(recipeWrap);
+      const metaLine = document.createElement('div');
+      metaLine.className='recmeta';
+      metaLine.textContent = `Recipe icons show what you need. Grey means you do not have enough yet. Cost: ${up.dd} DD`;
+      req.appendChild(metaLine);
+    }
+    card.appendChild(req);
+
+    const btn=document.createElement('button');
+    btn.className='craftbtn';
+    if(owned){
+      btn.textContent='Crafted';
+      btn.disabled=true;
+    }else if(locked){
+      btn.textContent='Locked';
+      btn.disabled=true;
+    }else{
+      btn.textContent=`Craft for ${up.dd} DD`;
+      btn.disabled=!canCraftUpgrade(up);
+      btn.addEventListener('click',()=>craftUpgrade(up.id));
+    }
+    card.appendChild(btn);
+
+    grid.appendChild(card);
   }
 }
 
@@ -647,12 +1061,12 @@ function switchTab(tab){
   document.getElementById('gal-view').style.display=tab==='gal'?'block':'none';
   document.getElementById('tab-game').className='tab'+(tab==='game'?' on':'');
   document.getElementById('tab-gal').className='tab'+(tab==='gal'?' on':'');
-  if(tab==='gal')buildInventory();
+  if(tab==='gal'){buildInventory();buildWorkshop();}
 }
 
 // ─── PWA ──────────────────────────────────────────────────────────────
 // Manifest via blob
-const mf={name:'Ore Gacha',short_name:'OreGacha',start_url:'.',display:'standalone',
+const mf={name:'nodnalb',short_name:'nodnalb',start_url:'.',display:'standalone',
   background_color:'#080604',theme_color:'#080604',
   icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23c9a227'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E⛏%3C/text%3E%3C/svg%3E",sizes:'any',type:'image/svg+xml'}]};
 const ml=document.createElement('link');
