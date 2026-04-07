@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#080604">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>nodnalb</title>
+<title>Ore Gacha</title>
 <style>
 :root{--bg:#080604;--surf:#111009;--brd:#2a2016;--gold:#c9a227;--txt:#d4b896;--dim:#6b5a42;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -59,7 +59,6 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 .gi .gr{font-size:.62rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
 .gi .gc{font-size:.72rem;color:var(--gold);margin-top:4px;}
 .gi .cnt{font-size:.72rem;color:#c9f5ff;margin-top:2px;}
-.gi .gname{font-size:.68rem;color:var(--txt);margin-top:4px;letter-spacing:.5px;line-height:1.15;min-height:1.35em;}
 .sellbtn{width:100%;margin-top:8px;padding:7px 8px;border:none;border-radius:6px;
   background:linear-gradient(135deg,#123041,#2f718f 50%,#123041);color:#dff9ff;
   font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
@@ -171,10 +170,10 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 <body>
 
 <div id="hdr">
-  <div id="ttl">⛏ nodnalb</div>
+  <div id="ttl">⛏ Ore Gacha</div>
   <div id="cred-box">
     <span style="color:var(--gold)">◈</span>
-    <span id="cred-count">10</span>
+    <span id="cred-count">10 / 20</span>
     <span style="color:#7cf8ff">DD</span>
     <span id="dd-count">0</span>
     <span id="tmr"></span>
@@ -215,6 +214,9 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 
   <div class="shophead">Workshop Upgrades</div>
   <div class="shopgrid" id="shopgrid"></div>
+
+  <div class="shophead">Credit Capacity Upgrades</div>
+  <div class="shopgrid" id="capgrid"></div>
 </div>
 
 <div id="popup">
@@ -600,7 +602,7 @@ cv.addEventListener('click',e=>{
         b.collected=true;
         if(b.type.id === 'mystery'){
           const gain = 5 + Math.floor(Math.random()*26); // 5-30 inclusive
-          S.credits += gain;
+          addCredits(gain);
           S.mysteryLock = {grant: gain, spent: 0};
           save();
           updateUI();
@@ -639,7 +641,7 @@ function showPopup(type, opts={}){
 }
 
 // ─── STATE & CREDITS ──────────────────────────────────────────────────
-let S={credits:10,dd:0,col:{},upgrades:[],sellAllMode:false,mysteryLock:null,lastSeen:Date.now(),nextIn:30};
+let S={credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],sellAllMode:false,mysteryLock:null,lastSeen:Date.now(),nextIn:30};
 let nextIn=30;
 
 const UPGRADE_ITEMS = [
@@ -653,15 +655,29 @@ const UPGRADE_ITEMS = [
 ];
 
 function getOreLabel(id){
-  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
   const t=TYPES.find(x=>x.id===id);
-  return t?t.name:id;
+  if(t) return t.name;
+  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
+  return id;
 }
+const CAP_CREDIT_ITEMS = [
+  {id:'vault1', name:'Copper Vault',    tier:'I',   max:50,   dd:20,  mats:{coal:8, copper:4, iron:2}, effect:'Raises max credits to 50.'},
+  {id:'vault2', name:'Brass Vault',     tier:'II',  max:100,  dd:45,  mats:{tin:8, zinc:6, copper:6, silver:2}, effect:'Raises max credits to 100.'},
+  {id:'vault3', name:'Silver Vault',    tier:'III', max:200,  dd:90,  mats:{gold:10, silver:8, quartz:4}, effect:'Raises max credits to 200.'},
+  {id:'vault4', name:'Gold Vault',      tier:'IV',  max:350,  dd:160, mats:{emerald:4, diamond:3, titanium:3}, effect:'Raises max credits to 350.'},
+  {id:'vault5', name:'Platinum Vault',  tier:'V',   max:500,  dd:280, mats:{opal:2, netherite:2, iridium:2}, effect:'Raises max credits to 500.'},
+  {id:'vault6', name:'Diamond Vault',   tier:'VI',  max:750,  dd:450, mats:{adamantite:3, auric:2, celestial:1}, effect:'Raises max credits to 750.'},
+  {id:'vault7', name:'Apex Vault',      tier:'VII', max:1000, dd:700, mats:{void:1, aeon:1, starcore:1, plutonium:2, singularity:1}, effect:'Raises max credits to 1000.'},
+];
+const CAP_CREDIT_INDEX = Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
+
 const UPGRADE_INDEX = Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
+const ORE_INDEX = Object.fromEntries(TYPES.map(t=>[t.id,t]));
 
 function getCraftedCount(){ return Array.isArray(S.upgrades) ? S.upgrades.length : 0; }
 
 function getOwnedAmount(id){
+  if(ORE_INDEX[id]) return S.col[id] || 0;
   if(id in UPGRADE_INDEX) return (S.upgrades||[]).includes(id) ? 1 : 0;
   return S.col[id] || 0;
 }
@@ -671,14 +687,29 @@ function hasRequirement(id, amt){
 }
 
 function getReqLabel(id){
+  if(ORE_INDEX[id]) return ORE_INDEX[id].name;
   if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
-  const t=TYPES.find(x=>x.id===id);
-  return t ? t.name : id;
+  return id;
 }
 
 function getCreditInterval(){
   const reduce = (S.upgrades||[]).reduce((sum,id)=>sum + (UPGRADE_INDEX[id]?.reduce||0),0);
   return Math.max(8, 30 - reduce);
+}
+
+function getCreditCapTier(){
+  return Array.isArray(S.capUpgrades) ? S.capUpgrades.length : 0;
+}
+
+function getMaxCredits(){
+  const tier = getCreditCapTier();
+  if(tier <= 0) return 20;
+  return CAP_CREDIT_ITEMS[Math.min(tier, CAP_CREDIT_ITEMS.length) - 1]?.max ?? 20;
+}
+
+function addCredits(amount){
+  if(!Number.isFinite(amount) || amount <= 0) return;
+  S.credits = Math.min(getMaxCredits(), (S.credits||0) + amount);
 }
 
 
@@ -729,9 +760,11 @@ function load(){
       const parsed=JSON.parse(raw);
       S={...S,...parsed,col:{...S.col,...(parsed.col||{})}};
       if(!Array.isArray(S.upgrades)) S.upgrades=[];
+      if(!Array.isArray(S.capUpgrades)) S.capUpgrades=[];
       if(typeof S.sellAllMode!=='boolean') S.sellAllMode=false;
       if(typeof S.dd!=='number' || !Number.isFinite(S.dd)) S.dd=0;
       if(typeof S.credits!=='number' || !Number.isFinite(S.credits)) S.credits=10;
+      S.credits = Math.min(S.credits, getMaxCredits());
       if(typeof S.lastSeen!=='number' || !Number.isFinite(S.lastSeen)) S.lastSeen=Date.now();
       if(S.mysteryLock && typeof S.mysteryLock==='object'){
         if(!Number.isFinite(S.mysteryLock.grant) || S.mysteryLock.grant<=0 || S.mysteryLock.spent>=S.mysteryLock.grant){
@@ -744,7 +777,7 @@ function load(){
       }
       const secs=(Date.now()-S.lastSeen)/1000;
       const earn=Math.floor(secs/Math.max(1,getCreditInterval()));
-      if(earn>0){S.credits+=earn;S.lastSeen=Date.now();}
+      if(earn>0){addCredits(earn);S.lastSeen=Date.now();}
       nextIn = typeof S.nextIn==='number' && Number.isFinite(S.nextIn) ? S.nextIn : getCreditInterval();
       syncTimerToInterval();
     } else {
@@ -760,7 +793,7 @@ function load(){
 function addToCollection(type){
   S.col[type.id]=(S.col[type.id]||0)+1;
   save(); updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); }
+  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); buildCapWorkshop(); }
 }
 
 function sellOre(id, amount=1){
@@ -772,7 +805,7 @@ function sellOre(id, amount=1){
   S.dd += orePrice(type)*amount;
   save();
   updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); }
+  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); buildCapWorkshop(); }
   return true;
 }
 
@@ -787,17 +820,18 @@ function canCraftUpgrade(up){
   if(idx!==getCraftedCount()) return false;
   if(S.dd < up.dd) return false;
   for(const [id,amt] of Object.entries(up.mats)){
-    if(id in UPGRADE_INDEX){
-      if(!S.upgrades.includes(id)) return false;
-    }else if((S.col[id]||0) < amt){
-      return false;
-    }
+    if(!hasRequirement(id, amt)) return false;
   }
   return true;
 }
 
 function consumeMaterials(mats){
   for(const [id,amt] of Object.entries(mats)){
+    if(ORE_INDEX[id]){
+      S.col[id] = (S.col[id]||0) - amt;
+      if(S.col[id] <= 0) delete S.col[id];
+      continue;
+    }
     if(id in UPGRADE_INDEX) continue;
     S.col[id] = (S.col[id]||0) - amt;
     if(S.col[id] <= 0) delete S.col[id];
@@ -818,11 +852,41 @@ function craftUpgrade(id){
   save(); updateUI();
   buildInventory();
   buildWorkshop();
+  buildCapWorkshop();
+  return true;
+}
+
+function getCapCraftedCount(){ return Array.isArray(S.capUpgrades) ? S.capUpgrades.length : 0; }
+
+function canCraftCapUpgrade(up){
+  const idx = CAP_CREDIT_ITEMS.findIndex(u=>u.id===up.id);
+  if(idx!==getCapCraftedCount()) return false;
+  if(S.dd < up.dd) return false;
+  for(const [id,amt] of Object.entries(up.mats)){
+    if((S.col[id]||0) < amt) return false;
+  }
+  return true;
+}
+
+function craftCapUpgrade(id){
+  const up = CAP_CREDIT_INDEX[id];
+  if(!up) return false;
+  const idx = CAP_CREDIT_ITEMS.findIndex(u=>u.id===id);
+  if(idx!==getCapCraftedCount()) return false;
+  if(!canCraftCapUpgrade(up)) return false;
+
+  S.dd -= up.dd;
+  consumeMaterials(up.mats);
+  S.capUpgrades.push(id);
+  S.credits = Math.min(S.credits, getMaxCredits());
+  save(); updateUI();
+  buildInventory();
+  buildCapWorkshop();
   return true;
 }
 
 function updateUI(){
-  document.getElementById('cred-count').textContent=S.credits;
+  document.getElementById('cred-count').textContent=`${S.credits} / ${getMaxCredits()}`;
   document.getElementById('dd-count').textContent=S.dd;
   const pill=document.getElementById('dd-pill-count');
   if(pill) pill.textContent=S.dd;
@@ -844,7 +908,7 @@ setInterval(()=>{
   nextIn--;
   if(nextIn<=0){
     nextIn=iv;
-    S.credits++;
+    addCredits(1);
     save();
     updateUI();
   }else{
@@ -891,7 +955,6 @@ function buildInventory(){
     const gr=document.createElement('div');gr.className='gr';gr.textContent=RNAMES[type.r];
     const gc=document.createElement('div');gc.className='gc';gc.textContent=`${price} DD each`;
     const cntEl=document.createElement('div');cntEl.className='cnt';cntEl.textContent=`Owned ×${cnt}`;
-    const nameEl=document.createElement('div');nameEl.className='gname';nameEl.textContent=type.name;
 
     const btn=document.createElement('button');
     btn.className='sellbtn';
@@ -904,7 +967,6 @@ function buildInventory(){
     div.appendChild(gr);
     div.appendChild(gc);
     div.appendChild(cntEl);
-    div.appendChild(nameEl);
     div.appendChild(btn);
     grid.appendChild(div);
   }
@@ -1044,6 +1106,76 @@ function buildWorkshop(){
   }
 }
 
+function buildCapWorkshop(){
+  const grid=document.getElementById('capgrid');
+  if(!grid) return;
+  grid.innerHTML='';
+  const crafted = getCapCraftedCount();
+
+  for(let i=0;i<CAP_CREDIT_ITEMS.length;i++){
+    const up=CAP_CREDIT_ITEMS[i];
+    const owned = S.capUpgrades.includes(up.id);
+    const active = i===crafted;
+    const locked = i>crafted;
+
+    const card=document.createElement('div');
+    card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
+
+    const badge=document.createElement('div');
+    badge.className='shopbadge';
+    badge.textContent = owned ? 'Crafted' : (active ? 'Available' : `Tier ${up.tier}`);
+    card.appendChild(badge);
+
+    const name=document.createElement('div');
+    name.className='shopname';
+    name.textContent = up.name;
+    card.appendChild(name);
+
+    const meta=document.createElement('div');
+    meta.className='shopmeta';
+    meta.textContent = `Tier ${up.tier} · Max ${up.max} credits`;
+    card.appendChild(meta);
+
+    const eff=document.createElement('div');
+    eff.className='shopeff';
+    eff.textContent = up.effect;
+    card.appendChild(eff);
+
+    const req=document.createElement('div');
+    req.className='shopreq';
+    if(owned){
+      req.textContent = `Installed. Credit cap is now ${getMaxCredits()}.`;
+    }else if(locked){
+      req.textContent = `Locked. Craft ${CAP_CREDIT_ITEMS[i-1].name} first.`;
+    }else{
+      const recipeWrap = buildRecipeRow(up.mats);
+      req.appendChild(recipeWrap);
+      const metaLine = document.createElement('div');
+      metaLine.className='recmeta';
+      metaLine.textContent = `Raises your credit cap to ${up.max}. Cost: ${up.dd} DD`;
+      req.appendChild(metaLine);
+    }
+    card.appendChild(req);
+
+    const btn=document.createElement('button');
+    btn.className='craftbtn';
+    if(owned){
+      btn.textContent='Crafted';
+      btn.disabled=true;
+    }else if(locked){
+      btn.textContent='Locked';
+      btn.disabled=true;
+    }else{
+      btn.textContent=`Craft for ${up.dd} DD`;
+      btn.disabled=!canCraftCapUpgrade(up);
+      btn.addEventListener('click',()=>craftCapUpgrade(up.id));
+    }
+    card.appendChild(btn);
+
+    grid.appendChild(card);
+  }
+}
+
 // Animate inventory
 setInterval(()=>{
   if(document.getElementById('gal-view').style.display==='block'){
@@ -1061,12 +1193,12 @@ function switchTab(tab){
   document.getElementById('gal-view').style.display=tab==='gal'?'block':'none';
   document.getElementById('tab-game').className='tab'+(tab==='game'?' on':'');
   document.getElementById('tab-gal').className='tab'+(tab==='gal'?' on':'');
-  if(tab==='gal'){buildInventory();buildWorkshop();}
+  if(tab==='gal'){buildInventory();buildWorkshop();buildCapWorkshop();}
 }
 
 // ─── PWA ──────────────────────────────────────────────────────────────
 // Manifest via blob
-const mf={name:'nodnalb',short_name:'nodnalb',start_url:'.',display:'standalone',
+const mf={name:'Ore Gacha',short_name:'OreGacha',start_url:'.',display:'standalone',
   background_color:'#080604',theme_color:'#080604',
   icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23c9a227'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E⛏%3C/text%3E%3C/svg%3E",sizes:'any',type:'image/svg+xml'}]};
 const ml=document.createElement('link');
