@@ -53,11 +53,14 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 #rollbar{padding:10px 14px;background:var(--surf);border-top:1px solid var(--brd);
   display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;}
 #rbtn{background:linear-gradient(135deg,#5a3c0e,#c9a227 45%,#8a6010 55%,#5a3c0e);
-  border:none;color:#0a0603;padding:11px 36px;font-size:.95rem;font-family:inherit;
+  border:none;color:#0a0603;padding:10px 28px;font-size:.95rem;font-family:inherit;
   letter-spacing:3px;text-transform:uppercase;font-weight:bold;cursor:pointer;border-radius:3px;
-  box-shadow:0 0 18px rgba(201,162,39,.3);transition:box-shadow .2s,opacity .2s;}
+  box-shadow:0 0 18px rgba(201,162,39,.3);transition:box-shadow .2s,opacity .2s;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:118px;}
 #rbtn:hover:not(:disabled){box-shadow:0 0 30px rgba(201,162,39,.6);}
 #rbtn:disabled{opacity:.35;cursor:not-allowed;}
+#rbtn .rbtn-main{line-height:1;}
+#rbtn .rbtn-sub{font-size:.6rem;line-height:1;letter-spacing:1px;text-transform:none;color:#0a0603;opacity:.8;}
 #rcost{font-size:.75rem;color:var(--dim);}
 
 /* ── GALLERY / INVENTORY ── */
@@ -208,7 +211,7 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   </div>
   <div id="rollbar">
     <span id="rcost">◈ 1 credit per roll</span>
-    <button id="rbtn" onclick="roll()">ROLL</button>
+    <button id="rbtn" onclick="roll()"><span class="rbtn-main">ROLL</span><span class="rbtn-sub" id="rbtn-sub">+1 in 30s</span></button>
   </div>
 </div>
 
@@ -779,23 +782,23 @@ let S={
 let nextIn=30;
 
 const UPGRADE_ITEMS=[
-  {id:'clockwork',  name:'Clockwork Module', tier:'I',  reduce:3,dd:25, mats:{coal:2,iron:1,copper:1},          effect:'Reduces credit wait by 3s.'},
-  {id:'brassgov',   name:'Brass Governor',   tier:'II', reduce:3,dd:50, mats:{clockwork:1,tin:5,zinc:5,gold:2},effect:'Reduces credit wait by 3s.'},
-  {id:'silvercap',  name:'Silver Capacitor', tier:'III',reduce:4,dd:80, mats:{brassgov:1,silver:6,quartz:4,lapis:2},effect:'Reduces credit wait by 4s.'},
-  {id:'arcreg',     name:'Arcane Regulator', tier:'IV', reduce:4,dd:140,mats:{silvercap:1,amethyst:3,topaz:2,redstone:6},effect:'Reduces credit wait by 4s.'},
-  {id:'corestab',   name:'Core Stabilizer',  tier:'V',  reduce:3,dd:260,mats:{arcreg:1,diamond:3,titanium:2,emerald:2},effect:'Reduces credit wait by 3s.'},
-  {id:'chrono',     name:'Chrono Furnace',   tier:'VI', reduce:3,dd:500,mats:{corestab:1,opal:2,netherite:1,void:1,celestial:1},effect:'Reduces credit wait by 3s.'},
-  {id:'singularity',name:'Singularity Engine',tier:'VII',reduce:2,dd:900,mats:{chrono:1,singularity:1,aeon:1,starcore:1,plutonium:2},effect:'Reduces credit wait by 2s.'},
+  {id:'clockwork',  name:'Clockwork Module', tier:'I',  reduce:3,dd:25, mats:{coal:4,iron:2,copper:2},          effect:'Reduces credit wait by 3s.'},
+  {id:'brassgov',   name:'Brass Governor',   tier:'II', reduce:3,dd:50, mats:{clockwork:1,tin:10,zinc:10,gold:4},effect:'Reduces credit wait by 3s.'},
+  {id:'silvercap',  name:'Silver Capacitor', tier:'III',reduce:4,dd:80, mats:{brassgov:1,silver:12,quartz:8,lapis:4},effect:'Reduces credit wait by 4s.'},
+  {id:'arcreg',     name:'Arcane Regulator', tier:'IV', reduce:4,dd:140,mats:{silvercap:1,amethyst:6,topaz:4,redstone:12},effect:'Reduces credit wait by 4s.'},
+  {id:'corestab',   name:'Core Stabilizer',  tier:'V',  reduce:3,dd:260,mats:{arcreg:1,diamond:6,titanium:4,emerald:3},effect:'Reduces credit wait by 3s.'},
+  {id:'chrono',     name:'Chrono Furnace',   tier:'VI', reduce:3,dd:500,mats:{corestab:1,opal:3,netherite:2,void:1,celestial:1},effect:'Reduces credit wait by 3s.'},
+  {id:'singularity',name:'Singularity Engine',tier:'VII',reduce:2,dd:900,mats:{chrono:1,singularity:1,aeon:1,starcore:1,plutonium:4},effect:'Reduces credit wait by 2s.'},
 ];
 
 const CAP_CREDIT_ITEMS=[
-  {id:'vault1',name:'Copper Vault',  tier:'I',  max:50,  dd:20, mats:{coal:4,copper:2,iron:1},             effect:'Raises max credits to 50.'},
-  {id:'vault2',name:'Brass Vault',   tier:'II', max:100, dd:45, mats:{tin:5,zinc:4,copper:4,silver:1},      effect:'Raises max credits to 100.'},
-  {id:'vault3',name:'Silver Vault',  tier:'III',max:200, dd:90, mats:{gold:6,silver:5,quartz:3},           effect:'Raises max credits to 200.'},
-  {id:'vault4',name:'Gold Vault',    tier:'IV', max:350, dd:160,mats:{emerald:3,diamond:2,titanium:2},      effect:'Raises max credits to 350.'},
-  {id:'vault5',name:'Platinum Vault',tier:'V',  max:500, dd:280,mats:{opal:1,netherite:1,iridium:1},        effect:'Raises max credits to 500.'},
-  {id:'vault6',name:'Diamond Vault', tier:'VI', max:750, dd:450,mats:{adamantite:2,auric:1,celestial:1},    effect:'Raises max credits to 750.'},
-  {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:700,mats:{void:1,aeon:1,starcore:1,plutonium:1,singularity:1},effect:'Raises max credits to 1000.'},
+  {id:'vault1',name:'Copper Vault',  tier:'I',  max:50,  dd:20, mats:{coal:8,copper:4,iron:2},             effect:'Raises max credits to 50.'},
+  {id:'vault2',name:'Brass Vault',   tier:'II', max:100, dd:45, mats:{tin:8,zinc:6,copper:6,silver:2},      effect:'Raises max credits to 100.'},
+  {id:'vault3',name:'Silver Vault',  tier:'III',max:200, dd:90, mats:{gold:10,silver:8,quartz:4},           effect:'Raises max credits to 200.'},
+  {id:'vault4',name:'Gold Vault',    tier:'IV', max:350, dd:160,mats:{emerald:4,diamond:3,titanium:3},      effect:'Raises max credits to 350.'},
+  {id:'vault5',name:'Platinum Vault',tier:'V',  max:500, dd:280,mats:{opal:2,netherite:2,iridium:2},        effect:'Raises max credits to 500.'},
+  {id:'vault6',name:'Diamond Vault', tier:'VI', max:750, dd:450,mats:{adamantite:3,auric:2,celestial:1},    effect:'Raises max credits to 750.'},
+  {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:700,mats:{void:1,aeon:1,starcore:1,plutonium:2,singularity:1},effect:'Raises max credits to 1000.'},
 ];
 
 const CAP_CREDIT_INDEX=Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
@@ -997,6 +1000,15 @@ function updateMineBar(){
   const cost=mine.rollCost;
   document.getElementById('rcost').textContent=`◈ ${cost} credit${cost>1?'s':''} per roll`;
   document.getElementById('rbtn').disabled=S.credits<cost;
+  updateRollButton();
+}
+
+function updateRollButton(){
+  const sub=document.getElementById('rbtn-sub');
+  if(!sub) return;
+  const iv=getCreditInterval();
+  const secs=Math.max(0,Math.ceil(nextIn||iv));
+  sub.textContent = `+1 in ${secs}s`;
 }
 
 // ─── ROLL ─────────────────────────────────────────────────────────────
@@ -1220,6 +1232,7 @@ function updateUI(){
   const sellBtn=document.getElementById('sellmode-btn');
   if(sellBtn){sellBtn.textContent=S.sellAllMode?'Sell All':'Sell 1';sellBtn.classList.toggle('on',S.sellAllMode);}
   updateMineBar();
+  updateRollButton();
 }
 
 // Credit timer
@@ -1230,6 +1243,7 @@ setInterval(()=>{
   if(nextIn<=0){nextIn=iv;addCredits(1);save();updateUI();}
   else S.nextIn=nextIn;
   document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
+  updateRollButton();
   updateUI();
 },1000);
 
