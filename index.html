@@ -53,13 +53,13 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 #rollbar{padding:10px 14px;background:var(--surf);border-top:1px solid var(--brd);
   display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;}
 #rbtn{background:linear-gradient(135deg,#5a3c0e,#c9a227 45%,#8a6010 55%,#5a3c0e);
-  border:none;color:#0a0603;padding:10px 28px;font-size:.95rem;font-family:inherit;
+  border:none;color:#0a0603;padding:9px 30px;font-size:.95rem;font-family:inherit;
   letter-spacing:3px;text-transform:uppercase;font-weight:bold;cursor:pointer;border-radius:3px;
   box-shadow:0 0 18px rgba(201,162,39,.3);transition:box-shadow .2s,opacity .2s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:118px;}
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:120px;}
 #rbtn:hover:not(:disabled){box-shadow:0 0 30px rgba(201,162,39,.6);}
 #rbtn:disabled{opacity:.35;cursor:not-allowed;}
-#rbtn .rbtn-main{line-height:1;}
+#rbtn .rbtn-main{display:block;line-height:1;}
 #rbtn .rbtn-sub{font-size:.6rem;line-height:1;letter-spacing:1px;text-transform:none;color:#0a0603;opacity:.8;}
 #rcost{font-size:.75rem;color:var(--dim);}
 
@@ -261,86 +261,79 @@ const RCOLORS = ['#888','#aaa','#3ab','#88f','#f5a','#fd0'];
 // w:0 = mine-exclusive (doesn't appear in global fallback)
 // val = DD sell value override (defaults to PRICE_BY_RAR[r])
 const TYPES = [
-  // ── r0 Common (The Shallows) ──
-  {id:'coal',        name:'Coal',          r:0, w:16,  style:'rock',    c:['#4a4540','#1e1a16','#0d0b09']},
-  {id:'anthracite',  name:'Anthracite',    r:0, w:12,  style:'rock',    c:['#433a35','#171310','#070605']},
-  {id:'limestone',   name:'Limestone',     r:0, w:10,  style:'rock',    c:['#dad3c4','#9c927f','#65604f']},
-  {id:'slate',       name:'Slate',         r:0, w:8,   style:'rock',    c:['#6a7078','#2c3138','#0f1115']},
-  {id:'ash',         name:'Ash',           r:0, w:6,   style:'rock',    c:['#9c958c','#5e554b','#2b251f']},
-  {id:'peat',        name:'Peat',          r:0, w:2,   style:'rock',    c:['#5d4a35','#3a2a1b','#1f1610']},
-  {id:'mudstone',    name:'Mudstone',      r:0, w:1,   style:'rock',    c:['#7a5e47','#4a3827','#251a13']},
+  // Base surface
+  {id:'coal',       name:'Coal',        r:0, w:16,  style:'rock',   c:['#4a4540','#1e1a16','#0d0b09']},
+  {id:'anthracite', name:'Anthracite',  r:0, w:12,  style:'rock',   c:['#433a35','#171310','#070605']},
+  {id:'limestone',  name:'Limestone',   r:0, w:10,  style:'rock',   c:['#dad3c4','#9c927f','#65604f']},
+  {id:'slate',      name:'Slate',       r:0, w:8,   style:'rock',   c:['#6a7078','#2c3138','#0f1115']},
+  {id:'ash',        name:'Ash',         r:0, w:6,   style:'rock',   c:['#9c958c','#5e554b','#2b251f']},
+  {id:'peat',       name:'Peat',        r:0, w:2,   style:'rock',   c:['#5d4a35','#3a2a1b','#1f1610']},
+  {id:'mudstone',   name:'Mudstone',    r:0, w:1,   style:'rock',   c:['#7a5e47','#4a3827','#251a13']},
+  {id:'shale',      name:'Shale',       r:0, w:0,   style:'rock',   c:['#5f5a56','#2a2624','#11100f']},
+  {id:'gypsum',     name:'Gypsum',      r:0, w:0,   style:'crystal',c:['#fff7ea','#d9ccb7','#a79a83']},
+  {id:'basalt',     name:'Basalt',      r:0, w:0,   style:'shadow', c:['#63686f','#282d33','#0d0f12']},
 
-  // ── r1 Uncommon ──
-  {id:'iron',        name:'Iron',          r:1, w:7,   style:'metal',   c:['#d4cdc4','#9a9590','#6e6a65']},
-  {id:'copper',      name:'Copper',        r:1, w:6,   style:'metal',   c:['#e8855a','#b85c30','#7a3318']},
-  {id:'tin',         name:'Tin',           r:1, w:5,   style:'metal',   c:['#d7dbe0','#9ea8b2','#5b6774']},
-  {id:'nickel',      name:'Nickel',        r:1, w:4,   style:'metal',   c:['#b8c2b0','#7f8d7b','#495347']},
-  {id:'zinc',        name:'Zinc',          r:1, w:3,   style:'metal',   c:['#d8d0a8','#a79e67','#6c6338']},
-  {id:'silver',      name:'Silver',        r:1, w:2,   style:'metal',   c:['#f2f4f7','#b3bcc6','#75818f']},
-  {id:'lead',        name:'Lead',          r:1, w:2,   style:'metal',   c:['#8f98a8','#59606d','#2d3138']},
-  {id:'sulfur',      name:'Sulfur',        r:1, w:1,   style:'toxic',   c:['#f6e66a','#c0a51a','#615000']},
-  // Crystal Caverns r1
-  {id:'chalcopyrite',name:'Chalcopyrite',  r:1, w:0,   val:6, style:'metal',   c:['#d4b830','#988820','#504808']},
+  // Uncommon
+  {id:'iron',       name:'Iron',        r:1, w:7,   style:'metal',  c:['#d4cdc4','#9a9590','#6e6a65']},
+  {id:'copper',     name:'Copper',      r:1, w:6,   style:'metal',  c:['#e8855a','#b85c30','#7a3318']},
+  {id:'tin',        name:'Tin',         r:1, w:5,   style:'metal',  c:['#d7dbe0','#9ea8b2','#5b6774']},
+  {id:'nickel',     name:'Nickel',      r:1, w:4,   style:'metal',  c:['#b8c2b0','#7f8d7b','#495347']},
+  {id:'zinc',       name:'Zinc',        r:1, w:3,   style:'metal',  c:['#d8d0a8','#a79e67','#6c6338']},
+  {id:'silver',     name:'Silver',      r:1, w:2,   style:'metal',  c:['#f2f4f7','#b3bcc6','#75818f']},
+  {id:'lead',       name:'Lead',        r:1, w:2,   style:'metal',  c:['#8f98a8','#59606d','#2d3138']},
+  {id:'sulfur',     name:'Sulfur',      r:1, w:1,   style:'toxic',  c:['#f6e66a','#c0a51a','#615000']},
 
-  // ── r2 Rare ──
-  {id:'gold',        name:'Gold',          r:2, w:4,   style:'metal',   c:['#ffe87c','#d4a018','#6b4500']},
-  {id:'lapis',       name:'Lapis',         r:2, w:3,   style:'gem',     c:['#4a7af0','#1a3aaa','#0a1a5a']},
-  {id:'redstone',    name:'Redstone',      r:2, w:3,   style:'energy',  c:['#ff6a40','#c01010','#580000']},
-  {id:'quartz',      name:'Quartz',        r:2, w:2.5, style:'crystal', c:['#fff5f8','#f0d0dc','#a07090']},
-  {id:'obsidian',    name:'Obsidian',      r:2, w:2,   style:'shadow',  c:['#2a1a3a','#0d0814','#050308']},
-  {id:'topaz',       name:'Topaz',         r:2, w:2,   style:'gem',     c:['#ffe0a0','#e89020','#a04000']},
-  {id:'pyrite',      name:'Pyrite',        r:2, w:1.5, style:'metal',   c:['#d4c060','#a08820','#606010']},
-  {id:'malachite',   name:'Malachite',     r:2, w:1.5, style:'gem',     c:['#7fffbb','#1fb06a','#065334']},
-  {id:'hematite',    name:'Hematite',      r:2, w:1,   style:'metal',   c:['#d89a8a','#9c5b4b','#551f18']},
-  {id:'bismuth',     name:'Bismuth',       r:2, w:1,   style:'crystal', c:['#8be3ff','#7d7bff','#ff7ab8']},
-  // Crystal Caverns r2
-  {id:'azurite',     name:'Azurite',       r:2, w:0,   val:18, style:'gem',    c:['#60b8ff','#1060e0','#082468']},
-  {id:'garnet',      name:'Garnet',        r:2, w:0,   val:16, style:'gem',    c:['#c83038','#801018','#3c0008']},
-  {id:'vanadinite',  name:'Vanadinite',    r:2, w:0,   val:15, style:'energy', c:['#ff7020','#c04010','#500000']},
-  {id:'celestine',   name:'Celestine',     r:2, w:0,   val:17, style:'crystal',c:['#c0e8ff','#6aaad4','#1a4060']},
+  // Rare
+  {id:'gold',       name:'Gold',        r:2, w:4,   style:'metal',  c:['#ffe87c','#d4a018','#6b4500']},
+  {id:'lapis',      name:'Lapis',       r:2, w:3,   style:'gem',    c:['#4a7af0','#1a3aaa','#0a1a5a']},
+  {id:'redstone',   name:'Redstone',    r:2, w:3,   style:'energy', c:['#ff6a40','#c01010','#580000']},
+  {id:'quartz',     name:'Quartz',      r:2, w:2.5, style:'crystal',c:['#fff5f8','#f0d0dc','#a07090']},
+  {id:'obsidian',   name:'Obsidian',    r:2, w:2,   style:'shadow', c:['#2a1a3a','#0d0814','#050308']},
+  {id:'topaz',      name:'Topaz',       r:2, w:2,   style:'gem',    c:['#ffe0a0','#e89020','#a04000']},
+  {id:'pyrite',     name:'Pyrite',      r:2, w:1.5, style:'metal',  c:['#d4c060','#a08820','#606010']},
+  {id:'malachite',  name:'Malachite',   r:2, w:1.5, style:'gem',    c:['#7fffbb','#1fb06a','#065334']},
+  {id:'hematite',   name:'Hematite',    r:2, w:1,   style:'metal',  c:['#d89a8a','#9c5b4b','#551f18']},
+  {id:'bismuth',    name:'Bismuth',     r:2, w:1,   style:'crystal',c:['#8be3ff','#7d7bff','#ff7ab8']},
+  {id:'jasper',     name:'Jasper',      r:2, w:0,   style:'gem',    c:['#ffb18d','#cf5b35','#742112']},
+  {id:'verdite',    name:'Verdite',     r:2, w:0,   style:'gem',    c:['#8fe6b6','#2f9b61','#0f4d2f']},
 
-  // ── r3 Epic ──
-  {id:'amethyst',    name:'Amethyst',      r:3, w:1.8, style:'crystal', c:['#e0b0ff','#9040d0','#2a0060']},
-  {id:'emerald',     name:'Emerald',       r:3, w:1.6, style:'gem',     c:['#80ffa0','#20c060','#023018']},
-  {id:'diamond',     name:'Diamond',       r:3, w:1.4, style:'crystal', c:['#e8f8ff','#a0d8f8','#1050a0']},
-  {id:'ruby',        name:'Ruby',          r:3, w:1.2, style:'gem',     c:['#ff8090','#d01030','#3a0008']},
-  {id:'sapphire',    name:'Sapphire',      r:3, w:1,   style:'crystal', c:['#90b0ff','#2050e0','#020840']},
-  {id:'titanium',    name:'Titanium',      r:3, w:1,   style:'metal',   c:['#c8d4e0','#7090a8','#182030']},
-  {id:'peridot',     name:'Peridot',       r:3, w:0.8, style:'gem',     c:['#d8ff86','#7fd02a','#224800']},
-  {id:'fluorite',    name:'Fluorite',      r:3, w:0.8, style:'crystal', c:['#ffd8ff','#b86cff','#3a1d6f']},
-  // Crystal Caverns r3
-  {id:'tourmaline',  name:'Tourmaline',    r:3, w:0,   val:48, style:'crystal',c:['#ff80c0','#40c090','#103050']},
-  {id:'kunzite',     name:'Kunzite',       r:3, w:0,   val:45, style:'gem',    c:['#ffb0e8','#d060b0','#680058']},
-  {id:'alexandrite', name:'Alexandrite',   r:3, w:0,   val:55, style:'gem',    c:['#80ff80','#c040d0','#200040']},
-  // Infernal Core r3
-  {id:'magmalite',   name:'Magmalite',     r:3, w:0,   val:52, style:'energy', c:['#ff9020','#d04800','#680000']},
-  {id:'pyroxene',    name:'Pyroxene',      r:3, w:0,   val:44, style:'rock',   c:['#a06040','#703020','#2a0800']},
-  {id:'cinnabar',    name:'Cinnabar',      r:3, w:0,   val:50, style:'toxic',  c:['#ff3020','#c01010','#500000']},
+  // Epic
+  {id:'amethyst',   name:'Amethyst',    r:3, w:1.8, style:'crystal',c:['#e0b0ff','#9040d0','#2a0060']},
+  {id:'emerald',    name:'Emerald',     r:3, w:1.6, style:'gem',    c:['#80ffa0','#20c060','#023018']},
+  {id:'diamond',    name:'Diamond',     r:3, w:1.4, style:'crystal',c:['#e8f8ff','#a0d8f8','#1050a0']},
+  {id:'ruby',       name:'Ruby',        r:3, w:1.2, style:'gem',    c:['#ff8090','#d01030','#3a0008']},
+  {id:'sapphire',   name:'Sapphire',    r:3, w:1,   style:'crystal',c:['#90b0ff','#2050e0','#020840']},
+  {id:'titanium',   name:'Titanium',    r:3, w:1,   style:'metal',  c:['#c8d4e0','#7090a8','#182030']},
+  {id:'peridot',    name:'Peridot',     r:3, w:0.8, style:'gem',    c:['#d8ff86','#7fd02a','#224800']},
+  {id:'fluorite',   name:'Fluorite',    r:3, w:0.8, style:'crystal',c:['#ffd8ff','#b86cff','#3a1d6f']},
+  {id:'moonstone',  name:'Moonstone',   r:3, w:0,   style:'crystal',c:['#f4f1ff','#cabdff','#6c5d9a']},
+  {id:'frostite',   name:'Frostite',    r:3, w:0,   style:'crystal',c:['#e0fbff','#98d8ee','#3b6784']},
 
-  // ── r4 Legendary ──
-  {id:'opal',        name:'Opal',          r:4, w:0.9, style:'aurora',  c:['#fff8f2','#f0e8f8','#d8d0e8']},
-  {id:'netherite',   name:'Netherite',     r:4, w:0.8, style:'shadow',  c:['#5a5055','#2a2028','#0f0d10']},
-  {id:'plutonium',   name:'Plutonium',     r:4, w:0.6, style:'toxic',   c:['#b4ff6a','#30a010','#0a3a02']},
-  {id:'iridium',     name:'Iridium',       r:4, w:0.5, style:'metal',   c:['#eef1f6','#90a0b5','#465065']},
-  {id:'adamantite',  name:'Adamantite',    r:4, w:0.4, style:'gem',     c:['#8cf0ff','#19b4d0','#04526c']},
-  {id:'auric',       name:'Auric',         r:4, w:0.3, style:'metal',   c:['#fff0a8','#f0c14a','#725100']},
-  {id:'mystery',     name:'Mystery',       r:4, w:0.28,style:'mystery', c:['#f2d27a','#9b6c1d','#3c2400']},
-  // Infernal Core r4
-  {id:'dragonsteel', name:'Dragonsteel',   r:4, w:0,   val:140, style:'metal',  c:['#9a3030','#5a1010','#250000']},
-  {id:'soulfire',    name:'Soulfire',      r:4, w:0,   val:130, style:'energy', c:['#80e0ff','#2090ff','#001870']},
-  {id:'voidglass',   name:'Void Glass',    r:4, w:0,   val:120, style:'shadow', c:['#4040a0','#101040','#000008']},
-  {id:'ashforged',   name:'Ashforged',     r:4, w:0,   val:110, style:'metal',  c:['#808060','#504030','#181208']},
+  // Legendary
+  {id:'opal',       name:'Opal',        r:4, w:0.9, style:'aurora', c:['#fff8f2','#f0e8f8','#d8d0e8']},
+  {id:'netherite',  name:'Netherite',   r:4, w:0.8, style:'shadow', c:['#5a5055','#2a2028','#0f0d10']},
+  {id:'plutonium',  name:'Plutonium',   r:4, w:0.6, style:'toxic',  c:['#b4ff6a','#30a010','#0a3a02']},
+  {id:'iridium',    name:'Iridium',     r:4, w:0.5, style:'metal',  c:['#eef1f6','#90a0b5','#465065']},
+  {id:'adamantite', name:'Adamantite',  r:4, w:0.4, style:'gem',    c:['#8cf0ff','#19b4d0','#04526c']},
+  {id:'auric',      name:'Auric',       r:4, w:0.3, style:'metal',  c:['#fff0a8','#f0c14a','#725100']},
+  {id:'mystery',    name:'Mystery',     r:4, w:0.28,style:'mystery', c:['#f2d27a','#9b6c1d','#3c2400']},
+  {id:'emberglass', name:'Emberglass',  r:4, w:0,   style:'crystal',c:['#ffd7a1','#ff8a2a','#6b1c00']},
+  {id:'cindersteel',name:'Cindersteel', r:4, w:0,   style:'metal',  c:['#b9a79a','#70584a','#2b1b14']},
+  {id:'dragonsteel',name:'Dragonsteel', r:4, w:0,   val:140, style:'metal',  c:['#9a3030','#5a1010','#250000']},
+  {id:'soulfire',   name:'Soulfire',    r:4, w:0,   val:130, style:'energy', c:['#80e0ff','#2090ff','#001870']},
+  {id:'voidglass',  name:'Void Glass',  r:4, w:0,   val:120, style:'shadow', c:['#4040a0','#101040','#000008']},
+  {id:'ashforged',  name:'Ashforged',   r:4, w:0,   val:110, style:'metal',  c:['#808060','#504030','#181208']},
 
-  // ── r5 Mythic ──
-  {id:'void',        name:'Void',          r:5, w:0.3, style:'void',    c:['#200035','#080015','#000000']},
-  {id:'celestial',   name:'Celestial',     r:5, w:0.25,style:'cosmic',  c:['#1a0828','#080420','#020108']},
-  {id:'singularity', name:'Singularity',   r:5, w:0.2, style:'void',    c:['#0c0015','#040007','#000000']},
-  {id:'aeon',        name:'Aeon',          r:5, w:0.15,style:'cosmic',  c:['#0d1336','#17082f','#020108']},
-  {id:'starcore',    name:'Starcore',      r:5, w:0.1, style:'energy',  c:['#ffe8ff','#7cf8ff','#ff7ad9']},
-  // Infernal Core r5
-  {id:'riftstone',   name:'Riftstone',     r:5, w:0,   val:400, style:'void',   c:['#9040c0','#3a0870','#0a0018']},
-  {id:'eternium',    name:'Eternium',      r:5, w:0,   val:500, style:'cosmic', c:['#f8fcff','#b8d8ff','#204898']},
-  {id:'hearthcore',  name:'Hearthcore',    r:5, w:0,   val:450, style:'energy', c:['#ffb040','#ff4800','#200000']},
+  // Mythic
+  {id:'void',       name:'Void',        r:5, w:0.3, style:'void',   c:['#200035','#080015','#000000']},
+  {id:'celestial',   name:'Celestial',  r:5, w:0.25,style:'cosmic', c:['#1a0828','#080420','#020108']},
+  {id:'singularity',name:'Singularity', r:5, w:0.2, style:'void',   c:['#0c0015','#040007','#000000']},
+  {id:'aeon',       name:'Aeon',        r:5, w:0.15,style:'cosmic', c:['#0d1336','#17082f','#020108']},
+  {id:'starcore',   name:'Starcore',    r:5, w:0.1, style:'energy', c:['#ffe8ff','#7cf8ff','#ff7ad9']},
+  {id:'deepfire',   name:'Deepfire',    r:5, w:0,   style:'energy', c:['#fff2a8','#ff8f1f','#5a0800']},
+  {id:'riftstone',  name:'Riftstone',   r:5, w:0,   val:400, style:'void',   c:['#9040c0','#3a0870','#0a0018']},
+  {id:'eternium',   name:'Eternium',    r:5, w:0,   val:500, style:'cosmic', c:['#f8fcff','#b8d8ff','#204898']},
+  {id:'hearthcore', name:'Hearthcore',  r:5, w:0,   val:450, style:'energy', c:['#ffb040','#ff4800','#200000']},
 ];
 
 const TOT_W = TYPES.reduce((s,t)=>s+t.w,0);
@@ -378,34 +371,136 @@ const MINES = [
     ],
   },
   {
-    id: 'caverns',
-    name: 'Crystal Caverns',
-    icon: '💎',
-    desc: 'Deep underground chambers formed over aeons. Crystalline walls shimmer with gems and strange minerals not found on the surface.',
-    unlockCost: 500,
+    id: 'basalt',
+    name: 'Basalt Shelf',
+    icon: '🪨',
+    desc: 'A dense stone shelf with steady seams of common metals. This layer is built for fast early crafting and easy material farming.',
+    unlockCost: 700,
     rollCost: 2,
     theme: {
-      bg:'#030610', grid:'rgba(20,30,80,.45)',
-      floorGlow:['rgba(100,80,220,0)','rgba(80,60,200,.12)'],
-      floorLine:'rgba(130,100,230,.32)',
-      chute:'#1a1840', chuteBox:'#080820', chuteStroke:'#3030a0',
+      bg:'#0a090b', grid:'rgba(70,65,72,.34)',
+      floorGlow:['rgba(120,90,80,0)','rgba(120,90,80,.12)'],
+      floorLine:'rgba(130,110,100,.34)',
+      chute:'#2f2826', chuteBox:'#171412', chuteStroke:'#5b4a45',
     },
-    featured: ['Azurite','Tourmaline','Diamond','Opal'],
+    featured: ['Shale','Basalt','Copper','Tin'],
     ores: [
-      // r1
-      {id:'silver',w:4},{id:'lead',w:3},{id:'nickel',w:3},{id:'chalcopyrite',w:3},{id:'tin',w:2},
-      // r2
-      {id:'gold',w:4},{id:'lapis',w:4},{id:'redstone',w:3},{id:'quartz',w:3.5},
-      {id:'obsidian',w:2},{id:'topaz',w:2.5},{id:'malachite',w:2},{id:'bismuth',w:1.5},
-      {id:'azurite',w:2.5},{id:'garnet',w:2},{id:'pyrite',w:2},{id:'hematite',w:1.5},
-      {id:'vanadinite',w:1.5},{id:'celestine',w:1.5},
-      // r3
-      {id:'amethyst',w:2},{id:'emerald',w:1.5},{id:'diamond',w:1.2},
-      {id:'ruby',w:1.2},{id:'sapphire',w:1},{id:'peridot',w:1},{id:'fluorite',w:1},
-      {id:'tourmaline',w:1.2},{id:'kunzite',w:0.8},{id:'alexandrite',w:0.6},{id:'titanium',w:1},
-      // r4
-      {id:'opal',w:0.5},{id:'iridium',w:0.4},
-      {id:'mystery',w:0.28},
+      {id:'shale',w:10},{id:'basalt',w:10},{id:'gypsum',w:8},{id:'limestone',w:6},
+      {id:'coal',w:6},{id:'anthracite',w:5},{id:'ash',w:5},{id:'iron',w:8},
+      {id:'copper',w:8},{id:'tin',w:7},{id:'nickel',w:5},{id:'zinc',w:4},
+      {id:'silver',w:2.5},{id:'lead',w:2.5},{id:'gold',w:1.2},{id:'pyrite',w:1.5},
+      {id:'hematite',w:1.2},{id:'mystery',w:0.26},
+    ],
+  },
+  {
+    id: 'verdant',
+    name: 'Verdant Vein',
+    icon: '🌿',
+    desc: 'Wet mineral passages lined with green crystal growths. This mine feeds the midgame with balanced metals and gems without the harsh rarity spikes.',
+    unlockCost: 1100,
+    rollCost: 2,
+    theme: {
+      bg:'#061008', grid:'rgba(40,90,60,.34)',
+      floorGlow:['rgba(70,170,100,0)','rgba(70,170,100,.12)'],
+      floorLine:'rgba(70,170,100,.28)',
+      chute:'#11321f', chuteBox:'#07170d', chuteStroke:'#1f5a36',
+    },
+    featured: ['Verdite','Jasper','Silver','Gold'],
+    ores: [
+      {id:'gypsum',w:7},{id:'shale',w:6},{id:'basalt',w:5},{id:'iron',w:6},
+      {id:'copper',w:6},{id:'tin',w:5},{id:'silver',w:4},{id:'lead',w:4},
+      {id:'gold',w:3},{id:'lapis',w:3},{id:'quartz',w:3},{id:'topaz',w:2},
+      {id:'pyrite',w:2},{id:'hematite',w:2},{id:'jasper',w:3},{id:'verdite',w:3},
+      {id:'malachite',w:2.5},{id:'bismuth',w:1.5},{id:'mystery',w:0.25},
+    ],
+  },
+  {
+    id: 'jasper',
+    name: 'Jasper Hollows',
+    icon: '🔶',
+    desc: 'Warm stone hollows rich in colored mineral bands. The ore spread is tuned for steady crafting progress and dependable rare pickups.',
+    unlockCost: 1600,
+    rollCost: 3,
+    theme: {
+      bg:'#120803', grid:'rgba(140,80,30,.28)',
+      floorGlow:['rgba(255,140,80,0)','rgba(255,140,80,.11)'],
+      floorLine:'rgba(255,140,80,.28)',
+      chute:'#4d2411', chuteBox:'#201007', chuteStroke:'#8f4a22',
+    },
+    featured: ['Jasper','Topaz','Quartz','Amethyst'],
+    ores: [
+      {id:'jasper',w:9},{id:'verdite',w:6},{id:'gold',w:4},{id:'lapis',w:4},
+      {id:'redstone',w:4},{id:'quartz',w:5},{id:'obsidian',w:3},{id:'topaz',w:4},
+      {id:'pyrite',w:3},{id:'hematite',w:3},{id:'amethyst',w:3},{id:'emerald',w:2},
+      {id:'ruby',w:2.5},{id:'fluorite',w:2},{id:'diamond',w:1.2},{id:'silver',w:3},
+      {id:'mystery',w:0.24},
+    ],
+  },
+  {
+    id: 'moonfrost',
+    name: 'Moonfrost Cavern',
+    icon: '❄️',
+    desc: 'A cold, glittering chamber where pale crystals grow in the dark. It is ideal when you need a smoother bridge into the higher-tier gem materials.',
+    unlockCost: 2200,
+    rollCost: 3,
+    theme: {
+      bg:'#050814', grid:'rgba(100,140,220,.28)',
+      floorGlow:['rgba(120,170,255,0)','rgba(120,170,255,.12)'],
+      floorLine:'rgba(150,190,255,.28)',
+      chute:'#18284c', chuteBox:'#08101f', chuteStroke:'#35508f',
+    },
+    featured: ['Moonstone','Frostite','Sapphire','Diamond'],
+    ores: [
+      {id:'moonstone',w:7},{id:'frostite',w:7},{id:'amethyst',w:5},{id:'sapphire',w:4},
+      {id:'diamond',w:3},{id:'opal',w:2},{id:'celestine',w:3},{id:'tourmaline',w:2.5},
+      {id:'kunzite',w:2},{id:'alexandrite',w:1.5},{id:'fluorite',w:3},{id:'lapis',w:4},
+      {id:'silver',w:4},{id:'quartz',w:4},{id:'topaz',w:2},{id:'iridium',w:1.2},
+      {id:'mystery',w:0.23},
+    ],
+  },
+  {
+    id: 'ember',
+    name: 'Ember Rift',
+    icon: '🔥',
+    desc: 'Heat-warped tunnels where the stone starts to glass over. This mine starts feeding the infernal crafting ingredients in a much friendlier rhythm.',
+    unlockCost: 2800,
+    rollCost: 4,
+    theme: {
+      bg:'#0d0200', grid:'rgba(140,60,20,.3)',
+      floorGlow:['rgba(255,90,20,0)','rgba(255,90,20,.12)'],
+      floorLine:'rgba(255,100,30,.32)',
+      chute:'#541b05', chuteBox:'#220800', chuteStroke:'#a13b11',
+    },
+    featured: ['Emberglass','Cindersteel','Magmalite','Pyroxene'],
+    ores: [
+      {id:'emberglass',w:7},{id:'cindersteel',w:6},{id:'magmalite',w:7},{id:'pyroxene',w:6},
+      {id:'cinnabar',w:5},{id:'redstone',w:4},{id:'obsidian',w:4},{id:'netherite',w:3},
+      {id:'plutonium',w:2.5},{id:'adamantite',w:2},{id:'auric',w:1.5},{id:'soulfire',w:1.5},
+      {id:'voidglass',w:1.2},{id:'ruby',w:3},{id:'diamond',w:2},{id:'titanium',w:2},
+      {id:'mystery',w:0.22},
+    ],
+  },
+  {
+    id: 'ashen',
+    name: 'Ashen Antechamber',
+    icon: '🌋',
+    desc: 'A final buffer before the Infernal Core. This chamber is packed with late-game resources and a gentle stream of mythic fuel for the transition ahead.',
+    unlockCost: 3400,
+    rollCost: 4,
+    theme: {
+      bg:'#120601', grid:'rgba(180,90,30,.28)',
+      floorGlow:['rgba(255,120,40,0)','rgba(255,120,40,.1)'],
+      floorLine:'rgba(255,140,60,.3)',
+      chute:'#6a2305', chuteBox:'#240a02', chuteStroke:'#c34c12',
+    },
+    featured: ['Soulfire','Void Glass','Riftstone','Deepfire'],
+    ores: [
+      {id:'emberglass',w:5},{id:'cindersteel',w:5},{id:'plutonium',w:3},{id:'adamantite',w:3},
+      {id:'auric',w:3},{id:'dragonsteel',w:2.2},{id:'soulfire',w:2.2},{id:'voidglass',w:2},
+      {id:'ashforged',w:2},{id:'void',w:1.2},{id:'celestial',w:1},{id:'aeon',w:0.8},
+      {id:'starcore',w:0.6},{id:'deepfire',w:0.6},{id:'singularity',w:0.35},
+      {id:'riftstone',w:0.45},{id:'eternium',w:0.25},{id:'hearthcore',w:0.25},
+      {id:'mystery',w:0.2},
     ],
   },
   {
@@ -413,7 +508,7 @@ const MINES = [
     name: 'Infernal Core',
     icon: '🌋',
     desc: 'The scorching heart of the earth. Conventional tools melt here. Only the most extraordinary ores survive the heat — and so do the rarest rewards.',
-    unlockCost: 3000,
+    unlockCost: 4000,
     rollCost: 5,
     theme: {
       bg:'#0d0200', grid:'rgba(80,20,0,.45)',
