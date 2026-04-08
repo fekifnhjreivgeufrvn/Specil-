@@ -168,6 +168,18 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 .maction-btn:hover:not(.current):not(:disabled){filter:brightness(1.12);}
 .maction-btn:disabled{opacity:.38;cursor:not-allowed;}
 
+.mcard-ores{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #2c2318;gap:6px;flex-direction:column;max-height:240px;overflow-y:auto;padding-right:4px;}
+.mcard.open .mcard-ores{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));}
+.oreline{display:flex;align-items:center;gap:8px;background:#0a0805;border:1px solid #2c2318;border-radius:8px;padding:6px 8px;min-width:0;}
+.oreline canvas{flex-shrink:0;}
+.oreline-main{flex:1;min-width:0;}
+.oreline-name{font-size:.72rem;color:var(--txt);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.oreline-sub{font-size:.58rem;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;}
+.oreline-pct{font-size:.66rem;color:#c9f5ff;white-space:nowrap;flex-shrink:0;}
+.oreline.unknown{opacity:.58;filter:grayscale(1) brightness(.88);}
+.oreline.unknown .oreline-name{color:var(--dim);}
+.oreline.unknown .oreline-pct{color:var(--dim);}
+
 /* ── POPUP ── */
 #popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
   background:var(--surf);border:1px solid var(--brd);border-radius:12px;
@@ -211,7 +223,7 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   </div>
   <div id="rollbar">
     <span id="rcost">◈ 1 credit per roll</span>
-    <button id="rbtn" onclick="roll()"><span class="rbtn-main">ROLL</span><span class="rbtn-sub" id="rbtn-sub">+1 in 30s</span></button>
+    <button id="rbtn" onclick="roll()"><span class="rbtn-main">ROLL</span><span class="rbtn-sub" id="rbtn-sub">+1 in 10s</span></button>
   </div>
 </div>
 
@@ -219,11 +231,11 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   <div id="inv-top">
     <div>
       <div id="inv-title">Inventory</div>
-      <div id="inv-sub">Sell ores for DD. Credits stay separate and keep powering rolls.</div>
+      <div id="inv-sub">Sell ores for DD. Credits stay separate and keep powering rolls. Tap a mine to see its spawn rates and ore icons.</div>
     </div>
     <div id="inv-actions">
       <div id="dd-pill">DD <b id="dd-pill-count">0</b></div>
-      <div id="cycle-pill">Cycle <b id="cycle-count">30s</b></div>
+      <div id="cycle-pill">Cycle <b id="cycle-count">10s</b></div>
       <button id="sellmode-btn" class="modebtn" onclick="toggleSellMode()">Sell 1</button>
     </div>
   </div>
@@ -375,7 +387,7 @@ const MINES = [
     name: 'Basalt Shelf',
     icon: '🪨',
     desc: 'A dense stone shelf with steady seams of common metals. This layer is built for fast early crafting and easy material farming.',
-    unlockCost: 700,
+    unlockCost: 350,
     rollCost: 2,
     theme: {
       bg:'#0a090b', grid:'rgba(70,65,72,.34)',
@@ -397,7 +409,7 @@ const MINES = [
     name: 'Verdant Vein',
     icon: '🌿',
     desc: 'Wet mineral passages lined with green crystal growths. This mine feeds the midgame with balanced metals and gems without the harsh rarity spikes.',
-    unlockCost: 1100,
+    unlockCost: 700,
     rollCost: 2,
     theme: {
       bg:'#061008', grid:'rgba(40,90,60,.34)',
@@ -419,7 +431,7 @@ const MINES = [
     name: 'Jasper Hollows',
     icon: '🔶',
     desc: 'Warm stone hollows rich in colored mineral bands. The ore spread is tuned for steady crafting progress and dependable rare pickups.',
-    unlockCost: 1600,
+    unlockCost: 1050,
     rollCost: 3,
     theme: {
       bg:'#120803', grid:'rgba(140,80,30,.28)',
@@ -441,7 +453,7 @@ const MINES = [
     name: 'Moonfrost Cavern',
     icon: '❄️',
     desc: 'A cold, glittering chamber where pale crystals grow in the dark. It is ideal when you need a smoother bridge into the higher-tier gem materials.',
-    unlockCost: 2200,
+    unlockCost: 1450,
     rollCost: 3,
     theme: {
       bg:'#050814', grid:'rgba(100,140,220,.28)',
@@ -463,7 +475,7 @@ const MINES = [
     name: 'Ember Rift',
     icon: '🔥',
     desc: 'Heat-warped tunnels where the stone starts to glass over. This mine starts feeding the infernal crafting ingredients in a much friendlier rhythm.',
-    unlockCost: 2800,
+    unlockCost: 1850,
     rollCost: 4,
     theme: {
       bg:'#0d0200', grid:'rgba(140,60,20,.3)',
@@ -484,8 +496,8 @@ const MINES = [
     id: 'ashen',
     name: 'Ashen Antechamber',
     icon: '🌋',
-    desc: 'A final buffer before the Infernal Core. This chamber is packed with late-game resources and a gentle stream of mythic fuel for the transition ahead.',
-    unlockCost: 3400,
+    desc: 'A final buffer before the Infernal Core. This chamber feeds the transition with late-game metals and a clearer line into the highest-tier fuels.',
+    unlockCost: 2300,
     rollCost: 4,
     theme: {
       bg:'#120601', grid:'rgba(180,90,30,.28)',
@@ -495,20 +507,20 @@ const MINES = [
     },
     featured: ['Soulfire','Void Glass','Riftstone','Deepfire'],
     ores: [
-      {id:'emberglass',w:5},{id:'cindersteel',w:5},{id:'plutonium',w:3},{id:'adamantite',w:3},
-      {id:'auric',w:3},{id:'dragonsteel',w:2.2},{id:'soulfire',w:2.2},{id:'voidglass',w:2},
-      {id:'ashforged',w:2},{id:'void',w:1.2},{id:'celestial',w:1},{id:'aeon',w:0.8},
-      {id:'starcore',w:0.6},{id:'deepfire',w:0.6},{id:'singularity',w:0.35},
-      {id:'riftstone',w:0.45},{id:'eternium',w:0.25},{id:'hearthcore',w:0.25},
-      {id:'mystery',w:0.2},
+      {id:'emberglass',w:4},{id:'cindersteel',w:4},{id:'plutonium',w:3.2},{id:'adamantite',w:3.2},
+      {id:'auric',w:2.8},{id:'dragonsteel',w:2.8},{id:'soulfire',w:2.8},{id:'voidglass',w:2.4},
+      {id:'ashforged',w:2.4},{id:'void',w:1.4},{id:'celestial',w:1.2},{id:'aeon',w:1},
+      {id:'starcore',w:0.9},{id:'deepfire',w:1.2},{id:'singularity',w:0.5},
+      {id:'riftstone',w:0.9},{id:'eternium',w:0.6},{id:'hearthcore',w:0.6},
+      {id:'mystery',w:0.15},
     ],
   },
   {
     id: 'infernal',
     name: 'Infernal Core',
     icon: '🌋',
-    desc: 'The scorching heart of the earth. Conventional tools melt here. Only the most extraordinary ores survive the heat — and so do the rarest rewards.',
-    unlockCost: 4000,
+    desc: 'The scorching heart of the earth. Conventional tools melt here. This mine should feel like the payoff, not a detour.',
+    unlockCost: 2900,
     rollCost: 5,
     theme: {
       bg:'#0d0200', grid:'rgba(80,20,0,.45)',
@@ -519,18 +531,18 @@ const MINES = [
     featured: ['Magmalite','Dragonsteel','Soulfire','Eternium'],
     ores: [
       // r2
-      {id:'obsidian',w:2},{id:'redstone',w:2},{id:'hematite',w:1.5},{id:'bismuth',w:1.5},{id:'gold',w:1},
+      {id:'obsidian',w:1},{id:'redstone',w:1},{id:'hematite',w:0.7},{id:'bismuth',w:0.7},{id:'gold',w:0.8},
       // r3
-      {id:'ruby',w:3},{id:'diamond',w:2.5},{id:'titanium',w:2.5},
-      {id:'amethyst',w:2},{id:'emerald',w:1.5},{id:'magmalite',w:4},
-      {id:'pyroxene',w:2.5},{id:'cinnabar',w:2},
+      {id:'ruby',w:2.2},{id:'diamond',w:2.2},{id:'titanium',w:2.2},
+      {id:'amethyst',w:1.8},{id:'emerald',w:1.6},{id:'magmalite',w:5},
+      {id:'pyroxene',w:3.2},{id:'cinnabar',w:2.4},
       // r4
-      {id:'netherite',w:2},{id:'plutonium',w:2},{id:'adamantite',w:1.5},
-      {id:'auric',w:1},{id:'dragonsteel',w:2},{id:'soulfire',w:1.5},
-      {id:'voidglass',w:1},{id:'ashforged',w:1},{id:'mystery',w:0.3},
+      {id:'netherite',w:2.4},{id:'plutonium',w:2.4},{id:'adamantite',w:2},
+      {id:'auric',w:1.4},{id:'dragonsteel',w:3.6},{id:'soulfire',w:3},
+      {id:'voidglass',w:2.2},{id:'ashforged',w:2.2},{id:'mystery',w:0.18},
       // r5
-      {id:'void',w:0.6},{id:'celestial',w:0.5},{id:'singularity',w:0.2},
-      {id:'riftstone',w:0.4},{id:'eternium',w:0.2},{id:'hearthcore',w:0.25},
+      {id:'void',w:1.3},{id:'celestial',w:1.2},{id:'singularity',w:0.85},
+      {id:'riftstone',w:1.2},{id:'eternium',w:1},{id:'hearthcore',w:1.1},{id:'deepfire',w:0.95},
     ],
   },
 ];
@@ -549,6 +561,53 @@ function pickFromMine(){
   const t=TYPES.find(x=>x.id===pool[0].id);
   return t||TYPES[0];
 }
+
+
+function getMineTotalWeight(mine){
+  return (mine.ores||[]).reduce((sum,o)=>sum+(o.w||0),0);
+}
+function buildMineOreList(mine){
+  const total=getMineTotalWeight(mine);
+  const wrap=document.createElement('div');
+  wrap.className='mcard-ores';
+  const title=document.createElement('div');
+  title.className='mcard-desc';
+  title.style.marginBottom='0';
+  title.textContent='Tap any mine to view spawn rates.';
+  wrap.appendChild(title);
+
+  const sorted=[...(mine.ores||[])].slice().sort((a,b)=>(b.w||0)-(a.w||0));
+  for(const o of sorted){
+    const type=TYPES.find(t=>t.id===o.id);
+    if(!type) continue;
+    const row=document.createElement('div');
+    row.className='oreline'+(isOreDiscovered(type.id)?'':' unknown');
+    const ico=makeMiniBall(type.id,24);
+    row.appendChild(ico);
+
+    const main=document.createElement('div');
+    main.className='oreline-main';
+    const nm=document.createElement('div');
+    nm.className='oreline-name';
+    nm.textContent=getDisplayOreName(type.id);
+    const sub=document.createElement('div');
+    sub.className='oreline-sub';
+    sub.textContent=isOreDiscovered(type.id)?`Spawn weight ${o.w}`:'Undiscovered';
+    main.appendChild(nm);
+    main.appendChild(sub);
+    row.appendChild(main);
+
+    const pct=document.createElement('div');
+    pct.className='oreline-pct';
+    const chance = total>0 ? (o.w/total*100) : 0;
+    pct.textContent=`${chance.toFixed(1)}%`;
+    row.appendChild(pct);
+
+    wrap.appendChild(row);
+  }
+  return wrap;
+}
+let expandedMineId='shallows';
 
 // ─── DRAW ─────────────────────────────────────────────────────────────
 function clamp01(v){return Math.max(0,Math.min(1,v));}
@@ -869,36 +928,89 @@ function showPopup(type,opts={}){
 }
 
 // ─── STATE ────────────────────────────────────────────────────────────
+const BASE_CREDIT_INTERVAL=10;
 let S={
-  credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],sellAllMode:false,
-  mysteryLock:null,lastSeen:Date.now(),nextIn:30,
+  credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],discoveredOres:[],sellAllMode:false,
+  mysteryLock:null,lastSeen:Date.now(),nextIn:BASE_CREDIT_INTERVAL,
   mine:'shallows',unlockedMines:['shallows'],
 };
-let nextIn=30;
+let nextIn=BASE_CREDIT_INTERVAL;
 
 const UPGRADE_ITEMS=[
-  {id:'clockwork',  name:'Clockwork Module', tier:'I',  reduce:3,dd:25, mats:{coal:4,iron:2,copper:2},          effect:'Reduces credit wait by 3s.'},
-  {id:'brassgov',   name:'Brass Governor',   tier:'II', reduce:3,dd:50, mats:{clockwork:1,tin:10,zinc:10,gold:4},effect:'Reduces credit wait by 3s.'},
-  {id:'silvercap',  name:'Silver Capacitor', tier:'III',reduce:4,dd:80, mats:{brassgov:1,silver:12,quartz:8,lapis:4},effect:'Reduces credit wait by 4s.'},
-  {id:'arcreg',     name:'Arcane Regulator', tier:'IV', reduce:4,dd:140,mats:{silvercap:1,amethyst:6,topaz:4,redstone:12},effect:'Reduces credit wait by 4s.'},
-  {id:'corestab',   name:'Core Stabilizer',  tier:'V',  reduce:3,dd:260,mats:{arcreg:1,diamond:6,titanium:4,emerald:3},effect:'Reduces credit wait by 3s.'},
-  {id:'chrono',     name:'Chrono Furnace',   tier:'VI', reduce:3,dd:500,mats:{corestab:1,opal:3,netherite:2,void:1,celestial:1},effect:'Reduces credit wait by 3s.'},
-  {id:'singularity',name:'Singularity Engine',tier:'VII',reduce:2,dd:900,mats:{chrono:1,singularity:1,aeon:1,starcore:1,plutonium:4},effect:'Reduces credit wait by 2s.'},
+  {id:'clockwork',  name:'Clockwork Module', tier:'I',  pct:14, dd:12,  mats:{coal:2,iron:1,copper:1},                 effect:'Reduces credit wait by 14%.'},
+  {id:'brassgov',   name:'Brass Governor',   tier:'II', pct:12, dd:22,  mats:{clockwork:1,tin:4,zinc:4,gold:1},        effect:'Reduces credit wait by 12%.'},
+  {id:'silvercap',  name:'Silver Capacitor', tier:'III',pct:10, dd:38,  mats:{brassgov:1,silver:6,quartz:4,lapis:2},    effect:'Reduces credit wait by 10%.'},
+  {id:'arcreg',     name:'Arcane Regulator', tier:'IV', pct:10, dd:58,  mats:{silvercap:1,amethyst:3,topaz:2,redstone:5},effect:'Reduces credit wait by 10%.'},
+  {id:'corestab',   name:'Core Stabilizer',  tier:'V',  pct:8,  dd:82,  mats:{arcreg:1,diamond:3,titanium:2,emerald:1}, effect:'Reduces credit wait by 8%.'},
+  {id:'chrono',     name:'Chrono Furnace',   tier:'VI', pct:8,  dd:118, mats:{corestab:1,opal:1,netherite:1,void:1,celestial:1},effect:'Reduces credit wait by 8%.'},
+  {id:'singularity',name:'Singularity Engine',tier:'VII',pct:10, dd:170, mats:{chrono:1,singularity:1,aeon:1,starcore:1,plutonium:2},effect:'Reduces credit wait by 10%.'},
 ];
 
 const CAP_CREDIT_ITEMS=[
-  {id:'vault1',name:'Copper Vault',  tier:'I',  max:50,  dd:20, mats:{coal:8,copper:4,iron:2},             effect:'Raises max credits to 50.'},
-  {id:'vault2',name:'Brass Vault',   tier:'II', max:100, dd:45, mats:{tin:8,zinc:6,copper:6,silver:2},      effect:'Raises max credits to 100.'},
-  {id:'vault3',name:'Silver Vault',  tier:'III',max:200, dd:90, mats:{gold:10,silver:8,quartz:4},           effect:'Raises max credits to 200.'},
-  {id:'vault4',name:'Gold Vault',    tier:'IV', max:350, dd:160,mats:{emerald:4,diamond:3,titanium:3},      effect:'Raises max credits to 350.'},
-  {id:'vault5',name:'Platinum Vault',tier:'V',  max:500, dd:280,mats:{opal:2,netherite:2,iridium:2},        effect:'Raises max credits to 500.'},
-  {id:'vault6',name:'Diamond Vault', tier:'VI', max:750, dd:450,mats:{adamantite:3,auric:2,celestial:1},    effect:'Raises max credits to 750.'},
-  {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:700,mats:{void:1,aeon:1,starcore:1,plutonium:2,singularity:1},effect:'Raises max credits to 1000.'},
+  {id:'vault1',name:'Copper Vault',  tier:'I',  max:50,  dd:15, mats:{coal:5,copper:3,iron:1},             effect:'Raises max credits to 50.'},
+  {id:'vault2',name:'Brass Vault',   tier:'II', max:100, dd:35, mats:{tin:5,zinc:4,copper:4,silver:1},      effect:'Raises max credits to 100.'},
+  {id:'vault3',name:'Silver Vault',  tier:'III',max:200, dd:65, mats:{gold:6,silver:5,quartz:3},           effect:'Raises max credits to 200.'},
+  {id:'vault4',name:'Gold Vault',    tier:'IV', max:350, dd:110,mats:{emerald:2,diamond:2,titanium:2},      effect:'Raises max credits to 350.'},
+  {id:'vault5',name:'Platinum Vault',tier:'V',  max:500, dd:170,mats:{opal:1,netherite:1,iridium:1},        effect:'Raises max credits to 500.'},
+  {id:'vault6',name:'Diamond Vault', tier:'VI', max:750, dd:250,mats:{adamantite:2,auric:1,celestial:1},    effect:'Raises max credits to 750.'},
+  {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:360,mats:{void:1,aeon:1,starcore:1,plutonium:2,singularity:1},effect:'Raises max credits to 1000.'},
 ];
 
 const CAP_CREDIT_INDEX=Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
 const UPGRADE_INDEX=Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
 const ORE_INDEX=Object.fromEntries(TYPES.map(t=>[t.id,t]));
+function normalizeMineProgress(){
+  if(!Array.isArray(S.unlockedMines)) S.unlockedMines=['shallows'];
+  const ordered=[];
+  for(let i=0;i<MINES.length;i++){
+    const id=MINES[i].id;
+    if(i===0){
+      ordered.push(id);
+      continue;
+    }
+    if(S.unlockedMines.includes(id)) ordered.push(id);
+    else break;
+  }
+  S.unlockedMines=ordered.length?ordered:['shallows'];
+  if(!S.unlockedMines.includes(S.mine)){
+    S.mine=S.unlockedMines[S.unlockedMines.length-1]||'shallows';
+  }
+}
+
+function isMineUnlocked(id){
+  return Array.isArray(S.unlockedMines) && S.unlockedMines.includes(id);
+}
+
+function getNextMineIndex(){
+  return Math.min((Array.isArray(S.unlockedMines)?S.unlockedMines.length:1), MINES.length-1);
+}
+
+function canUnlockMine(id){
+  const idx=MINES.findIndex(m=>m.id===id);
+  if(idx<0) return false;
+  return idx===((Array.isArray(S.unlockedMines)?S.unlockedMines.length:1)) && S.dd>=MINES[idx].unlockCost;
+}
+
+function isOreDiscovered(id){
+  return Array.isArray(S.discoveredOres) && S.discoveredOres.includes(id);
+}
+
+function markOreDiscovered(id){
+  if(!id || id==='mystery') return;
+  if(!Array.isArray(S.discoveredOres)) S.discoveredOres=[];
+  if(!S.discoveredOres.includes(id)) S.discoveredOres.push(id);
+}
+
+function getDisplayOreName(id){
+  return isOreDiscovered(id) ? (ORE_INDEX[id]?.name || id) : '???';
+}
+
+function getDisplayFeaturedName(label){
+  const t=TYPES.find(x=>x.name===label);
+  if(!t) return label;
+  return isOreDiscovered(t.id) ? label : '???';
+}
+
 
 function getCraftedCount(){return Array.isArray(S.upgrades)?S.upgrades.length:0;}
 function getCapCraftedCount(){return Array.isArray(S.capUpgrades)?S.capUpgrades.length:0;}
@@ -920,8 +1032,8 @@ function getOreLabel(id){
   return id;
 }
 function getCreditInterval(){
-  const reduce=(S.upgrades||[]).reduce((sum,id)=>sum+(UPGRADE_INDEX[id]?.reduce||0),0);
-  return Math.max(8,30-reduce);
+  const mult=(S.upgrades||[]).reduce((prod,id)=>prod*(1-((UPGRADE_INDEX[id]?.pct||0)/100)),1);
+  return Math.max(4,Math.ceil(BASE_CREDIT_INTERVAL*mult));
 }
 function getMaxCredits(){
   const tier=Array.isArray(S.capUpgrades)?S.capUpgrades.length:0;
@@ -960,6 +1072,7 @@ function load(){
       S={...S,...parsed,col:{...S.col,...(parsed.col||{})}};
       if(!Array.isArray(S.upgrades))S.upgrades=[];
       if(!Array.isArray(S.capUpgrades))S.capUpgrades=[];
+      if(!Array.isArray(S.discoveredOres))S.discoveredOres=[];
       if(typeof S.sellAllMode!=='boolean')S.sellAllMode=false;
       if(typeof S.dd!=='number'||!Number.isFinite(S.dd))S.dd=0;
       if(typeof S.credits!=='number'||!Number.isFinite(S.credits))S.credits=10;
@@ -967,7 +1080,7 @@ function load(){
       if(typeof S.lastSeen!=='number'||!Number.isFinite(S.lastSeen))S.lastSeen=Date.now();
       if(!S.mine)S.mine='shallows';
       if(!Array.isArray(S.unlockedMines))S.unlockedMines=['shallows'];
-      if(!S.unlockedMines.includes('shallows'))S.unlockedMines.unshift('shallows');
+      normalizeMineProgress();
       if(S.mysteryLock&&typeof S.mysteryLock==='object'){
         if(!Number.isFinite(S.mysteryLock.grant)||S.mysteryLock.grant<=0||S.mysteryLock.spent>=S.mysteryLock.grant)S.mysteryLock=null;
         else if(!Number.isFinite(S.mysteryLock.spent))S.mysteryLock.spent=0;
@@ -975,10 +1088,10 @@ function load(){
       const secs=(Date.now()-S.lastSeen)/1000;
       const earn=Math.floor(secs/Math.max(1,getCreditInterval()));
       if(earn>0){addCredits(earn);S.lastSeen=Date.now();}
-      nextIn=typeof S.nextIn==='number'&&Number.isFinite(S.nextIn)?S.nextIn:getCreditInterval();
+      nextIn=typeof S.nextIn==='number'&&Number.isFinite(S.nextIn)?S.nextIn:BASE_CREDIT_INTERVAL;
       syncTimerToInterval();
-    }else{nextIn=getCreditInterval();syncTimerToInterval();}
-  }catch(e){nextIn=getCreditInterval();syncTimerToInterval();}
+    }else{nextIn=BASE_CREDIT_INTERVAL;syncTimerToInterval();}
+  }catch(e){nextIn=BASE_CREDIT_INTERVAL;syncTimerToInterval();}
 }
 
 // ─── MINE PANEL ───────────────────────────────────────────────────────
@@ -997,13 +1110,21 @@ function getMineRaritySet(mine){
 function buildMinePanel(){
   const container=document.getElementById('mine-cards');
   container.innerHTML='';
-  for(const mine of MINES){
+  for(let i=0;i<MINES.length;i++){
+    const mine=MINES[i];
     const isActive=S.mine===mine.id;
-    const isUnlocked=S.unlockedMines.includes(mine.id);
+    const isUnlocked=isMineUnlocked(mine.id);
+    const isNext=i===getNextMineIndex();
     const canAfford=S.dd>=mine.unlockCost;
+    const expanded=expandedMineId===mine.id || isActive;
 
     const card=document.createElement('div');
-    card.className='mcard'+(isActive?' active':'')+((!isUnlocked)?' locked-card':'');
+    card.className='mcard'+(isActive?' active':'')+((!isUnlocked)?' locked-card':'')+(expanded?' open':'');
+    card.addEventListener('click',(e)=>{
+      if(e.target.closest('button')) return;
+      expandedMineId = expandedMineId===mine.id ? '' : mine.id;
+      buildMinePanel();
+    });
 
     // Header
     const hdr=document.createElement('div');hdr.className='mcard-hdr';
@@ -1012,7 +1133,8 @@ function buildMinePanel(){
     const badge=document.createElement('span');badge.className='mcard-badge';
     if(isActive){badge.textContent='▶ Active';badge.classList.add('badge-active');}
     else if(isUnlocked){badge.textContent='Unlocked';badge.classList.add('badge-unlocked');}
-    else{badge.textContent='🔒 Locked';badge.classList.add('badge-locked');}
+    else if(isNext){badge.textContent='Next';badge.classList.add('badge-locked');}
+    else{badge.textContent='Locked';badge.classList.add('badge-locked');}
     hdr.appendChild(icon);hdr.appendChild(title);hdr.appendChild(badge);
     card.appendChild(hdr);
 
@@ -1028,7 +1150,7 @@ function buildMinePanel(){
     stats.appendChild(costStat);
     if(mine.unlockCost>0){
       const unlockStat=document.createElement('div');unlockStat.className='mstat';
-      unlockStat.innerHTML=isUnlocked?'<b style="color:#70c090">✓ Unlocked</b>':`Unlock: <b>${mine.unlockCost.toLocaleString()} DD</b>`;
+      unlockStat.innerHTML=isUnlocked?'<b style="color:#70c090">✓ Unlocked</b>':(isNext?`Unlock: <b>${mine.unlockCost.toLocaleString()} DD</b>`:'<b style="color:#c06060">Locked</b>');
       stats.appendChild(unlockStat);
     }else{
       const freeStat=document.createElement('div');freeStat.className='mstat';
@@ -1050,8 +1172,11 @@ function buildMinePanel(){
 
     // Featured
     const feat=document.createElement('div');feat.className='mfeatured';
-    feat.innerHTML='Notable finds: '+mine.featured.map(n=>`<b>${n}</b>`).join(', ');
+    feat.innerHTML='Notable finds: '+mine.featured.map(n=>`<b>${getDisplayFeaturedName(n)}</b>`).join(', ');
     card.appendChild(feat);
+
+    // Spawn table
+    card.appendChild(buildMineOreList(mine));
 
     // Action button
     const btn=document.createElement('button');btn.className='maction-btn';
@@ -1060,11 +1185,14 @@ function buildMinePanel(){
     }else if(isUnlocked){
       btn.textContent=`Switch to ${mine.name}`;btn.classList.add('select');
       btn.addEventListener('click',()=>{selectMine(mine.id);closeMinePanel();});
-    }else{
+    }else if(isNext){
       btn.textContent=`Unlock for ${mine.unlockCost.toLocaleString()} DD`;btn.classList.add('unlock');
       btn.disabled=!canAfford;
       if(!canAfford)btn.textContent+=` (need ${(mine.unlockCost-S.dd).toLocaleString()} more)`;
       btn.addEventListener('click',()=>{unlockMine(mine.id);});
+    }else{
+      btn.textContent='Reach previous mine first';btn.classList.add('current');
+      btn.disabled=true;
     }
     card.appendChild(btn);
     container.appendChild(card);
@@ -1072,13 +1200,15 @@ function buildMinePanel(){
 }
 
 function selectMine(id){
-  if(!S.unlockedMines.includes(id))return;
+  if(!isMineUnlocked(id))return;
   S.mine=id;save();updateMineBar();
 }
 
 function unlockMine(id){
-  const mine=MINES.find(m=>m.id===id);
-  if(!mine||S.unlockedMines.includes(id))return;
+  const idx=MINES.findIndex(m=>m.id===id);
+  const mine=MINES[idx];
+  if(!mine||isMineUnlocked(id))return;
+  if(idx!==getNextMineIndex())return;
   if(S.dd<mine.unlockCost)return;
   S.dd-=mine.unlockCost;
   S.unlockedMines.push(id);
@@ -1123,6 +1253,7 @@ function roll(){
 // ─── COLLECTION ───────────────────────────────────────────────────────
 function addToCollection(type){
   S.col[type.id]=(S.col[type.id]||0)+1;
+  markOreDiscovered(type.id);
   save();updateUI();
   if(document.getElementById('gal-view').style.display==='block'){buildInventory();buildWorkshop();buildCapWorkshop();}
 }
@@ -1251,61 +1382,106 @@ function buildRecipeRow(mats){
 }
 
 function buildWorkshop(){
-  const grid=document.getElementById('shopgrid');grid.innerHTML='';
-  const crafted=getCraftedCount();
-  for(let i=0;i<UPGRADE_ITEMS.length;i++){
-    const up=UPGRADE_ITEMS[i];
-    const owned=S.upgrades.includes(up.id),active=i===crafted,locked=i>crafted;
-    const card=document.createElement('div');card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
-    const badge=document.createElement('div');badge.className='shopbadge';
-    badge.textContent=owned?'Crafted':(active?'Available':`Tier ${up.tier}`);card.appendChild(badge);
-    const name=document.createElement('div');name.className='shopname';name.textContent=up.name;card.appendChild(name);
-    const meta=document.createElement('div');meta.className='shopmeta';meta.textContent=`Tier ${up.tier} · -${up.reduce}s credit wait`;card.appendChild(meta);
-    const eff=document.createElement('div');eff.className='shopeff';eff.textContent=up.effect;card.appendChild(eff);
-    const req=document.createElement('div');req.className='shopreq';
-    if(owned){req.textContent='Already installed. The factory cycle bonus is active.';}
-    else if(locked){req.textContent=`Locked. Craft ${UPGRADE_ITEMS[i-1].name} first.`;}
-    else{
-      req.appendChild(buildRecipeRow(up.mats));
-      const ml=document.createElement('div');ml.className='recmeta';
-      ml.textContent=`Recipe icons show what you need. Grey = not enough yet. Cost: ${up.dd} DD`;req.appendChild(ml);
-    }
-    card.appendChild(req);
-    const btn=document.createElement('button');btn.className='craftbtn';
-    if(owned){btn.textContent='Crafted';btn.disabled=true;}
-    else if(locked){btn.textContent='Locked';btn.disabled=true;}
-    else{btn.textContent=`Craft for ${up.dd} DD`;btn.disabled=!canCraftUpgrade(up);btn.addEventListener('click',()=>craftUpgrade(up.id));}
-    card.appendChild(btn);grid.appendChild(card);
+  const grid=document.getElementById('shopgrid');
+  grid.innerHTML='';
+  const idx=getCraftedCount();
+  const up=UPGRADE_ITEMS[idx];
+  if(!up){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:26px;color:var(--dim);font-size:.8rem">All wait-time upgrades are installed.</div>';
+    return;
   }
+
+  const card=document.createElement('div');
+  card.className='shopcard';
+
+  const badge=document.createElement('div');
+  badge.className='shopbadge';
+  badge.textContent=`Next · Tier ${up.tier}`;
+  card.appendChild(badge);
+
+  const name=document.createElement('div');
+  name.className='shopname';
+  name.textContent=up.name;
+  card.appendChild(name);
+
+  const meta=document.createElement('div');
+  meta.className='shopmeta';
+  meta.textContent=`Tier ${up.tier} · ${up.pct}% faster credit gain`;
+  card.appendChild(meta);
+
+  const eff=document.createElement('div');
+  eff.className='shopeff';
+  eff.textContent=up.effect;
+  card.appendChild(eff);
+
+  const req=document.createElement('div');
+  req.className='shopreq';
+  req.appendChild(buildRecipeRow(up.mats));
+  const ml=document.createElement('div');
+  ml.className='recmeta';
+  ml.textContent=`Only the next upgrade is shown. Cost: ${up.dd} DD`;
+  req.appendChild(ml);
+  card.appendChild(req);
+
+  const btn=document.createElement('button');
+  btn.className='craftbtn';
+  btn.textContent=`Craft for ${up.dd} DD`;
+  btn.disabled=!canCraftUpgrade(up);
+  btn.addEventListener('click',()=>craftUpgrade(up.id));
+  card.appendChild(btn);
+
+  grid.appendChild(card);
 }
 
 function buildCapWorkshop(){
   const grid=document.getElementById('capgrid');if(!grid)return;grid.innerHTML='';
-  const crafted=getCapCraftedCount();
-  for(let i=0;i<CAP_CREDIT_ITEMS.length;i++){
-    const up=CAP_CREDIT_ITEMS[i];
-    const owned=S.capUpgrades.includes(up.id),active=i===crafted,locked=i>crafted;
-    const card=document.createElement('div');card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
-    const badge=document.createElement('div');badge.className='shopbadge';
-    badge.textContent=owned?'Crafted':(active?'Available':`Tier ${up.tier}`);card.appendChild(badge);
-    const name=document.createElement('div');name.className='shopname';name.textContent=up.name;card.appendChild(name);
-    const meta=document.createElement('div');meta.className='shopmeta';meta.textContent=`Tier ${up.tier} · Max ${up.max} credits`;card.appendChild(meta);
-    const eff=document.createElement('div');eff.className='shopeff';eff.textContent=up.effect;card.appendChild(eff);
-    const req=document.createElement('div');req.className='shopreq';
-    if(owned){req.textContent=`Installed. Credit cap is now ${getMaxCredits()}.`;}
-    else if(locked){req.textContent=`Locked. Craft ${CAP_CREDIT_ITEMS[i-1].name} first.`;}
-    else{
-      req.appendChild(buildRecipeRow(up.mats));
-      const ml=document.createElement('div');ml.className='recmeta';
-      ml.textContent=`Raises your credit cap to ${up.max}. Cost: ${up.dd} DD`;req.appendChild(ml);
-    }
-    card.appendChild(req);
-    const btn=document.createElement('button');btn.className='craftbtn';
-    if(owned){btn.textContent='Crafted';btn.disabled=true;}
-    else if(locked){btn.textContent='Locked';btn.disabled=true;}
-    else{btn.textContent=`Craft for ${up.dd} DD`;btn.disabled=!canCraftCapUpgrade(up);btn.addEventListener('click',()=>craftCapUpgrade(up.id));}
-    card.appendChild(btn);grid.appendChild(card);
+  const idx=getCapCraftedCount();
+  const up=CAP_CREDIT_ITEMS[idx];
+  if(!up){
+    grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:26px;color:var(--dim);font-size:.8rem">All credit-cap upgrades are installed.</div>';
+    return;
   }
+
+  const card=document.createElement('div');
+  card.className='shopcard';
+
+  const badge=document.createElement('div');
+  badge.className='shopbadge';
+  badge.textContent=`Next · Tier ${up.tier}`;
+  card.appendChild(badge);
+
+  const name=document.createElement('div');
+  name.className='shopname';
+  name.textContent=up.name;
+  card.appendChild(name);
+
+  const meta=document.createElement('div');
+  meta.className='shopmeta';
+  meta.textContent=`Tier ${up.tier} · Max ${up.max} credits`;
+  card.appendChild(meta);
+
+  const eff=document.createElement('div');
+  eff.className='shopeff';
+  eff.textContent=up.effect;
+  card.appendChild(eff);
+
+  const req=document.createElement('div');
+  req.className='shopreq';
+  req.appendChild(buildRecipeRow(up.mats));
+  const ml=document.createElement('div');
+  ml.className='recmeta';
+  ml.textContent=`Only the next cap upgrade is shown. Cost: ${up.dd} DD`;
+  req.appendChild(ml);
+  card.appendChild(req);
+
+  const btn=document.createElement('button');
+  btn.className='craftbtn';
+  btn.textContent=`Craft for ${up.dd} DD`;
+  btn.disabled=!canCraftCapUpgrade(up);
+  btn.addEventListener('click',()=>craftCapUpgrade(up.id));
+  card.appendChild(btn);
+
+  grid.appendChild(card);
 }
 
 // Animate inventory canvases
