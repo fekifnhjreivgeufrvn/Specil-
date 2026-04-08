@@ -14,6 +14,7 @@ html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font
 body{display:flex;flex-direction:column;height:100dvh;}
 button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-select:none;}
 
+/* ── HEADER ── */
 #hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
   background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
 #ttl{font-size:1rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);text-shadow:0 0 12px rgba(201,162,39,.4);}
@@ -22,24 +23,33 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 #dd-count{color:#7cf8ff;font-size:1rem;}
 #tmr{font-size:.65rem;color:var(--dim);min-width:60px;text-align:right;}
 
+/* ── TABS ── */
 #tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
 .tab{flex:1;padding:9px;text-align:center;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
   cursor:pointer;color:var(--dim);transition:color .2s;border-bottom:2px solid transparent;}
 .tab.on{color:var(--gold);border-bottom-color:var(--gold);}
 
+/* ── GAME AREA ── */
 #game{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
-#gal-view{flex:1;overflow-y:auto;padding:14px;display:none;}
-#inv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-  padding:12px 14px;margin-bottom:12px;background:var(--surf);border:1px solid var(--brd);border-radius:10px;}
-#inv-title{font-size:.95rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-#inv-sub{margin-top:4px;font-size:.72rem;color:var(--dim);line-height:1.35;max-width:42ch;}
-#dd-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#0c1620;border:1px solid #2d5672;
-  border-radius:999px;padding:8px 12px;color:#c9f5ff;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
-#dd-pill b{font-size:1rem;color:#7cf8ff;}
 
+/* ── MINE BAR ── */
+#mine-bar{display:flex;align-items:center;gap:8px;padding:5px 12px;
+  background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
+#mine-bar-icon{font-size:1rem;line-height:1;flex-shrink:0;}
+#mine-bar-name{flex:1;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#mine-bar-cost{font-size:.62rem;color:var(--dim);white-space:nowrap;flex-shrink:0;}
+#mine-switch-btn{border:1px solid var(--brd);background:transparent;color:var(--dim);
+  border-radius:4px;padding:4px 9px;font-size:.62rem;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;font-family:inherit;transition:color .2s,border-color .2s;flex-shrink:0;}
+#mine-switch-btn:hover{color:var(--gold);border-color:var(--gold);}
+
+/* ── CANVAS ── */
 #cwrap{flex:1;position:relative;min-height:0;}
 #c{position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;}
+#hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;
+  font-size:.62rem;color:var(--dim);pointer-events:none;font-style:italic;letter-spacing:.5px;}
 
+/* ── ROLL BAR ── */
 #rollbar{padding:10px 14px;background:var(--surf);border-top:1px solid var(--brd);
   display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;}
 #rbtn{background:linear-gradient(135deg,#5a3c0e,#c9a227 45%,#8a6010 55%,#5a3c0e);
@@ -50,27 +60,15 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 #rbtn:disabled{opacity:.35;cursor:not-allowed;}
 #rcost{font-size:.75rem;color:var(--dim);}
 
-/* Gallery */
-.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:10px;}
-.gi{background:var(--surf);border-radius:10px;padding:10px;text-align:center;
-  cursor:default;border:1px solid;transition:transform .15s,box-shadow .15s;}
-.gi:hover{transform:translateY(-1px);}
-.gi canvas{display:block;margin:0 auto;}
-.gi .gr{font-size:.62rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
-.gi .gc{font-size:.72rem;color:var(--gold);margin-top:4px;}
-.gi .cnt{font-size:.72rem;color:#c9f5ff;margin-top:2px;}
-.sellbtn{width:100%;margin-top:8px;padding:7px 8px;border:none;border-radius:6px;
-  background:linear-gradient(135deg,#123041,#2f718f 50%,#123041);color:#dff9ff;
-  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
-.sellbtn:hover{filter:brightness(1.12);}
-.sellbtn:disabled{opacity:.35;cursor:not-allowed;}
-.r0{border-color:#444;}
-.r1{border-color:#888;}
-.r2{border-color:#3a9;}
-.r3{border-color:#58f;}
-.r4{border-color:#f5a;box-shadow:0 0 6px rgba(255,80,180,.3);}
-.r5{border-color:#fd0;box-shadow:0 0 10px rgba(255,210,0,.4);}
-
+/* ── GALLERY / INVENTORY ── */
+#gal-view{flex:1;overflow-y:auto;padding:14px;display:none;}
+#inv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  padding:12px 14px;margin-bottom:12px;background:var(--surf);border:1px solid var(--brd);border-radius:10px;}
+#inv-title{font-size:.95rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+#inv-sub{margin-top:4px;font-size:.72rem;color:var(--dim);line-height:1.35;max-width:42ch;}
+#dd-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#0c1620;border:1px solid #2d5672;
+  border-radius:999px;padding:8px 12px;color:#c9f5ff;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
+#dd-pill b{font-size:1rem;color:#7cf8ff;}
 #inv-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
 #cycle-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#1a140f;border:1px solid #4c3a24;
   border-radius:999px;padding:8px 12px;color:#eedfc4;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
@@ -80,7 +78,25 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   font-size:.72rem;letter-spacing:1px;text-transform:uppercase;min-width:92px;}
 .modebtn.on{background:linear-gradient(135deg,#173447,#2f718f 50%,#173447);color:#dff9ff;}
 .modebtn:hover{filter:brightness(1.08);}
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:10px;}
+.gi{background:var(--surf);border-radius:10px;padding:10px;text-align:center;
+  cursor:default;border:1px solid;transition:transform .15s,box-shadow .15s;}
+.gi:hover{transform:translateY(-1px);}
+.gi canvas{display:block;margin:0 auto;}
+.gi .gname{font-size:.82rem;font-weight:bold;color:var(--txt);margin-top:6px;letter-spacing:.5px;}
+.gi .gr{font-size:.6rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
+.gi .gc{font-size:.72rem;color:var(--gold);margin-top:4px;}
+.gi .cnt{font-size:.72rem;color:#c9f5ff;margin-top:2px;}
+.sellbtn{width:100%;margin-top:8px;padding:7px 8px;border:none;border-radius:6px;
+  background:linear-gradient(135deg,#123041,#2f718f 50%,#123041);color:#dff9ff;
+  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
+.sellbtn:hover{filter:brightness(1.12);}
+.sellbtn:disabled{opacity:.35;cursor:not-allowed;}
+.r0{border-color:#444;}.r1{border-color:#888;}.r2{border-color:#3a9;}
+.r3{border-color:#58f;}.r4{border-color:#f5a;box-shadow:0 0 6px rgba(255,80,180,.3);}
+.r5{border-color:#fd0;box-shadow:0 0 10px rgba(255,210,0,.4);}
 
+/* ── WORKSHOP ── */
 .shophead{margin:14px 0 10px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
 .shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:18px;}
 .shopcard{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;}
@@ -97,64 +113,59 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   font-size:.72rem;letter-spacing:1px;text-transform:uppercase;font-weight:bold;cursor:pointer;}
 .craftbtn:hover:not(:disabled){filter:brightness(1.1);}
 .craftbtn:disabled{opacity:.4;cursor:not-allowed;}
+.recipe{display:flex;flex-direction:column;gap:6px;}
+.reqs{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;}
+.reqtok{width:44px;min-height:58px;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;gap:4px;padding:5px 4px 4px;border-radius:9px;
+  background:#0d0b08;border:1px solid #3c3427;color:#f5ead6;position:relative;}
+.reqtok.locked{opacity:.38;filter:grayscale(1);}
+.reqtok canvas{display:block;}
+.reqtok .qty{font-size:.62rem;line-height:1;letter-spacing:1px;color:var(--gold);}
+.reqtok .lbl{font-size:.52rem;line-height:1;color:var(--dim);text-transform:uppercase;
+  letter-spacing:.6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.recmeta{font-size:.66rem;color:var(--dim);line-height:1.25;}
 
-.recipe{
-  display:flex;
-  flex-direction:column;
-  gap:6px;
-}
-.reqs{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  align-items:flex-start;
-}
-.reqtok{
-  width:44px;
-  min-height:58px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:flex-start;
-  gap:4px;
-  padding:5px 4px 4px;
-  border-radius:9px;
-  background:#0d0b08;
-  border:1px solid #3c3427;
-  color:#f5ead6;
-  position:relative;
-}
-.reqtok.locked{
-  opacity:.38;
-  filter:grayscale(1);
-}
-.reqtok canvas{
-  display:block;
-}
-.reqtok .qty{
-  font-size:.62rem;
-  line-height:1;
-  letter-spacing:1px;
-  color:var(--gold);
-}
-.reqtok .lbl{
-  font-size:.52rem;
-  line-height:1;
-  color:var(--dim);
-  text-transform:uppercase;
-  letter-spacing:.6px;
-  max-width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-.recmeta{
-  font-size:.66rem;
-  color:var(--dim);
-  line-height:1.25;
-}
+/* ── MINE PANEL ── */
+#mine-panel{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.84);
+  display:none;flex-direction:column;align-items:center;justify-content:flex-end;}
+#mine-panel.open{display:flex;}
+#mine-panel-inner{width:100%;max-width:480px;background:#0d0b08;
+  border-top:1px solid #3a2e1a;border-radius:16px 16px 0 0;
+  padding:16px 14px 24px;max-height:85vh;overflow-y:auto;}
+.mpanel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.mpanel-title{font-size:.85rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
+.mpanel-close{border:1px solid var(--brd);background:transparent;color:var(--dim);
+  border-radius:4px;padding:4px 10px;font-size:.72rem;cursor:pointer;font-family:inherit;}
+.mcard{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:10px;}
+.mcard.active{border-color:var(--gold);}
+.mcard.locked-card{opacity:.68;}
+.mcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.mcard-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
+.mcard-title{font-size:.92rem;letter-spacing:1px;color:var(--txt);font-weight:bold;flex:1;}
+.mcard-badge{font-size:.58rem;letter-spacing:1px;text-transform:uppercase;
+  padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0;}
+.badge-active{background:#1e1808;border:1px solid #8a6820;color:#d4b050;}
+.badge-unlocked{background:#0c1a10;border:1px solid #2a6040;color:#70c090;}
+.badge-locked{background:#1a0c0c;border:1px solid #6a2020;color:#c06060;}
+.mcard-desc{font-size:.7rem;color:var(--dim);line-height:1.45;margin-bottom:8px;}
+.mcard-stats{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.mstat{font-size:.66rem;color:var(--txt);background:#0a0804;border:1px solid var(--brd);
+  border-radius:5px;padding:3px 8px;}
+.mstat b{color:var(--gold);}
+.mstat.expensive b{color:#f08060;}
+.mrar-chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
+.rchip{font-size:.56rem;padding:2px 7px;border-radius:999px;letter-spacing:.5px;border:1px solid;}
+.mfeatured{font-size:.62rem;color:var(--dim);margin-bottom:10px;line-height:1.5;}
+.mfeatured b{color:var(--txt);}
+.maction-btn{width:100%;padding:10px;border:none;border-radius:6px;font-family:inherit;
+  font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:bold;cursor:pointer;transition:filter .2s;}
+.maction-btn.select{background:linear-gradient(135deg,#4b2f09,#c9a227 55%,#4b2f09);color:#0b0603;}
+.maction-btn.unlock{background:linear-gradient(135deg,#0f2c40,#1e6090 50%,#0f2c40);color:#c0e8ff;}
+.maction-btn.current{background:#1e1810;color:var(--dim);cursor:default;}
+.maction-btn:hover:not(.current):not(:disabled){filter:brightness(1.12);}
+.maction-btn:disabled{opacity:.38;cursor:not-allowed;}
 
-/* Rarity popup */
+/* ── POPUP ── */
 #popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
   background:var(--surf);border:1px solid var(--brd);border-radius:12px;
   padding:18px 24px;text-align:center;z-index:9999;
@@ -164,7 +175,6 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 #pop-canvas{display:block;margin:0;}
 #pop-name{font-size:1.08rem;letter-spacing:1.5px;color:var(--gold);text-align:center;line-height:1.2;}
 #pop-rar{font-size:.75rem;color:var(--dim);margin-top:1px;letter-spacing:1px;text-align:center;}
-
 </style>
 </head>
 <body>
@@ -186,6 +196,12 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 </div>
 
 <div id="game">
+  <div id="mine-bar">
+    <span id="mine-bar-icon">⛏</span>
+    <span id="mine-bar-name">The Shallows</span>
+    <span id="mine-bar-cost">◈ 1 credit / roll</span>
+    <button id="mine-switch-btn" onclick="openMinePanel()">Switch Mine</button>
+  </div>
   <div id="cwrap">
     <canvas id="c"></canvas>
     <div id="hint">Tap a ball to collect it</div>
@@ -208,15 +224,23 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
       <button id="sellmode-btn" class="modebtn" onclick="toggleSellMode()">Sell 1</button>
     </div>
   </div>
-
   <div class="shophead">Ore Inventory</div>
   <div class="ggrid" id="ggrid"></div>
-
   <div class="shophead">Workshop Upgrades</div>
   <div class="shopgrid" id="shopgrid"></div>
-
   <div class="shophead">Credit Capacity Upgrades</div>
   <div class="shopgrid" id="capgrid"></div>
+</div>
+
+<!-- Mine Selector Panel -->
+<div id="mine-panel" onclick="if(event.target===this)closeMinePanel()">
+  <div id="mine-panel-inner">
+    <div class="mpanel-hdr">
+      <div class="mpanel-title">⛰ Choose Mine</div>
+      <button class="mpanel-close" onclick="closeMinePanel()">✕ Close</button>
+    </div>
+    <div id="mine-cards"></div>
+  </div>
 </div>
 
 <div id="popup">
@@ -226,111 +250,245 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 </div>
 
 <script>
-// ─── TYPES ────────────────────────────────────────────────────────────
-const RNAMES = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
+// ─── RARITY ───────────────────────────────────────────────────────────
+const RNAMES  = ['Common','Uncommon','Rare','Epic','Legendary','Mythic'];
+const RCOLORS = ['#888','#aaa','#3ab','#88f','#f5a','#fd0'];
+
+// ─── ORE TYPES ────────────────────────────────────────────────────────
+// w:0 = mine-exclusive (doesn't appear in global fallback)
+// val = DD sell value override (defaults to PRICE_BY_RAR[r])
 const TYPES = [
-  {id:'coal',       name:'Coal',        r:0, w:16,  style:'rock',   c:['#4a4540','#1e1a16','#0d0b09']},
-  {id:'anthracite', name:'Anthracite',  r:0, w:12,  style:'rock',   c:['#433a35','#171310','#070605']},
-  {id:'limestone',  name:'Limestone',   r:0, w:10,  style:'rock',   c:['#dad3c4','#9c927f','#65604f']},
-  {id:'slate',      name:'Slate',       r:0, w:8,   style:'rock',   c:['#6a7078','#2c3138','#0f1115']},
-  {id:'ash',        name:'Ash',         r:0, w:6,   style:'rock',   c:['#9c958c','#5e554b','#2b251f']},
-  {id:'peat',       name:'Peat',        r:0, w:2,   style:'rock',   c:['#5d4a35','#3a2a1b','#1f1610']},
-  {id:'mudstone',   name:'Mudstone',    r:0, w:1,   style:'rock',   c:['#7a5e47','#4a3827','#251a13']},
+  // ── r0 Common (The Shallows) ──
+  {id:'coal',        name:'Coal',          r:0, w:16,  style:'rock',    c:['#4a4540','#1e1a16','#0d0b09']},
+  {id:'anthracite',  name:'Anthracite',    r:0, w:12,  style:'rock',    c:['#433a35','#171310','#070605']},
+  {id:'limestone',   name:'Limestone',     r:0, w:10,  style:'rock',    c:['#dad3c4','#9c927f','#65604f']},
+  {id:'slate',       name:'Slate',         r:0, w:8,   style:'rock',    c:['#6a7078','#2c3138','#0f1115']},
+  {id:'ash',         name:'Ash',           r:0, w:6,   style:'rock',    c:['#9c958c','#5e554b','#2b251f']},
+  {id:'peat',        name:'Peat',          r:0, w:2,   style:'rock',    c:['#5d4a35','#3a2a1b','#1f1610']},
+  {id:'mudstone',    name:'Mudstone',      r:0, w:1,   style:'rock',    c:['#7a5e47','#4a3827','#251a13']},
 
-  {id:'iron',       name:'Iron',        r:1, w:7,   style:'metal',  c:['#d4cdc4','#9a9590','#6e6a65']},
-  {id:'copper',     name:'Copper',      r:1, w:6,   style:'metal',  c:['#e8855a','#b85c30','#7a3318']},
-  {id:'tin',        name:'Tin',         r:1, w:5,   style:'metal',  c:['#d7dbe0','#9ea8b2','#5b6774']},
-  {id:'nickel',     name:'Nickel',      r:1, w:4,   style:'metal',  c:['#b8c2b0','#7f8d7b','#495347']},
-  {id:'zinc',       name:'Zinc',        r:1, w:3,   style:'metal',  c:['#d8d0a8','#a79e67','#6c6338']},
-  {id:'silver',     name:'Silver',      r:1, w:2,   style:'metal',  c:['#f2f4f7','#b3bcc6','#75818f']},
-  {id:'lead',       name:'Lead',        r:1, w:2,   style:'metal',  c:['#8f98a8','#59606d','#2d3138']},
-  {id:'sulfur',     name:'Sulfur',      r:1, w:1,   style:'toxic',  c:['#f6e66a','#c0a51a','#615000']},
+  // ── r1 Uncommon ──
+  {id:'iron',        name:'Iron',          r:1, w:7,   style:'metal',   c:['#d4cdc4','#9a9590','#6e6a65']},
+  {id:'copper',      name:'Copper',        r:1, w:6,   style:'metal',   c:['#e8855a','#b85c30','#7a3318']},
+  {id:'tin',         name:'Tin',           r:1, w:5,   style:'metal',   c:['#d7dbe0','#9ea8b2','#5b6774']},
+  {id:'nickel',      name:'Nickel',        r:1, w:4,   style:'metal',   c:['#b8c2b0','#7f8d7b','#495347']},
+  {id:'zinc',        name:'Zinc',          r:1, w:3,   style:'metal',   c:['#d8d0a8','#a79e67','#6c6338']},
+  {id:'silver',      name:'Silver',        r:1, w:2,   style:'metal',   c:['#f2f4f7','#b3bcc6','#75818f']},
+  {id:'lead',        name:'Lead',          r:1, w:2,   style:'metal',   c:['#8f98a8','#59606d','#2d3138']},
+  {id:'sulfur',      name:'Sulfur',        r:1, w:1,   style:'toxic',   c:['#f6e66a','#c0a51a','#615000']},
+  // Crystal Caverns r1
+  {id:'chalcopyrite',name:'Chalcopyrite',  r:1, w:0,   val:6, style:'metal',   c:['#d4b830','#988820','#504808']},
 
-  {id:'gold',       name:'Gold',        r:2, w:4,   style:'metal',  c:['#ffe87c','#d4a018','#6b4500']},
-  {id:'lapis',      name:'Lapis',       r:2, w:3,   style:'gem',    c:['#4a7af0','#1a3aaa','#0a1a5a']},
-  {id:'redstone',   name:'Redstone',    r:2, w:3,   style:'energy', c:['#ff6a40','#c01010','#580000']},
-  {id:'quartz',     name:'Quartz',      r:2, w:2.5, style:'crystal',c:['#fff5f8','#f0d0dc','#a07090']},
-  {id:'obsidian',   name:'Obsidian',    r:2, w:2,   style:'shadow', c:['#2a1a3a','#0d0814','#050308']},
-  {id:'topaz',      name:'Topaz',       r:2, w:2,   style:'gem',    c:['#ffe0a0','#e89020','#a04000']},
-  {id:'pyrite',     name:'Pyrite',      r:2, w:1.5, style:'metal',  c:['#d4c060','#a08820','#606010']},
-  {id:'malachite',  name:'Malachite',   r:2, w:1.5, style:'gem',    c:['#7fffbb','#1fb06a','#065334']},
-  {id:'hematite',   name:'Hematite',    r:2, w:1,   style:'metal',  c:['#d89a8a','#9c5b4b','#551f18']},
-  {id:'bismuth',    name:'Bismuth',     r:2, w:1,   style:'crystal',c:['#8be3ff','#7d7bff','#ff7ab8']},
+  // ── r2 Rare ──
+  {id:'gold',        name:'Gold',          r:2, w:4,   style:'metal',   c:['#ffe87c','#d4a018','#6b4500']},
+  {id:'lapis',       name:'Lapis',         r:2, w:3,   style:'gem',     c:['#4a7af0','#1a3aaa','#0a1a5a']},
+  {id:'redstone',    name:'Redstone',      r:2, w:3,   style:'energy',  c:['#ff6a40','#c01010','#580000']},
+  {id:'quartz',      name:'Quartz',        r:2, w:2.5, style:'crystal', c:['#fff5f8','#f0d0dc','#a07090']},
+  {id:'obsidian',    name:'Obsidian',      r:2, w:2,   style:'shadow',  c:['#2a1a3a','#0d0814','#050308']},
+  {id:'topaz',       name:'Topaz',         r:2, w:2,   style:'gem',     c:['#ffe0a0','#e89020','#a04000']},
+  {id:'pyrite',      name:'Pyrite',        r:2, w:1.5, style:'metal',   c:['#d4c060','#a08820','#606010']},
+  {id:'malachite',   name:'Malachite',     r:2, w:1.5, style:'gem',     c:['#7fffbb','#1fb06a','#065334']},
+  {id:'hematite',    name:'Hematite',      r:2, w:1,   style:'metal',   c:['#d89a8a','#9c5b4b','#551f18']},
+  {id:'bismuth',     name:'Bismuth',       r:2, w:1,   style:'crystal', c:['#8be3ff','#7d7bff','#ff7ab8']},
+  // Crystal Caverns r2
+  {id:'azurite',     name:'Azurite',       r:2, w:0,   val:18, style:'gem',    c:['#60b8ff','#1060e0','#082468']},
+  {id:'garnet',      name:'Garnet',        r:2, w:0,   val:16, style:'gem',    c:['#c83038','#801018','#3c0008']},
+  {id:'vanadinite',  name:'Vanadinite',    r:2, w:0,   val:15, style:'energy', c:['#ff7020','#c04010','#500000']},
+  {id:'celestine',   name:'Celestine',     r:2, w:0,   val:17, style:'crystal',c:['#c0e8ff','#6aaad4','#1a4060']},
 
-  {id:'amethyst',   name:'Amethyst',    r:3, w:1.8, style:'crystal',c:['#e0b0ff','#9040d0','#2a0060']},
-  {id:'emerald',    name:'Emerald',     r:3, w:1.6, style:'gem',    c:['#80ffa0','#20c060','#023018']},
-  {id:'diamond',    name:'Diamond',     r:3, w:1.4, style:'crystal',c:['#e8f8ff','#a0d8f8','#1050a0']},
-  {id:'ruby',       name:'Ruby',        r:3, w:1.2, style:'gem',    c:['#ff8090','#d01030','#3a0008']},
-  {id:'sapphire',   name:'Sapphire',    r:3, w:1,   style:'crystal',c:['#90b0ff','#2050e0','#020840']},
-  {id:'titanium',   name:'Titanium',    r:3, w:1,   style:'metal',  c:['#c8d4e0','#7090a8','#182030']},
-  {id:'peridot',    name:'Peridot',     r:3, w:0.8, style:'gem',    c:['#d8ff86','#7fd02a','#224800']},
-  {id:'fluorite',   name:'Fluorite',    r:3, w:0.8, style:'crystal',c:['#ffd8ff','#b86cff','#3a1d6f']},
+  // ── r3 Epic ──
+  {id:'amethyst',    name:'Amethyst',      r:3, w:1.8, style:'crystal', c:['#e0b0ff','#9040d0','#2a0060']},
+  {id:'emerald',     name:'Emerald',       r:3, w:1.6, style:'gem',     c:['#80ffa0','#20c060','#023018']},
+  {id:'diamond',     name:'Diamond',       r:3, w:1.4, style:'crystal', c:['#e8f8ff','#a0d8f8','#1050a0']},
+  {id:'ruby',        name:'Ruby',          r:3, w:1.2, style:'gem',     c:['#ff8090','#d01030','#3a0008']},
+  {id:'sapphire',    name:'Sapphire',      r:3, w:1,   style:'crystal', c:['#90b0ff','#2050e0','#020840']},
+  {id:'titanium',    name:'Titanium',      r:3, w:1,   style:'metal',   c:['#c8d4e0','#7090a8','#182030']},
+  {id:'peridot',     name:'Peridot',       r:3, w:0.8, style:'gem',     c:['#d8ff86','#7fd02a','#224800']},
+  {id:'fluorite',    name:'Fluorite',      r:3, w:0.8, style:'crystal', c:['#ffd8ff','#b86cff','#3a1d6f']},
+  // Crystal Caverns r3
+  {id:'tourmaline',  name:'Tourmaline',    r:3, w:0,   val:48, style:'crystal',c:['#ff80c0','#40c090','#103050']},
+  {id:'kunzite',     name:'Kunzite',       r:3, w:0,   val:45, style:'gem',    c:['#ffb0e8','#d060b0','#680058']},
+  {id:'alexandrite', name:'Alexandrite',   r:3, w:0,   val:55, style:'gem',    c:['#80ff80','#c040d0','#200040']},
+  // Infernal Core r3
+  {id:'magmalite',   name:'Magmalite',     r:3, w:0,   val:52, style:'energy', c:['#ff9020','#d04800','#680000']},
+  {id:'pyroxene',    name:'Pyroxene',      r:3, w:0,   val:44, style:'rock',   c:['#a06040','#703020','#2a0800']},
+  {id:'cinnabar',    name:'Cinnabar',      r:3, w:0,   val:50, style:'toxic',  c:['#ff3020','#c01010','#500000']},
 
-  {id:'opal',       name:'Opal',        r:4, w:0.9, style:'aurora', c:['#fff8f2','#f0e8f8','#d8d0e8']},
-  {id:'netherite',  name:'Netherite',   r:4, w:0.8, style:'shadow', c:['#5a5055','#2a2028','#0f0d10']},
-  {id:'plutonium',  name:'Plutonium',   r:4, w:0.6, style:'toxic',  c:['#b4ff6a','#30a010','#0a3a02']},
-  {id:'iridium',    name:'Iridium',     r:4, w:0.5, style:'metal',  c:['#eef1f6','#90a0b5','#465065']},
-  {id:'adamantite', name:'Adamantite',  r:4, w:0.4, style:'gem',    c:['#8cf0ff','#19b4d0','#04526c']},
-  {id:'auric',      name:'Auric',       r:4, w:0.3, style:'metal',  c:['#fff0a8','#f0c14a','#725100']},
+  // ── r4 Legendary ──
+  {id:'opal',        name:'Opal',          r:4, w:0.9, style:'aurora',  c:['#fff8f2','#f0e8f8','#d8d0e8']},
+  {id:'netherite',   name:'Netherite',     r:4, w:0.8, style:'shadow',  c:['#5a5055','#2a2028','#0f0d10']},
+  {id:'plutonium',   name:'Plutonium',     r:4, w:0.6, style:'toxic',   c:['#b4ff6a','#30a010','#0a3a02']},
+  {id:'iridium',     name:'Iridium',       r:4, w:0.5, style:'metal',   c:['#eef1f6','#90a0b5','#465065']},
+  {id:'adamantite',  name:'Adamantite',    r:4, w:0.4, style:'gem',     c:['#8cf0ff','#19b4d0','#04526c']},
+  {id:'auric',       name:'Auric',         r:4, w:0.3, style:'metal',   c:['#fff0a8','#f0c14a','#725100']},
+  {id:'mystery',     name:'Mystery',       r:4, w:0.28,style:'mystery', c:['#f2d27a','#9b6c1d','#3c2400']},
+  // Infernal Core r4
+  {id:'dragonsteel', name:'Dragonsteel',   r:4, w:0,   val:140, style:'metal',  c:['#9a3030','#5a1010','#250000']},
+  {id:'soulfire',    name:'Soulfire',      r:4, w:0,   val:130, style:'energy', c:['#80e0ff','#2090ff','#001870']},
+  {id:'voidglass',   name:'Void Glass',    r:4, w:0,   val:120, style:'shadow', c:['#4040a0','#101040','#000008']},
+  {id:'ashforged',   name:'Ashforged',     r:4, w:0,   val:110, style:'metal',  c:['#808060','#504030','#181208']},
 
-  {id:'void',       name:'Void',        r:5, w:0.3, style:'void',   c:['#200035','#080015','#000000']},
-  {id:'celestial',  name:'Celestial',   r:5, w:0.25,style:'cosmic', c:['#1a0828','#080420','#020108']},
-  {id:'singularity',name:'Singularity', r:5, w:0.2, style:'void',   c:['#0c0015','#040007','#000000']},
-  {id:'mystery',    name:'Mystery',     r:4, w:0.28,style:'mystery', c:['#f2d27a','#9b6c1d','#3c2400']},
-  {id:'aeon',       name:'Aeon',        r:5, w:0.15,style:'cosmic', c:['#0d1336','#17082f','#020108']},
-  {id:'starcore',   name:'Starcore',    r:5, w:0.1, style:'energy', c:['#ffe8ff','#7cf8ff','#ff7ad9']},
+  // ── r5 Mythic ──
+  {id:'void',        name:'Void',          r:5, w:0.3, style:'void',    c:['#200035','#080015','#000000']},
+  {id:'celestial',   name:'Celestial',     r:5, w:0.25,style:'cosmic',  c:['#1a0828','#080420','#020108']},
+  {id:'singularity', name:'Singularity',   r:5, w:0.2, style:'void',    c:['#0c0015','#040007','#000000']},
+  {id:'aeon',        name:'Aeon',          r:5, w:0.15,style:'cosmic',  c:['#0d1336','#17082f','#020108']},
+  {id:'starcore',    name:'Starcore',      r:5, w:0.1, style:'energy',  c:['#ffe8ff','#7cf8ff','#ff7ad9']},
+  // Infernal Core r5
+  {id:'riftstone',   name:'Riftstone',     r:5, w:0,   val:400, style:'void',   c:['#9040c0','#3a0870','#0a0018']},
+  {id:'eternium',    name:'Eternium',      r:5, w:0,   val:500, style:'cosmic', c:['#f8fcff','#b8d8ff','#204898']},
+  {id:'hearthcore',  name:'Hearthcore',    r:5, w:0,   val:450, style:'energy', c:['#ffb040','#ff4800','#200000']},
 ];
+
 const TOT_W = TYPES.reduce((s,t)=>s+t.w,0);
 const PRICE_BY_RAR = [1, 4, 12, 35, 100, 300];
-function orePrice(type){ return PRICE_BY_RAR[type.r] ?? 1; }
-function pick(){let v=Math.random()*TOT_W;for(const t of TYPES){v-=t.w;if(v<=0)return t;}return TYPES[0];}
+function orePrice(type){ return type.val ?? PRICE_BY_RAR[type.r] ?? 1; }
+function pick(){
+  let v=Math.random()*TOT_W;
+  for(const t of TYPES){v-=t.w;if(v<=0)return t;}
+  return TYPES[0];
+}
+
+// ─── MINES ────────────────────────────────────────────────────────────
+const MINES = [
+  {
+    id: 'shallows',
+    name: 'The Shallows',
+    icon: '⛏',
+    desc: 'A surface excavation. Earthy commons and basic metals abound. Reliable and cheap — the miner\'s bread and butter.',
+    unlockCost: 0,
+    rollCost: 1,
+    theme: {
+      bg:'#080604', grid:'rgba(50,38,20,.4)',
+      floorGlow:['rgba(201,162,39,0)','rgba(201,162,39,.12)'],
+      floorLine:'rgba(201,162,39,.3)',
+      chute:'#3a2e1a', chuteBox:'#1a1208', chuteStroke:'#4a3a1c',
+    },
+    featured: ['Coal','Iron','Gold','Pyrite'],
+    ores: [
+      {id:'coal',w:16},{id:'anthracite',w:12},{id:'limestone',w:10},{id:'slate',w:8},
+      {id:'ash',w:6},{id:'peat',w:2},{id:'mudstone',w:1},
+      {id:'iron',w:7},{id:'copper',w:6},{id:'tin',w:5},{id:'nickel',w:4},
+      {id:'zinc',w:3},{id:'silver',w:2},{id:'lead',w:2},{id:'sulfur',w:1},
+      {id:'gold',w:2},{id:'pyrite',w:1.5},{id:'hematite',w:1},
+      {id:'mystery',w:0.28},
+    ],
+  },
+  {
+    id: 'caverns',
+    name: 'Crystal Caverns',
+    icon: '💎',
+    desc: 'Deep underground chambers formed over aeons. Crystalline walls shimmer with gems and strange minerals not found on the surface.',
+    unlockCost: 500,
+    rollCost: 2,
+    theme: {
+      bg:'#030610', grid:'rgba(20,30,80,.45)',
+      floorGlow:['rgba(100,80,220,0)','rgba(80,60,200,.12)'],
+      floorLine:'rgba(130,100,230,.32)',
+      chute:'#1a1840', chuteBox:'#080820', chuteStroke:'#3030a0',
+    },
+    featured: ['Azurite','Tourmaline','Diamond','Opal'],
+    ores: [
+      // r1
+      {id:'silver',w:4},{id:'lead',w:3},{id:'nickel',w:3},{id:'chalcopyrite',w:3},{id:'tin',w:2},
+      // r2
+      {id:'gold',w:4},{id:'lapis',w:4},{id:'redstone',w:3},{id:'quartz',w:3.5},
+      {id:'obsidian',w:2},{id:'topaz',w:2.5},{id:'malachite',w:2},{id:'bismuth',w:1.5},
+      {id:'azurite',w:2.5},{id:'garnet',w:2},{id:'pyrite',w:2},{id:'hematite',w:1.5},
+      {id:'vanadinite',w:1.5},{id:'celestine',w:1.5},
+      // r3
+      {id:'amethyst',w:2},{id:'emerald',w:1.5},{id:'diamond',w:1.2},
+      {id:'ruby',w:1.2},{id:'sapphire',w:1},{id:'peridot',w:1},{id:'fluorite',w:1},
+      {id:'tourmaline',w:1.2},{id:'kunzite',w:0.8},{id:'alexandrite',w:0.6},{id:'titanium',w:1},
+      // r4
+      {id:'opal',w:0.5},{id:'iridium',w:0.4},
+      {id:'mystery',w:0.28},
+    ],
+  },
+  {
+    id: 'infernal',
+    name: 'Infernal Core',
+    icon: '🌋',
+    desc: 'The scorching heart of the earth. Conventional tools melt here. Only the most extraordinary ores survive the heat — and so do the rarest rewards.',
+    unlockCost: 3000,
+    rollCost: 5,
+    theme: {
+      bg:'#0d0200', grid:'rgba(80,20,0,.45)',
+      floorGlow:['rgba(255,60,0,0)','rgba(255,60,0,.1)'],
+      floorLine:'rgba(255,90,20,.35)',
+      chute:'#4a1800', chuteBox:'#200800', chuteStroke:'#8a3010',
+    },
+    featured: ['Magmalite','Dragonsteel','Soulfire','Eternium'],
+    ores: [
+      // r2
+      {id:'obsidian',w:2},{id:'redstone',w:2},{id:'hematite',w:1.5},{id:'bismuth',w:1.5},{id:'gold',w:1},
+      // r3
+      {id:'ruby',w:3},{id:'diamond',w:2.5},{id:'titanium',w:2.5},
+      {id:'amethyst',w:2},{id:'emerald',w:1.5},{id:'magmalite',w:4},
+      {id:'pyroxene',w:2.5},{id:'cinnabar',w:2},
+      // r4
+      {id:'netherite',w:2},{id:'plutonium',w:2},{id:'adamantite',w:1.5},
+      {id:'auric',w:1},{id:'dragonsteel',w:2},{id:'soulfire',w:1.5},
+      {id:'voidglass',w:1},{id:'ashforged',w:1},{id:'mystery',w:0.3},
+      // r5
+      {id:'void',w:0.6},{id:'celestial',w:0.5},{id:'singularity',w:0.2},
+      {id:'riftstone',w:0.4},{id:'eternium',w:0.2},{id:'hearthcore',w:0.25},
+    ],
+  },
+];
+
+function getCurrentMine(){ return MINES.find(m=>m.id===S.mine)||MINES[0]; }
+
+function pickFromMine(){
+  const mine = getCurrentMine();
+  const pool = mysteryAllowed() ? mine.ores : mine.ores.filter(o=>o.id!=='mystery');
+  const totW = pool.reduce((s,o)=>s+o.w,0);
+  let v = Math.random()*totW;
+  for(const o of pool){
+    v -= o.w;
+    if(v<=0){ const t=TYPES.find(x=>x.id===o.id); return t||TYPES[0]; }
+  }
+  const t=TYPES.find(x=>x.id===pool[0].id);
+  return t||TYPES[0];
+}
 
 // ─── DRAW ─────────────────────────────────────────────────────────────
 function clamp01(v){return Math.max(0,Math.min(1,v));}
-function addStop(g, stops){for(const [o,c] of stops)g.addColorStop(o,c);return g;}
+function addStop(g,stops){for(const[o,c]of stops)g.addColorStop(o,c);return g;}
 function drawSpecks(ctx,cx,cy,R,n,baseAlpha=0.16,palette=['#fff']){
   for(let i=0;i<n;i++){
-    const a=i*2.39996323;
-    const d=R*(0.1+0.75*((i*13)%17)/17);
-    const sz=R*(0.02+0.03*((i*7)%5));
+    const a=i*2.39996323,d=R*(0.1+0.75*((i*13)%17)/17),sz=R*(0.02+0.03*((i*7)%5));
     const col=palette[i%palette.length];
-    ctx.fillStyle=col.replace(')',`,${baseAlpha + ((i%3)*0.04)})`).replace('rgb(', 'rgba(');
+    ctx.fillStyle=col.replace(')',`,${baseAlpha+((i%3)*0.04)})`).replace('rgb(','rgba(');
     ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,sz,0,Math.PI*2);ctx.fill();
   }
 }
 function drawFacets(ctx,cx,cy,R,lines=4,alpha=.35){
-  ctx.strokeStyle=`rgba(255,255,255,${alpha})`;
-  ctx.lineWidth=1;
+  ctx.strokeStyle=`rgba(255,255,255,${alpha})`;ctx.lineWidth=1;
   for(let i=0;i<lines;i++){
     const a=i*(Math.PI*2/lines)+.2;
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.lineTo(cx+Math.cos(a)*R*.76, cy+Math.sin(a)*R*.76);
-    ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+Math.cos(a)*R*.76,cy+Math.sin(a)*R*.76);ctx.stroke();
   }
 }
 function drawCoreGlow(ctx,cx,cy,R,colors,throb=0){
   const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-  addStop(g, [[0,colors[0]], [.42,colors[1]], [1,colors[2]]]);
-  ctx.fillStyle=g;
-  ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
+  addStop(g,[[0,colors[0]],[.42,colors[1]],[1,colors[2]]]);
+  ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   const hg=ctx.createRadialGradient(cx,cy,0,cx,cy,R*.85);
-  addStop(hg, [[0,`rgba(255,255,255,${.12+.05*Math.sin(throb)})`],[.55,'rgba(255,255,255,0)'],[1,'rgba(255,255,255,0)']]);
+  addStop(hg,[[0,`rgba(255,255,255,${.12+.05*Math.sin(throb)})`],[.55,'rgba(255,255,255,0)'],[1,'rgba(255,255,255,0)']]);
   ctx.fillStyle=hg;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
 }
 const STYLES = {
   rock(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx-R*.28,cy-R*.3,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.5,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.5,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=1;
     for(let i=0;i<3;i++){
       const a=i*2.2+t*.08;
-      ctx.beginPath();
-      ctx.moveTo(cx-Math.cos(a)*R*.36,cy-Math.sin(a)*R*.18);
-      ctx.lineTo(cx+Math.cos(a*1.12)*R*.42,cy+Math.sin(a*1.12)*R*.38);
-      ctx.stroke();
+      ctx.beginPath();ctx.moveTo(cx-Math.cos(a)*R*.36,cy-Math.sin(a)*R*.18);
+      ctx.lineTo(cx+Math.cos(a*1.12)*R*.42,cy+Math.sin(a*1.12)*R*.38);ctx.stroke();
     }
     ctx.strokeStyle='rgba(0,0,0,.28)';ctx.lineWidth=1;
     ctx.beginPath();ctx.arc(cx,cy,R*.72,0,Math.PI*2);ctx.stroke();
@@ -338,27 +496,23 @@ const STYLES = {
   metal(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx-R*.2,cy-R*.22,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.42,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.42,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,.12)';ctx.lineWidth=1;
-    for(let i=-2;i<=2;i++){
-      ctx.beginPath();
-      ctx.moveTo(cx-R,cy+i*R*.24);
-      ctx.lineTo(cx+R,cy+i*R*.24);
-      ctx.stroke();
-    }
+    for(let i=-2;i<=2;i++){ctx.beginPath();ctx.moveTo(cx-R,cy+i*R*.24);ctx.lineTo(cx+R,cy+i*R*.24);ctx.stroke();}
     const h=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
-    addStop(h, [[0,'rgba(255,255,255,0)'], [.48,'rgba(255,255,255,0)'], [.52,'rgba(255,255,255,.22)'], [1,'rgba(255,255,255,0)']]);
+    addStop(h,[[0,'rgba(255,255,255,0)'],[.48,'rgba(255,255,255,0)'],[.52,'rgba(255,255,255,.22)'],[1,'rgba(255,255,255,0)']]);
     ctx.fillStyle=h;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
   gem(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     drawCoreGlow(ctx,cx,cy,R,c,t);
     ctx.strokeStyle='rgba(255,255,255,.24)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.moveTo(cx,cy-R*.72);ctx.lineTo(cx+R*.55,cy-R*.08);ctx.lineTo(cx,cy+R*.75);ctx.lineTo(cx-R*.55,cy-R*.08);ctx.closePath();ctx.stroke();
+    ctx.beginPath();ctx.moveTo(cx,cy-R*.72);ctx.lineTo(cx+R*.55,cy-R*.08);
+    ctx.lineTo(cx,cy+R*.75);ctx.lineTo(cx-R*.55,cy-R*.08);ctx.closePath();ctx.stroke();
     drawFacets(ctx,cx,cy,R,4,.28);
     const gl=ctx.createRadialGradient(cx-R*.18,cy-R*.18,0,cx,cy,R*.95);
-    addStop(gl, [[0,'rgba(255,255,255,.32)'], [.35,'rgba(255,255,255,.08)'], [1,'rgba(255,255,255,0)']]);
+    addStop(gl,[[0,'rgba(255,255,255,.32)'],[.35,'rgba(255,255,255,.08)'],[1,'rgba(255,255,255,0)']]);
     ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
   crystal(ctx,cx,cy,R,t,tp){
@@ -374,21 +528,20 @@ const STYLES = {
       ctx.stroke();
     }
     const tw=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
-    addStop(tw, [[0,'rgba(255,255,255,0)'], [.35,'rgba(255,255,255,0)'], [.5,'rgba(255,255,255,.36)'], [.65,'rgba(255,255,255,0)'], [1,'rgba(255,255,255,0)']]);
+    addStop(tw,[[0,'rgba(255,255,255,0)'],[.35,'rgba(255,255,255,0)'],[.5,'rgba(255,255,255,.36)'],[.65,'rgba(255,255,255,0)'],[1,'rgba(255,255,255,0)']]);
     ctx.fillStyle=tw;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   },
   energy(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const pulse=.72+.28*Math.sin(t*3.3);
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-    addStop(g, [[0,`rgba(255,255,255,${pulse})`], [.36,c[0]], [.75,c[1]], [1,c[2]]]);
+    addStop(g,[[0,`rgba(255,255,255,${pulse})`],[.36,c[0]],[.75,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=1;
     ctx.beginPath();ctx.arc(cx,cy,R*.45,0,Math.PI*2);ctx.stroke();
     ctx.beginPath();ctx.arc(cx,cy,R*.72,0,Math.PI*2);ctx.stroke();
     for(let i=0;i<6;i++){
-      const a=t*2+i*1.047;
-      const d=R*(.18+.32*((i%3)/3));
+      const a=t*2+i*1.047,d=R*(.18+.32*((i%3)/3));
       ctx.fillStyle=`rgba(255,255,255,${.16+.18*((i+1)%2)})`;
       ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();
     }
@@ -396,14 +549,13 @@ const STYLES = {
   toxic(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx-R*.15,cy-R*.18,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.45,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.45,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     const fog=ctx.createRadialGradient(cx,cy,R*.15,cx,cy,R);
-    addStop(fog, [[0,'rgba(255,255,120,.2)'], [.45,'rgba(180,255,90,.2)'], [1,'rgba(120,255,40,0)']]);
+    addStop(fog,[[0,'rgba(255,255,120,.2)'],[.45,'rgba(180,255,90,.2)'],[1,'rgba(120,255,40,0)']]);
     ctx.fillStyle=fog;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     for(let i=0;i<5;i++){
-      const a=t*1.2+i*1.35;
-      const d=R*(.18+.34*((i%4)/4));
+      const a=t*1.2+i*1.35,d=R*(.18+.34*((i%4)/4));
       ctx.fillStyle=`rgba(210,255,120,${.14+.1*Math.sin(t*2+i)})`;
       ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*(.04+.01*(i%3)),0,Math.PI*2);ctx.fill();
     }
@@ -411,14 +563,13 @@ const STYLES = {
   shadow(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.45,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.45,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     const rim=ctx.createRadialGradient(cx,cy,R*.52,cx,cy,R);
-    addStop(rim, [[0,'rgba(120,60,220,0)'], [1,'rgba(170,80,255,.55)']]);
+    addStop(rim,[[0,'rgba(120,60,220,0)'],[1,'rgba(170,80,255,.55)']]);
     ctx.fillStyle=rim;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     for(let i=0;i<8;i++){
-      const a=i*.79+t*.65;
-      const d=R*(.16+.33*((i*3)%7)/7);
+      const a=i*.79+t*.65,d=R*(.16+.33*((i*3)%7)/7);
       ctx.fillStyle=`rgba(120,80,255,${.18+.1*Math.sin(t+i)})`;
       ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*(.028+.012*(i%2)),0,Math.PI*2);ctx.fill();
     }
@@ -426,11 +577,10 @@ const STYLES = {
   void(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.35,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.35,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     for(let i=0;i<10;i++){
-      const a=i*.63+t*.8;
-      const d=R*(.12+.36*(i/10));
+      const a=i*.63+t*.8,d=R*(.12+.36*(i/10));
       ctx.fillStyle=`rgba(${40+i*10},0,${90+i*12},${.24+.18*Math.abs(Math.sin(t+i))})`;
       ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*(.03+.015*(i%3)),0,Math.PI*2);ctx.fill();
     }
@@ -440,15 +590,13 @@ const STYLES = {
   cosmic(ctx,cx,cy,R,t,tp){
     const c=tp.c;
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-    addStop(g, [[0,c[0]], [.45,c[1]], [1,c[2]]]);
+    addStop(g,[[0,c[0]],[.45,c[1]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     const neb=ctx.createRadialGradient(cx+R*.18,cy-R*.18,0,cx,cy,R*.9);
-    addStop(neb, [[0,'rgba(120,200,255,.28)'], [.4,'rgba(220,100,255,.16)'], [1,'rgba(40,80,200,0)']]);
+    addStop(neb,[[0,'rgba(120,200,255,.28)'],[.4,'rgba(220,100,255,.16)'],[1,'rgba(40,80,200,0)']]);
     ctx.fillStyle=neb;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     for(let i=0;i<14;i++){
-      const a=i*.449+t*.08;
-      const d=R*(.08+.6*((i*7%10)/10));
-      const tw=.25+.75*Math.abs(Math.sin(t*1.8+i));
+      const a=i*.449+t*.08,d=R*(.08+.6*((i*7%10)/10)),tw=.25+.75*Math.abs(Math.sin(t*1.8+i));
       ctx.fillStyle=`rgba(255,255,255,${tw})`;
       ctx.beginPath();ctx.arc(cx+Math.cos(a)*d,cy+Math.sin(a)*d,R*.04,0,Math.PI*2);ctx.fill();
     }
@@ -457,7 +605,7 @@ const STYLES = {
     const c=tp.c;
     drawCoreGlow(ctx,cx,cy,R,c,t);
     const g=ctx.createLinearGradient(cx-R,cy-R,cx+R,cy+R);
-    addStop(g, [[0,'rgba(255,255,255,0)'], [.4,'rgba(255,255,255,.12)'], [.5,'rgba(255,120,220,.32)'], [.6,'rgba(255,255,255,.12)'], [1,'rgba(255,255,255,0)']]);
+    addStop(g,[[0,'rgba(255,255,255,0)'],[.4,'rgba(255,255,255,.12)'],[.5,'rgba(255,120,220,.32)'],[.6,'rgba(255,255,255,.12)'],[1,'rgba(255,255,255,0)']]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     drawSpecks(ctx,cx,cy,R,6,.18,['#ffffff','#ffccff','#a8ffff']);
   },
@@ -465,32 +613,29 @@ const STYLES = {
     const c=tp.c;
     const pulse=.78+.22*Math.sin(t*5);
     const g=ctx.createRadialGradient(cx,cy,0,cx,cy,R);
-    addStop(g, [[0,`rgba(255,245,180,${pulse})`], [.42,c[0]], [1,c[2]]]);
+    addStop(g,[[0,`rgba(255,245,180,${pulse})`],[.42,c[0]],[1,c[2]]]);
     ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
     ctx.strokeStyle='rgba(255,235,170,.75)';ctx.lineWidth=1.4;
     ctx.beginPath();ctx.arc(cx,cy,R*.62,0,Math.PI*2);ctx.stroke();
     ctx.beginPath();ctx.arc(cx,cy,R*.88,0,Math.PI*2);ctx.stroke();
     ctx.fillStyle='rgba(255,255,255,.55)';
-    ctx.font=`bold ${Math.max(12,R*.9)}px Georgia, serif`;
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
+    ctx.font=`bold ${Math.max(12,R*.9)}px Georgia,serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText('?',cx,cy+1);
   },
 };
-function drawBall(ctx, id, cx, cy, R, t=0){
-  const tp=TYPES.find(x=>x.id===id) || TYPES[0];
-  const fn = STYLES[tp.style] || STYLES.rock;
-  ctx.save();
-  ctx.beginPath(); ctx.arc(cx,cy,R,0,Math.PI*2); ctx.clip();
+
+function drawBall(ctx,id,cx,cy,R,t=0){
+  const tp=TYPES.find(x=>x.id===id)||TYPES[0];
+  const fn=STYLES[tp.style]||STYLES.rock;
+  ctx.save();ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.clip();
   fn(ctx,cx,cy,R,t,tp);
-  // specular
   if(id!=='void'){
     const h=ctx.createRadialGradient(cx-R*.3,cy-R*.38,0,cx-R*.15,cy-R*.2,R*.6);
     h.addColorStop(0,'rgba(255,255,255,.38)');h.addColorStop(1,'rgba(255,255,255,0)');
     ctx.fillStyle=h;ctx.beginPath();ctx.arc(cx,cy,R,0,Math.PI*2);ctx.fill();
   }
   ctx.restore();
-  // glow ring for rare+
   const rar=tp.r;
   if(rar>=3){
     const rc=['','','','rgba(80,110,255,.7)','rgba(255,60,200,.8)','rgba(255,215,0,.9)'][rar];
@@ -501,31 +646,31 @@ function drawBall(ctx, id, cx, cy, R, t=0){
 }
 
 // ─── PHYSICS ──────────────────────────────────────────────────────────
-const GR=0.46, BNC=0.46, FRC=0.984, BR=26;
-let balls=[], gtime=0;
+const GR=0.46,BNC=0.46,FRC=0.984,BR=26;
+let balls=[],gtime=0;
 
 const cv=document.getElementById('c');
 function logW(){return cv.width/(window.devicePixelRatio||1);}
 function logH(){return cv.height/(window.devicePixelRatio||1);}
 
 function mkBall(type){
-  return {type,x:logW()/2+(Math.random()-.5)*8,y:88,vx:(Math.random()-.5)*1.5,vy:.5,r:BR,collected:false};
+  return{type,x:logW()/2+(Math.random()-.5)*8,y:88,vx:(Math.random()-.5)*1.5,vy:.5,r:BR,collected:false};
 }
 
 function step(){
-  const W=logW(), H=logH(), floor=H-BR-8;
+  const W=logW(),H=logH(),floor=H-BR-8;
   for(const b of balls){
     if(b.collected)continue;
-    b.vy+=GR; b.x+=b.vx; b.y+=b.vy;
+    b.vy+=GR;b.x+=b.vx;b.y+=b.vy;
     if(b.y>=floor){b.y=floor;b.vy*=-BNC;b.vx*=FRC;if(Math.abs(b.vy)<0.8)b.vy=0;}
     if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx)*.65;}
     if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx)*.65;}
     if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy)*.5;}
     for(const b2 of balls){
       if(b2===b||b2.collected)continue;
-      const dx=b2.x-b.x, dy=b2.y-b.y, dist=Math.sqrt(dx*dx+dy*dy);
+      const dx=b2.x-b.x,dy=b2.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
       if(dist<b.r+b2.r&&dist>0){
-        const nx=dx/dist, ny=dy/dist, ov=(b.r+b2.r-dist)/2;
+        const nx=dx/dist,ny=dy/dist,ov=(b.r+b2.r-dist)/2;
         b.x-=nx*ov;b.y-=ny*ov;b2.x+=nx*ov;b2.y+=ny*ov;
         const rv=(b.vx-b2.vx)*nx+(b.vy-b2.vy)*ny;
         if(rv>0){b.vx-=rv*nx*.5;b.vy-=rv*ny*.5;b2.vx+=rv*nx*.5;b2.vy+=rv*ny*.5;}
@@ -539,38 +684,26 @@ function step(){
 function render(){
   const ctx=cv.getContext('2d');
   const dpr=window.devicePixelRatio||1;
-  const W=logW(), H=logH();
-  ctx.save(); ctx.scale(dpr,dpr);
+  const W=logW(),H=logH();
+  const th=getCurrentMine().theme;
+  ctx.save();ctx.scale(dpr,dpr);
   ctx.clearRect(0,0,W,H);
-
-  // bg
-  ctx.fillStyle='#080604'; ctx.fillRect(0,0,W,H);
-
-  // subtle grid
-  ctx.strokeStyle='rgba(50,38,20,.4)'; ctx.lineWidth=1;
+  ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle=th.grid;ctx.lineWidth=1;
   for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
   for(let y=0;y<H;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-
-  // floor glow
   const fg=ctx.createLinearGradient(0,H-50,0,H);
-  fg.addColorStop(0,'rgba(201,162,39,0)'); fg.addColorStop(1,'rgba(201,162,39,.12)');
-  ctx.fillStyle=fg; ctx.fillRect(0,H-50,W,50);
-  ctx.strokeStyle='rgba(201,162,39,.3)'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(0,H-8); ctx.lineTo(W,H-8); ctx.stroke();
-
-  // dispenser chute
+  fg.addColorStop(0,th.floorGlow[0]);fg.addColorStop(1,th.floorGlow[1]);
+  ctx.fillStyle=fg;ctx.fillRect(0,H-50,W,50);
+  ctx.strokeStyle=th.floorLine;ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(0,H-8);ctx.lineTo(W,H-8);ctx.stroke();
   const dx=W/2;
-  ctx.strokeStyle='#3a2e1a'; ctx.lineWidth=4;
-  ctx.beginPath(); ctx.moveTo(dx-18,0); ctx.lineTo(dx-18,88); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(dx+18,0); ctx.lineTo(dx+18,88); ctx.stroke();
-  ctx.fillStyle='#1a1208';
-  ctx.fillRect(dx-22,-4,44,20);
-  ctx.strokeStyle='#4a3a1c'; ctx.lineWidth=2;
-  ctx.strokeRect(dx-22,-4,44,20);
-
-  // balls
-  for(const b of balls) drawBall(ctx, b.type.id, b.x, b.y, b.r, gtime);
-
+  ctx.strokeStyle=th.chute;ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(dx-18,0);ctx.lineTo(dx-18,88);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(dx+18,0);ctx.lineTo(dx+18,88);ctx.stroke();
+  ctx.fillStyle=th.chuteBox;ctx.fillRect(dx-22,-4,44,20);
+  ctx.strokeStyle=th.chuteStroke;ctx.lineWidth=2;ctx.strokeRect(dx-22,-4,44,20);
+  for(const b of balls)drawBall(ctx,b.type.id,b.x,b.y,b.r,gtime);
   ctx.restore();
   gtime+=0.016;
 }
@@ -578,35 +711,32 @@ function render(){
 function resizeCv(){
   const dpr=window.devicePixelRatio||1;
   const wrap=document.getElementById('cwrap');
-  const W=wrap.clientWidth, H=wrap.clientHeight;
+  const W=wrap.clientWidth,H=wrap.clientHeight;
   if(cv.width!==W*dpr||cv.height!==H*dpr){cv.width=W*dpr;cv.height=H*dpr;}
 }
-
 function loop(){resizeCv();step();render();requestAnimationFrame(loop);}
 
 // ─── INTERACTION ──────────────────────────────────────────────────────
 function getXY(e,rect){
   const dpr=window.devicePixelRatio||1;
-  const sx=cv.width/rect.width, sy=cv.height/rect.height;
-  return[(e.clientX-rect.left)*sx/dpr, (e.clientY-rect.top)*sy/dpr];
+  const sx=cv.width/rect.width,sy=cv.height/rect.height;
+  return[(e.clientX-rect.left)*sx/dpr,(e.clientY-rect.top)*sy/dpr];
 }
-
 cv.addEventListener('click',e=>{
   const rect=cv.getBoundingClientRect();
   const[x,y]=getXY(e,rect);
   for(let i=balls.length-1;i>=0;i--){
     const b=balls[i];
     if(!b.collected){
-      const dx=b.x-x, dy=b.y-y;
+      const dx=b.x-x,dy=b.y-y;
       if(dx*dx+dy*dy<b.r*b.r){
         b.collected=true;
-        if(b.type.id === 'mystery'){
-          const gain = 5 + Math.floor(Math.random()*26); // 5-30 inclusive
+        if(b.type.id==='mystery'){
+          const gain=5+Math.floor(Math.random()*26);
           addCredits(gain);
-          S.mysteryLock = {grant: gain, spent: 0};
-          save();
-          updateUI();
-          showPopup(b.type, {title:`BONUS +${gain} CREDITS`, color:'#7cf8ff', sub:'Mystery reward'});
+          S.mysteryLock={grant:gain,spent:0};
+          save();updateUI();
+          showPopup(b.type,{title:`BONUS +${gain} CREDITS`,color:'#7cf8ff',sub:'Mystery reward'});
         }else{
           addToCollection(b.type);
           showPopup(b.type);
@@ -624,7 +754,7 @@ cv.addEventListener('touchstart',e=>{
 
 // ─── POPUP ────────────────────────────────────────────────────────────
 let popTimer=null;
-function showPopup(type, opts={}){
+function showPopup(type,opts={}){
   const pop=document.getElementById('popup');
   const pc=document.getElementById('pop-canvas');
   const ctx=pc.getContext('2d');
@@ -632,306 +762,323 @@ function showPopup(type, opts={}){
   drawBall(ctx,type.id,40,40,36,gtime);
   const nameEl=document.getElementById('pop-name');
   const rarEl=document.getElementById('pop-rar');
-  nameEl.textContent=(opts.title || type.name).toUpperCase();
-  nameEl.style.color=opts.color || ['#888','#bbb','#4ac','#88f','#f5a','#fd0'][type.r] || '#d4b896';
-  rarEl.textContent=opts.sub || RNAMES[type.r];
+  nameEl.textContent=(opts.title||type.name).toUpperCase();
+  nameEl.style.color=opts.color||RCOLORS[type.r]||'#d4b896';
+  rarEl.textContent=opts.sub||RNAMES[type.r];
   pop.classList.add('show');
   clearTimeout(popTimer);
   popTimer=setTimeout(()=>pop.classList.remove('show'),1600);
 }
 
-// ─── STATE & CREDITS ──────────────────────────────────────────────────
-let S={credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],sellAllMode:false,mysteryLock:null,lastSeen:Date.now(),nextIn:30};
+// ─── STATE ────────────────────────────────────────────────────────────
+let S={
+  credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],sellAllMode:false,
+  mysteryLock:null,lastSeen:Date.now(),nextIn:30,
+  mine:'shallows',unlockedMines:['shallows'],
+};
 let nextIn=30;
 
-const UPGRADE_ITEMS = [
-  {id:'clockwork',   name:'Clockwork Module',  tier:'I',   reduce:3, dd:25,  mats:{coal:4, iron:2, copper:2}, effect:'Reduces credit wait by 3s.'},
-  {id:'brassgov',    name:'Brass Governor',    tier:'II',  reduce:3, dd:50,  mats:{clockwork:1, tin:10, zinc:10, gold:4}, effect:'Reduces credit wait by 3s.'},
-  {id:'silvercap',   name:'Silver Capacitor',  tier:'III', reduce:4, dd:80,  mats:{brassgov:1, silver:12, quartz:8, lapis:4}, effect:'Reduces credit wait by 4s.'},
-  {id:'arcreg',      name:'Arcane Regulator',  tier:'IV',  reduce:4, dd:140, mats:{silvercap:1, amethyst:6, topaz:4, redstone:12}, effect:'Reduces credit wait by 4s.'},
-  {id:'corestab',    name:'Core Stabilizer',   tier:'V',   reduce:3, dd:260, mats:{arcreg:1, diamond:6, titanium:4, emerald:3}, effect:'Reduces credit wait by 3s.'},
-  {id:'chrono',      name:'Chrono Furnace',    tier:'VI',  reduce:3, dd:500, mats:{corestab:1, opal:3, netherite:2, void:1, celestial:1}, effect:'Reduces credit wait by 3s.'},
-  {id:'singularity', name:'Singularity Engine', tier:'VII',reduce:2, dd:900, mats:{chrono:1, singularity:1, aeon:1, starcore:1, plutonium:4}, effect:'Reduces credit wait by 2s.'},
+const UPGRADE_ITEMS=[
+  {id:'clockwork',  name:'Clockwork Module', tier:'I',  reduce:3,dd:25, mats:{coal:2,iron:1,copper:1},          effect:'Reduces credit wait by 3s.'},
+  {id:'brassgov',   name:'Brass Governor',   tier:'II', reduce:3,dd:50, mats:{clockwork:1,tin:5,zinc:5,gold:2},effect:'Reduces credit wait by 3s.'},
+  {id:'silvercap',  name:'Silver Capacitor', tier:'III',reduce:4,dd:80, mats:{brassgov:1,silver:6,quartz:4,lapis:2},effect:'Reduces credit wait by 4s.'},
+  {id:'arcreg',     name:'Arcane Regulator', tier:'IV', reduce:4,dd:140,mats:{silvercap:1,amethyst:3,topaz:2,redstone:6},effect:'Reduces credit wait by 4s.'},
+  {id:'corestab',   name:'Core Stabilizer',  tier:'V',  reduce:3,dd:260,mats:{arcreg:1,diamond:3,titanium:2,emerald:2},effect:'Reduces credit wait by 3s.'},
+  {id:'chrono',     name:'Chrono Furnace',   tier:'VI', reduce:3,dd:500,mats:{corestab:1,opal:2,netherite:1,void:1,celestial:1},effect:'Reduces credit wait by 3s.'},
+  {id:'singularity',name:'Singularity Engine',tier:'VII',reduce:2,dd:900,mats:{chrono:1,singularity:1,aeon:1,starcore:1,plutonium:2},effect:'Reduces credit wait by 2s.'},
 ];
 
-function getOreLabel(id){
-  const t=TYPES.find(x=>x.id===id);
-  if(t) return t.name;
-  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
-  return id;
-}
-const CAP_CREDIT_ITEMS = [
-  {id:'vault1', name:'Copper Vault',    tier:'I',   max:50,   dd:20,  mats:{coal:8, copper:4, iron:2}, effect:'Raises max credits to 50.'},
-  {id:'vault2', name:'Brass Vault',     tier:'II',  max:100,  dd:45,  mats:{tin:8, zinc:6, copper:6, silver:2}, effect:'Raises max credits to 100.'},
-  {id:'vault3', name:'Silver Vault',    tier:'III', max:200,  dd:90,  mats:{gold:10, silver:8, quartz:4}, effect:'Raises max credits to 200.'},
-  {id:'vault4', name:'Gold Vault',      tier:'IV',  max:350,  dd:160, mats:{emerald:4, diamond:3, titanium:3}, effect:'Raises max credits to 350.'},
-  {id:'vault5', name:'Platinum Vault',  tier:'V',   max:500,  dd:280, mats:{opal:2, netherite:2, iridium:2}, effect:'Raises max credits to 500.'},
-  {id:'vault6', name:'Diamond Vault',   tier:'VI',  max:750,  dd:450, mats:{adamantite:3, auric:2, celestial:1}, effect:'Raises max credits to 750.'},
-  {id:'vault7', name:'Apex Vault',      tier:'VII', max:1000, dd:700, mats:{void:1, aeon:1, starcore:1, plutonium:2, singularity:1}, effect:'Raises max credits to 1000.'},
+const CAP_CREDIT_ITEMS=[
+  {id:'vault1',name:'Copper Vault',  tier:'I',  max:50,  dd:20, mats:{coal:4,copper:2,iron:1},             effect:'Raises max credits to 50.'},
+  {id:'vault2',name:'Brass Vault',   tier:'II', max:100, dd:45, mats:{tin:5,zinc:4,copper:4,silver:1},      effect:'Raises max credits to 100.'},
+  {id:'vault3',name:'Silver Vault',  tier:'III',max:200, dd:90, mats:{gold:6,silver:5,quartz:3},           effect:'Raises max credits to 200.'},
+  {id:'vault4',name:'Gold Vault',    tier:'IV', max:350, dd:160,mats:{emerald:3,diamond:2,titanium:2},      effect:'Raises max credits to 350.'},
+  {id:'vault5',name:'Platinum Vault',tier:'V',  max:500, dd:280,mats:{opal:1,netherite:1,iridium:1},        effect:'Raises max credits to 500.'},
+  {id:'vault6',name:'Diamond Vault', tier:'VI', max:750, dd:450,mats:{adamantite:2,auric:1,celestial:1},    effect:'Raises max credits to 750.'},
+  {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:700,mats:{void:1,aeon:1,starcore:1,plutonium:1,singularity:1},effect:'Raises max credits to 1000.'},
 ];
-const CAP_CREDIT_INDEX = Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
 
-const UPGRADE_INDEX = Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
-const ORE_INDEX = Object.fromEntries(TYPES.map(t=>[t.id,t]));
+const CAP_CREDIT_INDEX=Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
+const UPGRADE_INDEX=Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
+const ORE_INDEX=Object.fromEntries(TYPES.map(t=>[t.id,t]));
 
-function getCraftedCount(){ return Array.isArray(S.upgrades) ? S.upgrades.length : 0; }
+function getCraftedCount(){return Array.isArray(S.upgrades)?S.upgrades.length:0;}
+function getCapCraftedCount(){return Array.isArray(S.capUpgrades)?S.capUpgrades.length:0;}
 
 function getOwnedAmount(id){
-  if(ORE_INDEX[id]) return S.col[id] || 0;
-  if(id in UPGRADE_INDEX) return (S.upgrades||[]).includes(id) ? 1 : 0;
-  return S.col[id] || 0;
+  if(ORE_INDEX[id])return S.col[id]||0;
+  if(id in UPGRADE_INDEX)return(S.upgrades||[]).includes(id)?1:0;
+  return S.col[id]||0;
 }
-
-function hasRequirement(id, amt){
-  return getOwnedAmount(id) >= amt;
-}
-
+function hasRequirement(id,amt){return getOwnedAmount(id)>=amt;}
 function getReqLabel(id){
-  if(ORE_INDEX[id]) return ORE_INDEX[id].name;
-  if(id in UPGRADE_INDEX) return UPGRADE_INDEX[id].name;
+  if(ORE_INDEX[id])return ORE_INDEX[id].name;
+  if(id in UPGRADE_INDEX)return UPGRADE_INDEX[id].name;
   return id;
 }
-
+function getOreLabel(id){
+  const t=TYPES.find(x=>x.id===id);if(t)return t.name;
+  if(id in UPGRADE_INDEX)return UPGRADE_INDEX[id].name;
+  return id;
+}
 function getCreditInterval(){
-  const reduce = (S.upgrades||[]).reduce((sum,id)=>sum + (UPGRADE_INDEX[id]?.reduce||0),0);
-  return Math.max(8, 30 - reduce);
+  const reduce=(S.upgrades||[]).reduce((sum,id)=>sum+(UPGRADE_INDEX[id]?.reduce||0),0);
+  return Math.max(8,30-reduce);
 }
-
-function getCreditCapTier(){
-  return Array.isArray(S.capUpgrades) ? S.capUpgrades.length : 0;
-}
-
 function getMaxCredits(){
-  const tier = getCreditCapTier();
-  if(tier <= 0) return 20;
-  return CAP_CREDIT_ITEMS[Math.min(tier, CAP_CREDIT_ITEMS.length) - 1]?.max ?? 20;
+  const tier=Array.isArray(S.capUpgrades)?S.capUpgrades.length:0;
+  if(tier<=0)return 20;
+  return CAP_CREDIT_ITEMS[Math.min(tier,CAP_CREDIT_ITEMS.length)-1]?.max??20;
 }
-
 function addCredits(amount){
-  if(!Number.isFinite(amount) || amount <= 0) return;
-  S.credits = Math.min(getMaxCredits(), (S.credits||0) + amount);
+  if(!Number.isFinite(amount)||amount<=0)return;
+  S.credits=Math.min(getMaxCredits(),(S.credits||0)+amount);
 }
-
-
 function getMysteryLock(){
-  if(!S.mysteryLock || typeof S.mysteryLock!=='object') return null;
-  if(!Number.isFinite(S.mysteryLock.grant) || S.mysteryLock.grant<=0) return null;
-  if(!Number.isFinite(S.mysteryLock.spent)) S.mysteryLock.spent = 0;
-  if(S.mysteryLock.spent >= S.mysteryLock.grant){
-    S.mysteryLock = null;
-    return null;
-  }
+  if(!S.mysteryLock||typeof S.mysteryLock!=='object')return null;
+  if(!Number.isFinite(S.mysteryLock.grant)||S.mysteryLock.grant<=0)return null;
+  if(!Number.isFinite(S.mysteryLock.spent))S.mysteryLock.spent=0;
+  if(S.mysteryLock.spent>=S.mysteryLock.grant){S.mysteryLock=null;return null;}
   return S.mysteryLock;
 }
-
-function mysteryAllowed(){
-  return !getMysteryLock();
-}
-
-function pickWithoutMystery(){
-  let t = pick();
-  if(t.id==='mystery'){
-    const non = TYPES.filter(x=>x.id!=='mystery');
-    const total = non.reduce((s,x)=>s+x.w,0);
-    let v=Math.random()*total;
-    for(const x of non){ v-=x.w; if(v<=0) return x; }
-    return non[0] || TYPES[0];
-  }
-  return t;
-}
-
+function mysteryAllowed(){return !getMysteryLock();}
 function syncTimerToInterval(){
-  const iv = getCreditInterval();
-  if(!Number.isFinite(nextIn) || nextIn<=0) nextIn = iv;
-  nextIn = Math.min(nextIn, iv);
-  S.nextIn = nextIn;
+  const iv=getCreditInterval();
+  if(!Number.isFinite(nextIn)||nextIn<=0)nextIn=iv;
+  nextIn=Math.min(nextIn,iv);S.nextIn=nextIn;
 }
 
+// ─── SAVE / LOAD ──────────────────────────────────────────────────────
 function save(){
-  S.lastSeen=Date.now();
-  S.nextIn=nextIn;
-  try{localStorage.setItem('ore_g1',JSON.stringify(S));}catch(e){}
+  S.lastSeen=Date.now();S.nextIn=nextIn;
+  try{localStorage.setItem('ore_g2',JSON.stringify(S));}catch(e){}
 }
-
 function load(){
   try{
-    const raw=localStorage.getItem('ore_g1');
+    // Try new key, fall back to old
+    const raw=localStorage.getItem('ore_g2')||localStorage.getItem('ore_g1');
     if(raw){
       const parsed=JSON.parse(raw);
       S={...S,...parsed,col:{...S.col,...(parsed.col||{})}};
-      if(!Array.isArray(S.upgrades)) S.upgrades=[];
-      if(!Array.isArray(S.capUpgrades)) S.capUpgrades=[];
-      if(typeof S.sellAllMode!=='boolean') S.sellAllMode=false;
-      if(typeof S.dd!=='number' || !Number.isFinite(S.dd)) S.dd=0;
-      if(typeof S.credits!=='number' || !Number.isFinite(S.credits)) S.credits=10;
-      S.credits = Math.min(S.credits, getMaxCredits());
-      if(typeof S.lastSeen!=='number' || !Number.isFinite(S.lastSeen)) S.lastSeen=Date.now();
-      if(S.mysteryLock && typeof S.mysteryLock==='object'){
-        if(!Number.isFinite(S.mysteryLock.grant) || S.mysteryLock.grant<=0 || S.mysteryLock.spent>=S.mysteryLock.grant){
-          S.mysteryLock = null;
-        }else{
-          if(!Number.isFinite(S.mysteryLock.spent)) S.mysteryLock.spent = 0;
-        }
-      }else{
-        S.mysteryLock = null;
-      }
+      if(!Array.isArray(S.upgrades))S.upgrades=[];
+      if(!Array.isArray(S.capUpgrades))S.capUpgrades=[];
+      if(typeof S.sellAllMode!=='boolean')S.sellAllMode=false;
+      if(typeof S.dd!=='number'||!Number.isFinite(S.dd))S.dd=0;
+      if(typeof S.credits!=='number'||!Number.isFinite(S.credits))S.credits=10;
+      S.credits=Math.min(S.credits,getMaxCredits());
+      if(typeof S.lastSeen!=='number'||!Number.isFinite(S.lastSeen))S.lastSeen=Date.now();
+      if(!S.mine)S.mine='shallows';
+      if(!Array.isArray(S.unlockedMines))S.unlockedMines=['shallows'];
+      if(!S.unlockedMines.includes('shallows'))S.unlockedMines.unshift('shallows');
+      if(S.mysteryLock&&typeof S.mysteryLock==='object'){
+        if(!Number.isFinite(S.mysteryLock.grant)||S.mysteryLock.grant<=0||S.mysteryLock.spent>=S.mysteryLock.grant)S.mysteryLock=null;
+        else if(!Number.isFinite(S.mysteryLock.spent))S.mysteryLock.spent=0;
+      }else S.mysteryLock=null;
       const secs=(Date.now()-S.lastSeen)/1000;
       const earn=Math.floor(secs/Math.max(1,getCreditInterval()));
       if(earn>0){addCredits(earn);S.lastSeen=Date.now();}
-      nextIn = typeof S.nextIn==='number' && Number.isFinite(S.nextIn) ? S.nextIn : getCreditInterval();
+      nextIn=typeof S.nextIn==='number'&&Number.isFinite(S.nextIn)?S.nextIn:getCreditInterval();
       syncTimerToInterval();
-    } else {
-      nextIn = getCreditInterval();
-      syncTimerToInterval();
+    }else{nextIn=getCreditInterval();syncTimerToInterval();}
+  }catch(e){nextIn=getCreditInterval();syncTimerToInterval();}
+}
+
+// ─── MINE PANEL ───────────────────────────────────────────────────────
+function openMinePanel(){buildMinePanel();document.getElementById('mine-panel').classList.add('open');}
+function closeMinePanel(){document.getElementById('mine-panel').classList.remove('open');}
+
+function getMineRaritySet(mine){
+  const seen=new Set();
+  for(const o of mine.ores){
+    const t=TYPES.find(x=>x.id===o.id);
+    if(t&&t.id!=='mystery')seen.add(t.r);
+  }
+  return [...seen].sort((a,b)=>a-b);
+}
+
+function buildMinePanel(){
+  const container=document.getElementById('mine-cards');
+  container.innerHTML='';
+  for(const mine of MINES){
+    const isActive=S.mine===mine.id;
+    const isUnlocked=S.unlockedMines.includes(mine.id);
+    const canAfford=S.dd>=mine.unlockCost;
+
+    const card=document.createElement('div');
+    card.className='mcard'+(isActive?' active':'')+((!isUnlocked)?' locked-card':'');
+
+    // Header
+    const hdr=document.createElement('div');hdr.className='mcard-hdr';
+    const icon=document.createElement('span');icon.className='mcard-icon';icon.textContent=mine.icon;
+    const title=document.createElement('span');title.className='mcard-title';title.textContent=mine.name;
+    const badge=document.createElement('span');badge.className='mcard-badge';
+    if(isActive){badge.textContent='▶ Active';badge.classList.add('badge-active');}
+    else if(isUnlocked){badge.textContent='Unlocked';badge.classList.add('badge-unlocked');}
+    else{badge.textContent='🔒 Locked';badge.classList.add('badge-locked');}
+    hdr.appendChild(icon);hdr.appendChild(title);hdr.appendChild(badge);
+    card.appendChild(hdr);
+
+    // Desc
+    const desc=document.createElement('div');desc.className='mcard-desc';desc.textContent=mine.desc;
+    card.appendChild(desc);
+
+    // Stats
+    const stats=document.createElement('div');stats.className='mcard-stats';
+    const costStat=document.createElement('div');
+    costStat.className='mstat'+(mine.rollCost>1?' expensive':'');
+    costStat.innerHTML=`◈ <b>${mine.rollCost} credit${mine.rollCost>1?'s':''}</b> per roll`;
+    stats.appendChild(costStat);
+    if(mine.unlockCost>0){
+      const unlockStat=document.createElement('div');unlockStat.className='mstat';
+      unlockStat.innerHTML=isUnlocked?'<b style="color:#70c090">✓ Unlocked</b>':`Unlock: <b>${mine.unlockCost.toLocaleString()} DD</b>`;
+      stats.appendChild(unlockStat);
+    }else{
+      const freeStat=document.createElement('div');freeStat.className='mstat';
+      freeStat.innerHTML='<b style="color:#70c090">✓ Default Mine</b>';
+      stats.appendChild(freeStat);
     }
-  }catch(e){
-    nextIn = getCreditInterval();
-    syncTimerToInterval();
+    card.appendChild(stats);
+
+    // Rarity chips
+    const chips=document.createElement('div');chips.className='mrar-chips';
+    const rarities=getMineRaritySet(mine);
+    for(const r of rarities){
+      const chip=document.createElement('span');chip.className='rchip';
+      chip.textContent=RNAMES[r];
+      chip.style.cssText=`color:${RCOLORS[r]};border-color:${RCOLORS[r]}55;background:${RCOLORS[r]}11`;
+      chips.appendChild(chip);
+    }
+    card.appendChild(chips);
+
+    // Featured
+    const feat=document.createElement('div');feat.className='mfeatured';
+    feat.innerHTML='Notable finds: '+mine.featured.map(n=>`<b>${n}</b>`).join(', ');
+    card.appendChild(feat);
+
+    // Action button
+    const btn=document.createElement('button');btn.className='maction-btn';
+    if(isActive){
+      btn.textContent='Currently Active';btn.classList.add('current');
+    }else if(isUnlocked){
+      btn.textContent=`Switch to ${mine.name}`;btn.classList.add('select');
+      btn.addEventListener('click',()=>{selectMine(mine.id);closeMinePanel();});
+    }else{
+      btn.textContent=`Unlock for ${mine.unlockCost.toLocaleString()} DD`;btn.classList.add('unlock');
+      btn.disabled=!canAfford;
+      if(!canAfford)btn.textContent+=` (need ${(mine.unlockCost-S.dd).toLocaleString()} more)`;
+      btn.addEventListener('click',()=>{unlockMine(mine.id);});
+    }
+    card.appendChild(btn);
+    container.appendChild(card);
   }
 }
 
-function addToCollection(type){
-  S.col[type.id]=(S.col[type.id]||0)+1;
-  save(); updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); buildCapWorkshop(); }
+function selectMine(id){
+  if(!S.unlockedMines.includes(id))return;
+  S.mine=id;save();updateMineBar();
 }
 
-function sellOre(id, amount=1){
+function unlockMine(id){
+  const mine=MINES.find(m=>m.id===id);
+  if(!mine||S.unlockedMines.includes(id))return;
+  if(S.dd<mine.unlockCost)return;
+  S.dd-=mine.unlockCost;
+  S.unlockedMines.push(id);
+  S.mine=id;
+  save();updateUI();updateMineBar();
+  buildMinePanel(); // refresh panel
+}
+
+function updateMineBar(){
+  const mine=getCurrentMine();
+  document.getElementById('mine-bar-icon').textContent=mine.icon;
+  document.getElementById('mine-bar-name').textContent=mine.name;
+  document.getElementById('mine-bar-cost').textContent=`◈ ${mine.rollCost} credit${mine.rollCost>1?'s':''} / roll`;
+  const cost=mine.rollCost;
+  document.getElementById('rcost').textContent=`◈ ${cost} credit${cost>1?'s':''} per roll`;
+  document.getElementById('rbtn').disabled=S.credits<cost;
+}
+
+// ─── ROLL ─────────────────────────────────────────────────────────────
+function roll(){
+  const mine=getCurrentMine();
+  const cost=mine.rollCost;
+  if(S.credits<cost)return;
+  S.credits-=cost;
+  if(getMysteryLock()){
+    S.mysteryLock.spent=Math.min(S.mysteryLock.grant,(S.mysteryLock.spent||0)+1);
+    if(S.mysteryLock.spent>=S.mysteryLock.grant)S.mysteryLock=null;
+  }
+  save();updateUI();
+  balls.push(mkBall(pickFromMine()));
+}
+
+// ─── COLLECTION ───────────────────────────────────────────────────────
+function addToCollection(type){
+  S.col[type.id]=(S.col[type.id]||0)+1;
+  save();updateUI();
+  if(document.getElementById('gal-view').style.display==='block'){buildInventory();buildWorkshop();buildCapWorkshop();}
+}
+
+function sellOre(id,amount=1){
   const type=TYPES.find(t=>t.id===id);
   const have=S.col[id]||0;
-  if(!type || have<amount || amount<=0) return false;
+  if(!type||have<amount||amount<=0)return false;
   S.col[id]=have-amount;
-  if(S.col[id]<=0) delete S.col[id];
-  S.dd += orePrice(type)*amount;
-  save();
-  updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){ buildInventory(); buildWorkshop(); buildCapWorkshop(); }
+  if(S.col[id]<=0)delete S.col[id];
+  S.dd+=orePrice(type)*amount;
+  save();updateUI();
+  if(document.getElementById('gal-view').style.display==='block'){buildInventory();buildWorkshop();buildCapWorkshop();}
   return true;
 }
 
 function toggleSellMode(){
-  S.sellAllMode=!S.sellAllMode;
-  save(); updateUI();
-  buildInventory();
+  S.sellAllMode=!S.sellAllMode;save();updateUI();buildInventory();
 }
 
+// ─── CRAFTING ─────────────────────────────────────────────────────────
 function canCraftUpgrade(up){
-  const idx = UPGRADE_ITEMS.findIndex(u=>u.id===up.id);
-  if(idx!==getCraftedCount()) return false;
-  if(S.dd < up.dd) return false;
-  for(const [id,amt] of Object.entries(up.mats)){
-    if(!hasRequirement(id, amt)) return false;
-  }
+  const idx=UPGRADE_ITEMS.findIndex(u=>u.id===up.id);
+  if(idx!==getCraftedCount())return false;
+  if(S.dd<up.dd)return false;
+  for(const[id,amt]of Object.entries(up.mats)){if(!hasRequirement(id,amt))return false;}
   return true;
 }
-
 function consumeMaterials(mats){
-  for(const [id,amt] of Object.entries(mats)){
-    if(ORE_INDEX[id]){
-      S.col[id] = (S.col[id]||0) - amt;
-      if(S.col[id] <= 0) delete S.col[id];
-      continue;
-    }
-    if(id in UPGRADE_INDEX) continue;
-    S.col[id] = (S.col[id]||0) - amt;
-    if(S.col[id] <= 0) delete S.col[id];
+  for(const[id,amt]of Object.entries(mats)){
+    if(ORE_INDEX[id]){S.col[id]=(S.col[id]||0)-amt;if(S.col[id]<=0)delete S.col[id];continue;}
+    if(id in UPGRADE_INDEX)continue;
+    S.col[id]=(S.col[id]||0)-amt;if(S.col[id]<=0)delete S.col[id];
   }
 }
-
 function craftUpgrade(id){
-  const up = UPGRADE_INDEX[id];
-  if(!up) return false;
-  const idx = UPGRADE_ITEMS.findIndex(u=>u.id===id);
-  if(idx!==getCraftedCount()) return false;
-  if(!canCraftUpgrade(up)) return false;
-
-  S.dd -= up.dd;
-  consumeMaterials(up.mats);
-  S.upgrades.push(id);
-  syncTimerToInterval();
-  save(); updateUI();
-  buildInventory();
-  buildWorkshop();
-  buildCapWorkshop();
+  const up=UPGRADE_INDEX[id];if(!up)return false;
+  const idx=UPGRADE_ITEMS.findIndex(u=>u.id===id);
+  if(idx!==getCraftedCount())return false;
+  if(!canCraftUpgrade(up))return false;
+  S.dd-=up.dd;consumeMaterials(up.mats);S.upgrades.push(id);
+  syncTimerToInterval();save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();
   return true;
 }
-
-function getCapCraftedCount(){ return Array.isArray(S.capUpgrades) ? S.capUpgrades.length : 0; }
-
 function canCraftCapUpgrade(up){
-  const idx = CAP_CREDIT_ITEMS.findIndex(u=>u.id===up.id);
-  if(idx!==getCapCraftedCount()) return false;
-  if(S.dd < up.dd) return false;
-  for(const [id,amt] of Object.entries(up.mats)){
-    if((S.col[id]||0) < amt) return false;
-  }
+  const idx=CAP_CREDIT_ITEMS.findIndex(u=>u.id===up.id);
+  if(idx!==getCapCraftedCount())return false;
+  if(S.dd<up.dd)return false;
+  for(const[id,amt]of Object.entries(up.mats)){if((S.col[id]||0)<amt)return false;}
   return true;
 }
-
 function craftCapUpgrade(id){
-  const up = CAP_CREDIT_INDEX[id];
-  if(!up) return false;
-  const idx = CAP_CREDIT_ITEMS.findIndex(u=>u.id===id);
-  if(idx!==getCapCraftedCount()) return false;
-  if(!canCraftCapUpgrade(up)) return false;
-
-  S.dd -= up.dd;
-  consumeMaterials(up.mats);
-  S.capUpgrades.push(id);
-  S.credits = Math.min(S.credits, getMaxCredits());
-  save(); updateUI();
-  buildInventory();
-  buildCapWorkshop();
+  const up=CAP_CREDIT_INDEX[id];if(!up)return false;
+  const idx=CAP_CREDIT_ITEMS.findIndex(u=>u.id===id);
+  if(idx!==getCapCraftedCount())return false;
+  if(!canCraftCapUpgrade(up))return false;
+  S.dd-=up.dd;consumeMaterials(up.mats);S.capUpgrades.push(id);
+  S.credits=Math.min(S.credits,getMaxCredits());
+  save();updateUI();buildInventory();buildCapWorkshop();
   return true;
 }
 
-function updateUI(){
-  document.getElementById('cred-count').textContent=`${S.credits} / ${getMaxCredits()}`;
-  document.getElementById('dd-count').textContent=S.dd;
-  const pill=document.getElementById('dd-pill-count');
-  if(pill) pill.textContent=S.dd;
-  const cyc=document.getElementById('cycle-count');
-  if(cyc) cyc.textContent=`${getCreditInterval()}s`;
-  const sellBtn=document.getElementById('sellmode-btn');
-  if(sellBtn){
-    sellBtn.textContent=S.sellAllMode?'Sell All':'Sell 1';
-    sellBtn.classList.toggle('on', S.sellAllMode);
-  }
-  document.getElementById('rbtn').disabled=S.credits<1;
-  document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
-}
-
-// Credit timer
-setInterval(()=>{
-  const iv = getCreditInterval();
-  if(nextIn > iv) nextIn = iv;
-  nextIn--;
-  if(nextIn<=0){
-    nextIn=iv;
-    addCredits(1);
-    save();
-    updateUI();
-  }else{
-    S.nextIn = nextIn;
-  }
-  document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
-  updateUI();
-},1000);
-
-// ─── ROLL ─────────────────────────────────────────────────────────────
-function roll(){
-  if(S.credits<1)return;
-  S.credits--;
-  if(getMysteryLock()){
-    S.mysteryLock.spent = Math.min(S.mysteryLock.grant, (S.mysteryLock.spent||0)+1);
-    if(S.mysteryLock.spent >= S.mysteryLock.grant) S.mysteryLock = null;
-  }
-  save();updateUI();
-  const type = mysteryAllowed() ? pick() : pickWithoutMystery();
-  balls.push(mkBall(type));
-}
-
-// ─── INVENTORY / SHOP ────────────────────────────────────────────────
+// ─── UI BUILDERS ──────────────────────────────────────────────────────
 function buildInventory(){
   const grid=document.getElementById('ggrid');
   grid.innerHTML='';
@@ -944,248 +1091,147 @@ function buildInventory(){
   for(const type of col){
     const cnt=S.col[type.id];
     const price=orePrice(type);
-    const div=document.createElement('div');
-    div.className=`gi r${type.r}`;
-    const c=document.createElement('canvas');
-    c.width=60;c.height=60;c.dataset.tid=type.id;
-    const ctx=c.getContext('2d');
-    drawBall(ctx,type.id,30,30,26,gtime);
+    const div=document.createElement('div');div.className=`gi r${type.r}`;
+    const c=document.createElement('canvas');c.width=60;c.height=60;c.dataset.tid=type.id;
+    drawBall(c.getContext('2d'),type.id,30,30,26,gtime);
     div.appendChild(c);
 
+    // ── FIX: ore name now shown ──
+    const nm=document.createElement('div');nm.className='gname';nm.textContent=type.name;
     const gr=document.createElement('div');gr.className='gr';gr.textContent=RNAMES[type.r];
     const gc=document.createElement('div');gc.className='gc';gc.textContent=`${price} DD each`;
     const cntEl=document.createElement('div');cntEl.className='cnt';cntEl.textContent=`Owned ×${cnt}`;
 
-    const btn=document.createElement('button');
-    btn.className='sellbtn';
-    btn.textContent=S.sellAllMode ? 'Sell All' : 'Sell 1';
-    btn.disabled=cnt<1;
-    btn.addEventListener('click',()=>{
-      sellOre(type.id, S.sellAllMode ? (S.col[type.id]||0) : 1);
-    });
+    const btn=document.createElement('button');btn.className='sellbtn';
+    btn.textContent=S.sellAllMode?'Sell All':'Sell 1';btn.disabled=cnt<1;
+    btn.addEventListener('click',()=>sellOre(type.id,S.sellAllMode?(S.col[type.id]||0):1));
 
-    div.appendChild(gr);
-    div.appendChild(gc);
-    div.appendChild(cntEl);
-    div.appendChild(btn);
+    div.appendChild(nm);div.appendChild(gr);div.appendChild(gc);div.appendChild(cntEl);div.appendChild(btn);
     grid.appendChild(div);
   }
 }
 
-function makeMiniBall(id, size=28){
-  const c=document.createElement('canvas');
-  c.width=size; c.height=size;
+function makeMiniBall(id,size=28){
+  const c=document.createElement('canvas');c.width=size;c.height=size;
   const ctx=c.getContext('2d');
-  const type = TYPES.find(t=>t.id===id);
-  if(type){
-    drawBall(ctx, id, size/2, size/2, size/2 - 2, gtime);
-  }else{
-    ctx.clearRect(0,0,size,size);
-    const g=ctx.createRadialGradient(size*0.3,size*0.3,0,size/2,size/2,size/2);
-    g.addColorStop(0,'#4b4f57');
-    g.addColorStop(.5,'#2b2f35');
-    g.addColorStop(1,'#111418');
-    ctx.fillStyle=g;
-    ctx.beginPath();ctx.arc(size/2,size/2,size/2-2,0,Math.PI*2);ctx.fill();
+  const type=TYPES.find(t=>t.id===id);
+  if(type){drawBall(ctx,id,size/2,size/2,size/2-2,gtime);}
+  else{
+    const g=ctx.createRadialGradient(size*.3,size*.3,0,size/2,size/2,size/2);
+    g.addColorStop(0,'#4b4f57');g.addColorStop(.5,'#2b2f35');g.addColorStop(1,'#111418');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(size/2,size/2,size/2-2,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='rgba(255,255,255,.75)';
-    ctx.font=`bold ${Math.max(10, size*0.28)}px Georgia, serif`;
-    ctx.textAlign='center';
-    ctx.textBaseline='middle';
-    ctx.fillText('⚙', size/2, size/2+1);
+    ctx.font=`bold ${Math.max(10,size*.28)}px Georgia,serif`;
+    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('⚙',size/2,size/2+1);
   }
   return c;
 }
 
-function makeRecipeToken(id, amt){
-  const tok=document.createElement('div');
-  tok.className='reqtok';
-  const enough = hasRequirement(id, amt);
-  if(!enough) tok.classList.add('locked');
-
-  const icon = makeMiniBall(id, 28);
-  tok.appendChild(icon);
-
-  const qty=document.createElement('div');
-  qty.className='qty';
-  qty.textContent=`×${amt}`;
-  tok.appendChild(qty);
-
-  const lbl=document.createElement('div');
-  lbl.className='lbl';
-  lbl.textContent=getReqLabel(id);
-  tok.appendChild(lbl);
-
+function makeRecipeToken(id,amt){
+  const tok=document.createElement('div');tok.className='reqtok';
+  const enough=hasRequirement(id,amt);if(!enough)tok.classList.add('locked');
+  tok.appendChild(makeMiniBall(id,28));
+  const qty=document.createElement('div');qty.className='qty';qty.textContent=`×${amt}`;tok.appendChild(qty);
+  const lbl=document.createElement('div');lbl.className='lbl';lbl.textContent=getReqLabel(id);tok.appendChild(lbl);
   return tok;
 }
 
 function buildRecipeRow(mats){
-  const wrap=document.createElement('div');
-  wrap.className='recipe';
-  const row=document.createElement('div');
-  row.className='reqs';
-  for(const [id,amt] of Object.entries(mats)){
-    row.appendChild(makeRecipeToken(id, amt));
-  }
-  wrap.appendChild(row);
-  return wrap;
-}
-
-function recipeToText(mats){
-  return Object.entries(mats).map(([id,amt])=>{
-    const name = getOreLabel(id);
-    return `${amt} ${name}`;
-  }).join(' · ');
+  const wrap=document.createElement('div');wrap.className='recipe';
+  const row=document.createElement('div');row.className='reqs';
+  for(const[id,amt]of Object.entries(mats))row.appendChild(makeRecipeToken(id,amt));
+  wrap.appendChild(row);return wrap;
 }
 
 function buildWorkshop(){
-  const grid=document.getElementById('shopgrid');
-  grid.innerHTML='';
-  const crafted = getCraftedCount();
-
+  const grid=document.getElementById('shopgrid');grid.innerHTML='';
+  const crafted=getCraftedCount();
   for(let i=0;i<UPGRADE_ITEMS.length;i++){
     const up=UPGRADE_ITEMS[i];
-    const owned = S.upgrades.includes(up.id);
-    const active = i===crafted;
-    const locked = i>crafted;
-
-    const card=document.createElement('div');
-    card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
-
-    const badge=document.createElement('div');
-    badge.className='shopbadge';
-    badge.textContent = owned ? 'Crafted' : (active ? 'Available' : `Tier ${up.tier}`);
-    card.appendChild(badge);
-
-    const name=document.createElement('div');
-    name.className='shopname';
-    name.textContent = up.name;
-    card.appendChild(name);
-
-    const meta=document.createElement('div');
-    meta.className='shopmeta';
-    meta.textContent = `Tier ${up.tier} · -${up.reduce}s credit wait`;
-    card.appendChild(meta);
-
-    const eff=document.createElement('div');
-    eff.className='shopeff';
-    eff.textContent = up.effect;
-    card.appendChild(eff);
-
-    const req=document.createElement('div');
-    req.className='shopreq';
-    if(owned){
-      req.textContent = 'Already installed. The factory cycle bonus is active.';
-    }else if(locked){
-      req.textContent = `Locked. Craft ${UPGRADE_ITEMS[i-1].name} first.`;
-    }else{
-      const recipeWrap = buildRecipeRow(up.mats);
-      req.appendChild(recipeWrap);
-      const metaLine = document.createElement('div');
-      metaLine.className='recmeta';
-      metaLine.textContent = `Recipe icons show what you need. Grey means you do not have enough yet. Cost: ${up.dd} DD`;
-      req.appendChild(metaLine);
+    const owned=S.upgrades.includes(up.id),active=i===crafted,locked=i>crafted;
+    const card=document.createElement('div');card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
+    const badge=document.createElement('div');badge.className='shopbadge';
+    badge.textContent=owned?'Crafted':(active?'Available':`Tier ${up.tier}`);card.appendChild(badge);
+    const name=document.createElement('div');name.className='shopname';name.textContent=up.name;card.appendChild(name);
+    const meta=document.createElement('div');meta.className='shopmeta';meta.textContent=`Tier ${up.tier} · -${up.reduce}s credit wait`;card.appendChild(meta);
+    const eff=document.createElement('div');eff.className='shopeff';eff.textContent=up.effect;card.appendChild(eff);
+    const req=document.createElement('div');req.className='shopreq';
+    if(owned){req.textContent='Already installed. The factory cycle bonus is active.';}
+    else if(locked){req.textContent=`Locked. Craft ${UPGRADE_ITEMS[i-1].name} first.`;}
+    else{
+      req.appendChild(buildRecipeRow(up.mats));
+      const ml=document.createElement('div');ml.className='recmeta';
+      ml.textContent=`Recipe icons show what you need. Grey = not enough yet. Cost: ${up.dd} DD`;req.appendChild(ml);
     }
     card.appendChild(req);
-
-    const btn=document.createElement('button');
-    btn.className='craftbtn';
-    if(owned){
-      btn.textContent='Crafted';
-      btn.disabled=true;
-    }else if(locked){
-      btn.textContent='Locked';
-      btn.disabled=true;
-    }else{
-      btn.textContent=`Craft for ${up.dd} DD`;
-      btn.disabled=!canCraftUpgrade(up);
-      btn.addEventListener('click',()=>craftUpgrade(up.id));
-    }
-    card.appendChild(btn);
-
-    grid.appendChild(card);
+    const btn=document.createElement('button');btn.className='craftbtn';
+    if(owned){btn.textContent='Crafted';btn.disabled=true;}
+    else if(locked){btn.textContent='Locked';btn.disabled=true;}
+    else{btn.textContent=`Craft for ${up.dd} DD`;btn.disabled=!canCraftUpgrade(up);btn.addEventListener('click',()=>craftUpgrade(up.id));}
+    card.appendChild(btn);grid.appendChild(card);
   }
 }
 
 function buildCapWorkshop(){
-  const grid=document.getElementById('capgrid');
-  if(!grid) return;
-  grid.innerHTML='';
-  const crafted = getCapCraftedCount();
-
+  const grid=document.getElementById('capgrid');if(!grid)return;grid.innerHTML='';
+  const crafted=getCapCraftedCount();
   for(let i=0;i<CAP_CREDIT_ITEMS.length;i++){
     const up=CAP_CREDIT_ITEMS[i];
-    const owned = S.capUpgrades.includes(up.id);
-    const active = i===crafted;
-    const locked = i>crafted;
-
-    const card=document.createElement('div');
-    card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
-
-    const badge=document.createElement('div');
-    badge.className='shopbadge';
-    badge.textContent = owned ? 'Crafted' : (active ? 'Available' : `Tier ${up.tier}`);
-    card.appendChild(badge);
-
-    const name=document.createElement('div');
-    name.className='shopname';
-    name.textContent = up.name;
-    card.appendChild(name);
-
-    const meta=document.createElement('div');
-    meta.className='shopmeta';
-    meta.textContent = `Tier ${up.tier} · Max ${up.max} credits`;
-    card.appendChild(meta);
-
-    const eff=document.createElement('div');
-    eff.className='shopeff';
-    eff.textContent = up.effect;
-    card.appendChild(eff);
-
-    const req=document.createElement('div');
-    req.className='shopreq';
-    if(owned){
-      req.textContent = `Installed. Credit cap is now ${getMaxCredits()}.`;
-    }else if(locked){
-      req.textContent = `Locked. Craft ${CAP_CREDIT_ITEMS[i-1].name} first.`;
-    }else{
-      const recipeWrap = buildRecipeRow(up.mats);
-      req.appendChild(recipeWrap);
-      const metaLine = document.createElement('div');
-      metaLine.className='recmeta';
-      metaLine.textContent = `Raises your credit cap to ${up.max}. Cost: ${up.dd} DD`;
-      req.appendChild(metaLine);
+    const owned=S.capUpgrades.includes(up.id),active=i===crafted,locked=i>crafted;
+    const card=document.createElement('div');card.className=`shopcard ${owned?'owned':''} ${locked?'locked':''}`;
+    const badge=document.createElement('div');badge.className='shopbadge';
+    badge.textContent=owned?'Crafted':(active?'Available':`Tier ${up.tier}`);card.appendChild(badge);
+    const name=document.createElement('div');name.className='shopname';name.textContent=up.name;card.appendChild(name);
+    const meta=document.createElement('div');meta.className='shopmeta';meta.textContent=`Tier ${up.tier} · Max ${up.max} credits`;card.appendChild(meta);
+    const eff=document.createElement('div');eff.className='shopeff';eff.textContent=up.effect;card.appendChild(eff);
+    const req=document.createElement('div');req.className='shopreq';
+    if(owned){req.textContent=`Installed. Credit cap is now ${getMaxCredits()}.`;}
+    else if(locked){req.textContent=`Locked. Craft ${CAP_CREDIT_ITEMS[i-1].name} first.`;}
+    else{
+      req.appendChild(buildRecipeRow(up.mats));
+      const ml=document.createElement('div');ml.className='recmeta';
+      ml.textContent=`Raises your credit cap to ${up.max}. Cost: ${up.dd} DD`;req.appendChild(ml);
     }
     card.appendChild(req);
-
-    const btn=document.createElement('button');
-    btn.className='craftbtn';
-    if(owned){
-      btn.textContent='Crafted';
-      btn.disabled=true;
-    }else if(locked){
-      btn.textContent='Locked';
-      btn.disabled=true;
-    }else{
-      btn.textContent=`Craft for ${up.dd} DD`;
-      btn.disabled=!canCraftCapUpgrade(up);
-      btn.addEventListener('click',()=>craftCapUpgrade(up.id));
-    }
-    card.appendChild(btn);
-
-    grid.appendChild(card);
+    const btn=document.createElement('button');btn.className='craftbtn';
+    if(owned){btn.textContent='Crafted';btn.disabled=true;}
+    else if(locked){btn.textContent='Locked';btn.disabled=true;}
+    else{btn.textContent=`Craft for ${up.dd} DD`;btn.disabled=!canCraftCapUpgrade(up);btn.addEventListener('click',()=>craftCapUpgrade(up.id));}
+    card.appendChild(btn);grid.appendChild(card);
   }
 }
 
-// Animate inventory
+// Animate inventory canvases
 setInterval(()=>{
   if(document.getElementById('gal-view').style.display==='block'){
     document.querySelectorAll('#ggrid canvas[data-tid]').forEach(c=>{
-      const ctx=c.getContext('2d');
-      ctx.clearRect(0,0,60,60);
+      const ctx=c.getContext('2d');ctx.clearRect(0,0,60,60);
       drawBall(ctx,c.dataset.tid,30,30,26,gtime);
     });
   }
 },50);
+
+// ─── MAIN UI UPDATE ───────────────────────────────────────────────────
+function updateUI(){
+  document.getElementById('cred-count').textContent=`${S.credits} / ${getMaxCredits()}`;
+  document.getElementById('dd-count').textContent=S.dd;
+  const pill=document.getElementById('dd-pill-count');if(pill)pill.textContent=S.dd;
+  const cyc=document.getElementById('cycle-count');if(cyc)cyc.textContent=`${getCreditInterval()}s`;
+  const sellBtn=document.getElementById('sellmode-btn');
+  if(sellBtn){sellBtn.textContent=S.sellAllMode?'Sell All':'Sell 1';sellBtn.classList.toggle('on',S.sellAllMode);}
+  updateMineBar();
+}
+
+// Credit timer
+setInterval(()=>{
+  const iv=getCreditInterval();
+  if(nextIn>iv)nextIn=iv;
+  nextIn--;
+  if(nextIn<=0){nextIn=iv;addCredits(1);save();updateUI();}
+  else S.nextIn=nextIn;
+  document.getElementById('tmr').textContent=`+1 in ${Math.max(0,Math.ceil(nextIn))}s`;
+  updateUI();
+},1000);
 
 // ─── TABS ─────────────────────────────────────────────────────────────
 function switchTab(tab){
@@ -1197,21 +1243,16 @@ function switchTab(tab){
 }
 
 // ─── PWA ──────────────────────────────────────────────────────────────
-// Manifest via blob
 const mf={name:'Ore Gacha',short_name:'OreGacha',start_url:'.',display:'standalone',
   background_color:'#080604',theme_color:'#080604',
   icons:[{src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23c9a227'/%3E%3Ctext x='50' y='65' font-size='40' text-anchor='middle'%3E⛏%3C/text%3E%3C/svg%3E",sizes:'any',type:'image/svg+xml'}]};
 const ml=document.createElement('link');
 ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));
 document.head.appendChild(ml);
-
-// Service worker
 if('serviceWorker' in navigator){
   const sw=`self.addEventListener('install',e=>self.skipWaiting());self.addEventListener('activate',e=>self.clients.claim());self.addEventListener('fetch',e=>e.respondWith(fetch(e.request).catch(()=>caches.match(e.request))));`;
   navigator.serviceWorker.register(URL.createObjectURL(new Blob([sw],{type:'text/javascript'}))).catch(()=>{});
 }
-
-// Prevent iPad/iPhone gesture zoom and text selection quirks
 document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gesturechange',e=>e.preventDefault(),{passive:false});
 document.addEventListener('gestureend',e=>e.preventDefault(),{passive:false});
@@ -1219,8 +1260,7 @@ document.addEventListener('selectstart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>e.preventDefault());
 
 // ─── INIT ─────────────────────────────────────────────────────────────
-load();updateUI();
-loop();
+load();updateUI();loop();
 </script>
 </body>
 </html>
