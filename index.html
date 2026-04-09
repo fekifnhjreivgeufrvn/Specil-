@@ -8,188 +8,570 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Ore Gacha</title>
 <style>
-:root{--bg:#080604;--surf:#111009;--brd:#2a2016;--gold:#c9a227;--txt:#d4b896;--dim:#6b5a42;}
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap');
+
+:root{
+  --bg:#05040A;
+  --bg2:#08070F;
+  --surf:#0D0C16;
+  --surf2:#121120;
+  --brd:#1E1B30;
+  --brd2:#2A2640;
+  --gold:#C9A227;
+  --gold2:#E8C84A;
+  --golddim:#7A5F14;
+  --txt:#C8C0D8;
+  --dim:#5A5470;
+  --dim2:#7A7090;
+  --cyan:#7CF8FF;
+  --cyandim:#1A4A50;
+  --r0clr:#686870;
+  --r1clr:#A0A8B0;
+  --r2clr:#38B8A0;
+  --r3clr:#7888FF;
+  --r4clr:#FF5AAA;
+  --r5clr:#FFD800;
+}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
-html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'Georgia','Times New Roman',serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--txt);font-family:'Crimson Pro','Georgia',serif;touch-action:manipulation;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;}
 body{display:flex;flex-direction:column;height:100dvh;}
 button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-select:none;}
 
 /* ── HEADER ── */
-#hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;
-  background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
-#ttl{font-size:1rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);text-shadow:0 0 12px rgba(201,162,39,.4);}
-#cred-box{display:flex;align-items:center;gap:6px;font-size:.85rem;flex-wrap:wrap;justify-content:flex-end;}
-#cred-count{color:var(--gold);font-size:1rem;}
-#dd-count{color:#7cf8ff;font-size:1rem;}
-#tmr{font-size:.65rem;color:var(--dim);min-width:60px;text-align:right;}
+#hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 16px;height:52px;flex-shrink:0;
+  background:linear-gradient(180deg,#0A091A 0%,#080714 100%);
+  border-bottom:1px solid var(--brd2);
+  position:relative;
+}
+#hdr::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--golddim),transparent);
+}
+#ttl{
+  font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:5px;
+  text-transform:uppercase;color:var(--gold);
+  text-shadow:0 0 20px rgba(201,162,39,.5),0 0 40px rgba(201,162,39,.2);
+}
+#cred-box{display:flex;align-items:center;gap:10px;}
+.stat-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:4px 10px;border-radius:6px;
+  background:rgba(255,255,255,.04);border:1px solid var(--brd2);
+  font-size:.78rem;line-height:1;
+}
+.stat-pill .sp-icon{font-size:.7rem;opacity:.7;}
+.stat-pill .sp-val{font-family:'Cinzel',serif;font-weight:600;font-size:.85rem;}
+.stat-pill.sp-credits .sp-val{color:var(--gold);}
+.stat-pill.sp-dd .sp-val{color:var(--cyan);}
+#tmr{font-size:.6rem;color:var(--dim);letter-spacing:.5px;min-width:52px;text-align:right;line-height:1.3;}
 
 /* ── TABS ── */
-#tabs{display:flex;background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
-.tab{flex:1;padding:9px;text-align:center;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;
-  cursor:pointer;color:var(--dim);transition:color .2s;border-bottom:2px solid transparent;}
-.tab.on{color:var(--gold);border-bottom-color:var(--gold);}
+#tabs{
+  display:flex;flex-shrink:0;
+  background:var(--bg2);
+  border-bottom:1px solid var(--brd);
+  padding:0 8px;
+  gap:4px;
+}
+.tab{
+  flex:1;padding:10px 6px 9px;text-align:center;
+  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:3px;text-transform:uppercase;
+  cursor:pointer;color:var(--dim);
+  transition:color .25s,background .25s;
+  border-bottom:2px solid transparent;
+  border-radius:6px 6px 0 0;
+  margin-top:4px;
+}
+.tab.on{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,162,39,.06);}
+.tab:hover:not(.on){color:var(--dim2);}
 
 /* ── GAME AREA ── */
 #game{flex:1;display:flex;flex-direction:column;overflow:hidden;min-height:0;}
 
 /* ── MINE BAR ── */
-#mine-bar{display:flex;align-items:center;gap:8px;padding:5px 12px;
-  background:var(--surf);border-bottom:1px solid var(--brd);flex-shrink:0;}
+#mine-bar{
+  display:flex;align-items:center;gap:10px;padding:7px 14px;flex-shrink:0;
+  background:linear-gradient(90deg,var(--surf) 0%,rgba(13,12,22,0) 100%);
+  border-bottom:1px solid var(--brd);
+}
 #mine-bar-icon{font-size:1rem;line-height:1;flex-shrink:0;}
-#mine-bar-name{flex:1;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#mine-bar-cost{font-size:.62rem;color:var(--dim);white-space:nowrap;flex-shrink:0;}
-#mine-switch-btn{border:1px solid var(--brd);background:transparent;color:var(--dim);
-  border-radius:4px;padding:4px 9px;font-size:.62rem;letter-spacing:1px;text-transform:uppercase;
-  cursor:pointer;font-family:inherit;transition:color .2s,border-color .2s;flex-shrink:0;}
-#mine-switch-btn:hover{color:var(--gold);border-color:var(--gold);}
+#mine-bar-name{
+  flex:1;font-family:'Cinzel',serif;font-size:.68rem;letter-spacing:2px;
+  text-transform:uppercase;color:var(--gold);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#mine-bar-cost{
+  font-size:.6rem;color:var(--dim2);white-space:nowrap;flex-shrink:0;
+  background:rgba(255,255,255,.03);padding:2px 8px;border-radius:4px;border:1px solid var(--brd);
+}
+#mine-switch-btn{
+  border:1px solid var(--brd2);background:transparent;color:var(--dim2);
+  border-radius:5px;padding:5px 11px;
+  font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+#mine-switch-btn:hover{color:var(--gold);border-color:var(--golddim);background:rgba(201,162,39,.06);}
 
 /* ── CANVAS ── */
 #cwrap{flex:1;position:relative;min-height:0;}
 #c{position:absolute;top:0;left:0;width:100%;height:100%;cursor:crosshair;}
-#hint{position:absolute;bottom:12px;left:0;right:0;text-align:center;
-  font-size:.62rem;color:var(--dim);pointer-events:none;font-style:italic;letter-spacing:.5px;}
+#hint{
+  position:absolute;bottom:14px;left:0;right:0;text-align:center;
+  font-size:.62rem;color:var(--dim);pointer-events:none;
+  font-style:italic;letter-spacing:1px;
+  text-shadow:0 1px 8px rgba(0,0,0,.8);
+}
 
 /* ── ROLL BAR ── */
-#rollbar{padding:10px 14px;background:var(--surf);border-top:1px solid var(--brd);
-  display:flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;}
-#rbtn{background:linear-gradient(135deg,#5a3c0e,#c9a227 45%,#8a6010 55%,#5a3c0e);
-  border:none;color:#0a0603;padding:9px 30px;font-size:.95rem;font-family:inherit;
-  letter-spacing:3px;text-transform:uppercase;font-weight:bold;cursor:pointer;border-radius:3px;
-  box-shadow:0 0 18px rgba(201,162,39,.3);transition:box-shadow .2s,opacity .2s;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;min-width:120px;}
-#rbtn:hover:not(:disabled){box-shadow:0 0 30px rgba(201,162,39,.6);}
-#rbtn:disabled{opacity:.35;cursor:not-allowed;}
+#rollbar{
+  padding:12px 16px;
+  background:linear-gradient(0deg,#08070F 0%,#0A0918 100%);
+  border-top:1px solid var(--brd2);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+  gap:12px;
+}
+#rcost{
+  font-size:.72rem;color:var(--dim2);letter-spacing:.5px;
+  display:flex;flex-direction:column;gap:2px;
+}
+#rcost-label{font-size:.56rem;text-transform:uppercase;letter-spacing:1.5px;color:var(--dim);font-family:'Cinzel',serif;}
+#rbtn{
+  background:linear-gradient(135deg,#3A2208,#C9A227 40%,#E8C84A 50%,#C9A227 60%,#3A2208);
+  border:none;color:#0A0603;
+  padding:12px 36px;
+  font-family:'Cinzel',serif;font-size:.9rem;letter-spacing:4px;text-transform:uppercase;font-weight:700;
+  cursor:pointer;border-radius:4px;
+  box-shadow:0 0 24px rgba(201,162,39,.35),0 2px 0 rgba(0,0,0,.5);
+  transition:box-shadow .2s,transform .1s,opacity .2s;
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:130px;position:relative;overflow:hidden;
+}
+#rbtn::before{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.3),transparent);
+  transition:left .5s;
+}
+#rbtn:hover:not(:disabled)::before{left:150%;}
+#rbtn:hover:not(:disabled){box-shadow:0 0 40px rgba(201,162,39,.6),0 2px 0 rgba(0,0,0,.5);}
+#rbtn:active:not(:disabled){transform:translateY(1px);}
+#rbtn:disabled{opacity:.3;cursor:not-allowed;}
 #rbtn .rbtn-main{display:block;line-height:1;}
-#rbtn .rbtn-sub{font-size:.6rem;line-height:1;letter-spacing:1px;text-transform:none;color:#0a0603;opacity:.8;}
-#rcost{font-size:.75rem;color:var(--dim);}
+#rbtn .rbtn-sub{font-family:'Crimson Pro',serif;font-size:.62rem;line-height:1;letter-spacing:1px;color:#0a0603;opacity:.7;}
 
 /* ── GALLERY / INVENTORY ── */
-#gal-view{flex:1;overflow-y:auto;padding:14px;display:none;}
-#inv-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-  padding:12px 14px;margin-bottom:12px;background:var(--surf);border:1px solid var(--brd);border-radius:10px;}
-#inv-title{font-size:.95rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-#inv-sub{margin-top:4px;font-size:.72rem;color:var(--dim);line-height:1.35;max-width:42ch;}
-#dd-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#0c1620;border:1px solid #2d5672;
-  border-radius:999px;padding:8px 12px;color:#c9f5ff;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
-#dd-pill b{font-size:1rem;color:#7cf8ff;}
-#inv-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
-#cycle-pill{display:flex;align-items:center;gap:8px;flex-shrink:0;background:#1a140f;border:1px solid #4c3a24;
-  border-radius:999px;padding:8px 12px;color:#eedfc4;font-size:.82rem;letter-spacing:1px;text-transform:uppercase;}
-#cycle-pill b{font-size:1rem;color:var(--gold);}
-.modebtn{border:none;border-radius:999px;padding:8px 12px;cursor:pointer;
-  background:linear-gradient(135deg,#2d1f12,#5a3c0e 50%,#2d1f12);color:#f8ead0;
-  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;min-width:92px;}
-.modebtn.on{background:linear-gradient(135deg,#173447,#2f718f 50%,#173447);color:#dff9ff;}
-.modebtn:hover{filter:brightness(1.08);}
-.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(126px,1fr));gap:10px;}
-.gi{background:var(--surf);border-radius:10px;padding:10px;text-align:center;
-  cursor:default;border:1px solid;transition:transform .15s,box-shadow .15s;}
-.gi:hover{transform:translateY(-1px);}
-.gi canvas{display:block;margin:0 auto;}
-.gi .gname{font-size:.82rem;font-weight:bold;color:var(--txt);margin-top:6px;letter-spacing:.5px;}
-.gi .gr{font-size:.6rem;color:var(--dim);margin-top:2px;text-transform:uppercase;letter-spacing:1px;}
-.gi .gc{font-size:.72rem;color:var(--gold);margin-top:4px;}
-.gi .cnt{font-size:.72rem;color:#c9f5ff;margin-top:2px;}
-.sellbtn{width:100%;margin-top:8px;padding:7px 8px;border:none;border-radius:6px;
-  background:linear-gradient(135deg,#123041,#2f718f 50%,#123041);color:#dff9ff;
-  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;cursor:pointer;}
-.sellbtn:hover{filter:brightness(1.12);}
-.sellbtn:disabled{opacity:.35;cursor:not-allowed;}
-.r0{border-color:#444;}.r1{border-color:#888;}.r2{border-color:#3a9;}
-.r3{border-color:#58f;}.r4{border-color:#f5a;box-shadow:0 0 6px rgba(255,80,180,.3);}
-.r5{border-color:#fd0;box-shadow:0 0 10px rgba(255,210,0,.4);}
+#gal-view{flex:1;display:none;flex-direction:column;overflow:hidden;min-height:0;}
+#gal-view
+/* ── VAULT SUB-TABS ── */
+#vault-tabs{
+  display:flex;gap:4px;margin-bottom:14px;
+  background:rgba(0,0,0,.3);border:1px solid var(--brd);
+  border-radius:10px;padding:4px;flex-shrink:0;
+}
+.vtab{
+  flex:1;padding:7px 4px;border:none;border-radius:7px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;
+  background:transparent;color:var(--dim2);
+  transition:background .2s,color .2s;
+}
+.vtab.on{background:var(--surf2);color:var(--gold);box-shadow:0 1px 6px rgba(0,0,0,.4);}
+.vtab:hover:not(.on){color:var(--txt);}
+.vault-panel{display:flex;flex-direction:column;flex:1;overflow-y:auto;padding:0 12px 14px;gap:0;scrollbar-width:thin;scrollbar-color:var(--brd2) transparent;}
+#vault-tabs{margin:12px 12px 0;}
 
-/* ── WORKSHOP ── */
-.shophead{margin:14px 0 10px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
-.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:18px;}
-.shopcard{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:10px;display:flex;flex-direction:column;gap:6px;}
-.shopcard.locked{opacity:.62;filter:saturate(.75);}
-.shopcard.owned{border-color:#2d8f75;box-shadow:0 0 0 1px rgba(60,255,190,.12) inset;}
-.shopname{font-size:.9rem;letter-spacing:1px;color:var(--txt);}
-.shopmeta{font-size:.62rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px;}
-.shopeff{font-size:.72rem;color:#c9f5ff;line-height:1.3;}
-.shopreq{font-size:.68rem;color:var(--dim);line-height:1.35;}
-.shopbadge{display:inline-block;width:max-content;padding:3px 7px;border-radius:999px;
-  background:#0c1620;border:1px solid #2d5672;color:#b9edf6;font-size:.62rem;letter-spacing:1px;text-transform:uppercase;}
-.craftbtn{width:100%;margin-top:4px;padding:8px 10px;border:none;border-radius:6px;
-  background:linear-gradient(135deg,#4b2f09,#c9a227 55%,#4b2f09);color:#0b0603;
-  font-size:.72rem;letter-spacing:1px;text-transform:uppercase;font-weight:bold;cursor:pointer;}
-.craftbtn:hover:not(:disabled){filter:brightness(1.1);}
-.craftbtn:disabled{opacity:.4;cursor:not-allowed;}
+/* ── UPGRADE TRACKS ── */
+.upgrade-tracks{display:flex;flex-direction:column;gap:16px;padding-top:14px;}
+.utrack{background:var(--surf);border:1px solid var(--brd2);border-radius:12px;overflow:hidden;}
+.utrack-rail-wrap{position:relative;}
+.utrack-rail-wrap::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:40px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--surf));border-radius:0 0 12px 0;
+}
+.utrack-hdr{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 14px 10px;border-bottom:1px solid var(--brd);background:rgba(0,0,0,.2);
+}
+.utrack-icon{font-size:1.1rem;line-height:1;flex-shrink:0;opacity:.8;}
+.utrack-title{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:1.5px;color:var(--txt);font-weight:600;}
+.utrack-sub{font-size:.58rem;color:var(--dim2);text-transform:uppercase;letter-spacing:1.5px;font-family:'Cinzel',serif;margin-top:1px;}
+.utrack-rail{display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;padding:0;position:relative;}
+.utrack-rail::-webkit-scrollbar{display:none;}
+.utrack-rail::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--brd2);transform:translateY(-50%);pointer-events:none;z-index:0;}
+.tier-node{display:flex;flex-direction:column;align-items:center;min-width:90px;flex-shrink:0;padding:14px 8px 10px;position:relative;z-index:1;}
+.tier-node.node-done{opacity:.5;}
+.tier-node.node-locked{opacity:.28;filter:grayscale(.9);}
+.tier-dot{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;
+  border:2px solid var(--brd2);background:var(--bg2);
+  position:relative;z-index:1;flex-shrink:0;
+}
+.tier-node.node-done .tier-dot{background:rgba(20,40,20,.7);border-color:rgba(70,160,100,.5);color:rgba(112,200,144,.9);}
+.tier-node.node-next .tier-dot{border-color:var(--golddim);background:rgba(50,35,8,.8);color:var(--gold);box-shadow:0 0 16px rgba(201,162,39,.4);}
+.tier-node.node-locked .tier-dot{color:var(--dim);}
+.tier-name{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5px;color:var(--txt);margin-top:7px;text-align:center;line-height:1.3;max-width:80px;}
+.tier-node.node-done .tier-name{color:var(--dim2);}
+.tier-node.node-locked .tier-name{color:var(--dim);}
+.tier-stat{font-size:.56rem;color:var(--dim2);margin-top:3px;text-align:center;letter-spacing:.3px;line-height:1.3;}
+.tier-node.node-next .tier-stat{color:var(--cyan);opacity:.9;}
+.tier-node.node-next{cursor:pointer;}
+.tier-node.node-next:active .tier-dot{transform:scale(.94);}
+.tier-tap-hint{font-size:.46rem;color:var(--golddim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:'Cinzel',serif;}
+
+/* Slide-up craft drawer */
+.tier-craft{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:linear-gradient(0deg,#08070F 0%,#0D0C1C 100%);
+  border-top:1px solid var(--brd2);
+  padding:14px 16px 24px;
+  box-shadow:0 -12px 40px rgba(0,0,0,.7);
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.tier-craft.open{display:block;}
+.tier-craft-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.tier-craft-name{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:1.5px;color:var(--gold);font-weight:600;}
+.tier-craft-close{border:1px solid var(--brd2);background:transparent;color:var(--dim2);border-radius:5px;padding:4px 10px;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:1px;cursor:pointer;}
+.tier-craft-body{display:flex;flex-direction:column;gap:10px;}
+.tier-craft-effect{font-size:.68rem;color:var(--cyan);line-height:1.4;}
+.tier-craft-cost{font-size:.64rem;color:var(--dim2);font-style:italic;}
+
+/* Auto-sell filter section */
+#autosell-filter-wrap{margin-top:12px;background:var(--surf);border:1px solid var(--brd2);border-radius:12px;overflow:hidden;}
+.afs-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--brd);background:rgba(0,0,0,.2);}
+.afs-title{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.afs-count{font-family:'Cinzel',serif;font-size:.6rem;color:var(--dim2);letter-spacing:1px;}
+.afs-note{padding:8px 14px;font-size:.64rem;color:var(--dim2);font-style:italic;border-bottom:1px solid var(--brd);}
+.afs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;padding:10px;max-height:230px;overflow-y:auto;}
+
+::-webkit-scrollbar{width:4px;}
+#gal-view::-webkit-scrollbar-track{background:transparent;}
+#gal-view::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
+
+/* ── INV TOP STATS BAR ── */
+#inv-top{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:10px 12px;margin-bottom:14px;margin-top:14px;
+  background:var(--surf);border:1px solid var(--brd2);border-radius:10px;
+  flex-wrap:wrap;
+}
+.inv-stat{display:flex;flex-direction:column;gap:1px;min-width:60px;}
+.inv-stat-label{font-family:'Cinzel',serif;font-size:.5rem;letter-spacing:2px;text-transform:uppercase;color:var(--dim);}
+.inv-stat-val{font-family:'Cinzel',serif;font-size:.95rem;font-weight:600;}
+.inv-stat-val.gold{color:var(--gold);}
+.inv-stat-val.cyan{color:var(--cyan);}
+#inv-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.modebtn{
+  border:1px solid var(--brd2);border-radius:5px;padding:6px 12px;cursor:pointer;
+  background:rgba(255,255,255,.04);color:var(--txt);
+  font-family:'Cinzel',serif;font-size:.55rem;letter-spacing:2px;text-transform:uppercase;
+  transition:all .2s;
+}
+.modebtn.on{background:rgba(44,113,143,.2);border-color:#2f718f;color:#dff9ff;}
+.modebtn:hover{filter:brightness(1.15);}
+
+/* ── SECTION HEADS ── */
+.shophead{
+  display:flex;align-items:center;gap:10px;
+  margin:18px 0 10px;
+  font-family:'Cinzel',serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);
+}
+.shophead::before,.shophead::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--golddim),transparent);}
+.shophead::after{background:linear-gradient(90deg,transparent,var(--golddim));}
+
+/* ── ORE GRID ── */
+.ggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px;}
+.gi{
+  background:var(--surf);border-radius:10px;padding:10px 8px;text-align:center;
+  cursor:default;border:1px solid;
+  transition:transform .18s,box-shadow .18s;
+  position:relative;overflow:hidden;
+}
+.gi::before{
+  content:'';position:absolute;inset:0;border-radius:10px;
+  background:radial-gradient(circle at 50% 0%,rgba(255,255,255,.04),transparent 60%);
+  pointer-events:none;
+}
+.gi:hover{transform:translateY(-2px);}
+.gi canvas{display:block;margin:0 auto;}
+.gi .gname{font-family:'Cinzel',serif;font-size:.72rem;font-weight:600;color:var(--txt);margin-top:7px;letter-spacing:.5px;}
+.gi .gr{font-size:.56rem;color:var(--dim2);margin-top:2px;text-transform:uppercase;letter-spacing:1.5px;font-family:'Cinzel',serif;}
+.gi .gc{font-size:.68rem;color:var(--gold);margin-top:5px;letter-spacing:.3px;}
+.gi .cnt{font-size:.7rem;color:var(--cyan);margin-top:2px;letter-spacing:.3px;}
+.sellbtn{
+  width:100%;margin-top:8px;padding:6px 6px;border:none;border-radius:6px;
+  background:linear-gradient(135deg,#0E2535,#1E5A7A 50%,#0E2535);color:#C9F0FF;
+  font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;
+  cursor:pointer;transition:filter .2s,box-shadow .2s;
+}
+.sellbtn:hover{filter:brightness(1.2);box-shadow:0 0 10px rgba(44,113,143,.4);}
+.sellbtn:disabled{opacity:.3;cursor:not-allowed;}
+
+/* Rarity borders & glows */
+.r0{border-color:rgba(104,104,112,.4);}
+.r1{border-color:rgba(160,168,176,.45);}
+.r2{border-color:rgba(56,184,160,.5);}.r2:hover{box-shadow:0 4px 16px rgba(56,184,160,.2);}
+.r3{border-color:rgba(120,136,255,.55);}.r3:hover{box-shadow:0 4px 16px rgba(120,136,255,.25);}
+.r4{border-color:rgba(255,90,170,.6);box-shadow:0 0 8px rgba(255,90,170,.12);}.r4:hover{box-shadow:0 4px 20px rgba(255,90,170,.35);}
+.r5{border-color:rgba(255,216,0,.7);box-shadow:0 0 12px rgba(255,216,0,.2),0 0 1px rgba(255,216,0,.8) inset;}.r5:hover{box-shadow:0 4px 24px rgba(255,216,0,.4);}
+
+/* ── WORKSHOP CARDS ── */
+.shopgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:4px;}
+.shopcard{
+  background:var(--surf);border:1px solid var(--brd2);border-radius:12px;
+  padding:12px;display:flex;flex-direction:column;gap:7px;
+  position:relative;overflow:hidden;
+}
+.shopcard::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--brd2),transparent);
+}
+.shopcard.locked{opacity:.58;filter:saturate(.7);}
+.shopcard.owned{border-color:rgba(45,143,117,.5);box-shadow:0 0 0 1px rgba(60,255,190,.08) inset;}
+.shopname{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:.5px;color:var(--txt);font-weight:600;}
+.shopmeta{font-size:.6rem;color:var(--dim2);text-transform:uppercase;letter-spacing:1.5px;font-family:'Cinzel',serif;}
+.shopeff{font-size:.7rem;color:var(--cyan);line-height:1.4;opacity:.9;}
+.shopreq{font-size:.65rem;color:var(--dim2);line-height:1.4;}
+.shopbadge{
+  display:inline-flex;align-items:center;width:max-content;
+  padding:3px 9px;border-radius:4px;
+  background:rgba(44,86,114,.25);border:1px solid rgba(45,86,114,.6);
+  color:#A0D8F0;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:1.5px;text-transform:uppercase;
+}
+.craftbtn{
+  width:100%;margin-top:2px;padding:9px 10px;border:none;border-radius:7px;
+  background:linear-gradient(135deg,#3A2208,#C9A227 50%,#3A2208);color:#0b0603;
+  font-family:'Cinzel',serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:700;
+  cursor:pointer;transition:filter .2s,box-shadow .2s;
+  box-shadow:0 2px 10px rgba(201,162,39,.2);
+}
+.craftbtn:hover:not(:disabled){filter:brightness(1.12);box-shadow:0 2px 18px rgba(201,162,39,.4);}
+.craftbtn:disabled{opacity:.35;cursor:not-allowed;box-shadow:none;}
+
+/* ── RECIPE TOKENS ── */
 .recipe{display:flex;flex-direction:column;gap:6px;}
-.reqs{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;}
-.reqtok{width:44px;min-height:58px;display:flex;flex-direction:column;align-items:center;
-  justify-content:flex-start;gap:4px;padding:5px 4px 4px;border-radius:9px;
-  background:#0d0b08;border:1px solid #3c3427;color:#f5ead6;position:relative;}
-.reqtok.locked{opacity:.38;filter:grayscale(1);}
+.reqs{display:flex;flex-wrap:wrap;gap:5px;align-items:flex-start;}
+.reqtok{
+  width:48px;min-height:62px;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;gap:3px;padding:6px 4px 4px;border-radius:9px;
+  background:rgba(0,0,0,.3);border:1px solid var(--brd2);color:var(--txt);
+}
+.reqtok.locked{opacity:.35;filter:grayscale(1);}
 .reqtok canvas{display:block;}
-.reqtok .qty{font-size:.62rem;line-height:1;letter-spacing:1px;color:var(--gold);}
-.reqtok .lbl{font-size:.52rem;line-height:1;color:var(--dim);text-transform:uppercase;
-  letter-spacing:.6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.recmeta{font-size:.66rem;color:var(--dim);line-height:1.25;}
+.reqtok .qty{font-family:'Cinzel',serif;font-size:.6rem;line-height:1;color:var(--gold);}
+.reqtok .lbl{font-size:.5rem;line-height:1;color:var(--dim2);text-transform:uppercase;
+  letter-spacing:.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.recmeta{font-size:.64rem;color:var(--dim);line-height:1.3;font-style:italic;}
+
+/* ── AUTOSELL ── */
+.autosell-note{font-size:.65rem;color:var(--dim2);line-height:1.4;margin-top:2px;font-style:italic;}
+.autosell-config{margin-top:12px;padding-top:12px;border-top:1px solid var(--brd);display:flex;flex-direction:column;gap:8px;}
+.autosell-config-hdr{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;}
+.autosell-config-title{font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.autosell-config-count{font-size:.6rem;color:var(--dim2);text-transform:uppercase;letter-spacing:1px;font-family:'Cinzel',serif;}
+.autosell-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:5px;max-height:190px;overflow-y:auto;padding-right:2px;}
+.autosell-chip{
+  display:flex;align-items:center;gap:7px;
+  background:rgba(0,0,0,.25);border:1px solid var(--brd);border-radius:8px;
+  padding:6px 7px;cursor:pointer;min-width:0;
+  transition:border-color .18s,background .18s;
+}
+.autosell-chip canvas{flex-shrink:0;}
+.autosell-chip-main{min-width:0;flex:1;}
+.autosell-chip-name{font-size:.62rem;line-height:1;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.autosell-chip-sub{font-size:.52rem;line-height:1.3;color:var(--dim2);text-transform:uppercase;letter-spacing:.5px;}
+.autosell-chip.on{border-color:rgba(112,192,144,.6);background:rgba(10,30,18,.5);box-shadow:0 0 8px rgba(112,192,144,.1) inset;}
+.autosell-chip.on .autosell-chip-sub{color:#70C090;}
+.autosell-chip.locked{opacity:.45;filter:grayscale(1);}
 
 /* ── MINE PANEL ── */
-#mine-panel{position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.84);
-  display:none;flex-direction:column;align-items:center;justify-content:flex-end;}
+#mine-panel{
+  position:fixed;inset:0;z-index:1000;
+  background:rgba(2,2,8,.88);
+  display:none;flex-direction:column;align-items:center;justify-content:flex-end;
+  backdrop-filter:blur(4px);
+}
 #mine-panel.open{display:flex;}
-#mine-panel-inner{width:100%;max-width:480px;background:#0d0b08;
-  border-top:1px solid #3a2e1a;border-radius:16px 16px 0 0;
-  padding:16px 14px 24px;max-height:85vh;overflow-y:auto;}
-.mpanel-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.mpanel-title{font-size:.85rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);}
-.mpanel-close{border:1px solid var(--brd);background:transparent;color:var(--dim);
-  border-radius:4px;padding:4px 10px;font-size:.72rem;cursor:pointer;font-family:inherit;}
-.mcard{background:var(--surf);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:10px;}
-.mcard.active{border-color:var(--gold);}
-.mcard.locked-card{opacity:.68;}
-.mcard-hdr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
-.mcard-icon{font-size:1.4rem;line-height:1;flex-shrink:0;}
-.mcard-title{font-size:.92rem;letter-spacing:1px;color:var(--txt);font-weight:bold;flex:1;}
-.mcard-badge{font-size:.58rem;letter-spacing:1px;text-transform:uppercase;
-  padding:2px 8px;border-radius:999px;white-space:nowrap;flex-shrink:0;}
-.badge-active{background:#1e1808;border:1px solid #8a6820;color:#d4b050;}
-.badge-unlocked{background:#0c1a10;border:1px solid #2a6040;color:#70c090;}
-.badge-locked{background:#1a0c0c;border:1px solid #6a2020;color:#c06060;}
-.mcard-desc{font-size:.7rem;color:var(--dim);line-height:1.45;margin-bottom:8px;}
-.mcard-stats{display:flex;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
-.mstat{font-size:.66rem;color:var(--txt);background:#0a0804;border:1px solid var(--brd);
-  border-radius:5px;padding:3px 8px;}
+#mine-panel-inner{
+  width:100%;max-width:500px;
+  background:linear-gradient(180deg,#0D0C1C 0%,#08070F 100%);
+  border-top:1px solid var(--brd2);border-radius:20px 20px 0 0;
+  padding:18px 14px 28px;max-height:88vh;overflow-y:auto;
+  scrollbar-width:thin;scrollbar-color:var(--brd2) transparent;
+  box-shadow:0 -20px 60px rgba(0,0,0,.6);
+}
+.mpanel-hdr{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+  padding-bottom:12px;border-bottom:1px solid var(--brd);
+}
+.mpanel-title{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:4px;text-transform:uppercase;color:var(--gold);}
+.mpanel-close{
+  border:1px solid var(--brd2);background:transparent;color:var(--dim2);
+  border-radius:6px;padding:5px 12px;
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:1px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+}
+.mpanel-close:hover{color:var(--txt);border-color:var(--brd2);background:rgba(255,255,255,.05);}
+.mcard{
+  background:var(--surf);border:1px solid var(--brd2);border-radius:12px;
+  padding:13px;margin-bottom:8px;
+  transition:border-color .2s;
+}
+.mcard.active{border-color:var(--golddim);box-shadow:0 0 20px rgba(201,162,39,.08);}
+.mcard.locked-card{opacity:.62;}
+.mcard-hdr{display:flex;align-items:center;gap:9px;margin-bottom:6px;cursor:pointer;}
+.mcard-icon{font-size:1.3rem;line-height:1;flex-shrink:0;}
+.mcard-title{font-family:'Cinzel',serif;font-size:.85rem;letter-spacing:1px;color:var(--txt);font-weight:600;flex:1;}
+.mcard-badge{
+  font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:1px;text-transform:uppercase;
+  padding:3px 9px;border-radius:4px;white-space:nowrap;flex-shrink:0;
+}
+.badge-active{background:rgba(138,104,32,.2);border:1px solid rgba(138,104,32,.5);color:#D4B050;}
+.badge-unlocked{background:rgba(42,96,64,.2);border:1px solid rgba(42,96,64,.5);color:#70C090;}
+.badge-locked{background:rgba(106,32,32,.2);border:1px solid rgba(106,32,32,.5);color:#C06060;}
+.mcard-desc{font-size:.7rem;color:var(--dim2);line-height:1.55;margin-bottom:9px;font-style:italic;}
+.mcard-stats{display:flex;gap:8px;margin-bottom:9px;flex-wrap:wrap;}
+.mstat{
+  font-size:.63rem;color:var(--txt);
+  background:rgba(0,0,0,.3);border:1px solid var(--brd);
+  border-radius:5px;padding:4px 9px;
+}
 .mstat b{color:var(--gold);}
-.mstat.expensive b{color:#f08060;}
-.mrar-chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:10px;}
-.rchip{font-size:.56rem;padding:2px 7px;border-radius:999px;letter-spacing:.5px;border:1px solid;}
-.mfeatured{font-size:.62rem;color:var(--dim);margin-bottom:10px;line-height:1.5;}
-.mfeatured b{color:var(--txt);}
-.maction-btn{width:100%;padding:10px;border:none;border-radius:6px;font-family:inherit;
-  font-size:.75rem;letter-spacing:1.5px;text-transform:uppercase;font-weight:bold;cursor:pointer;transition:filter .2s;}
-.maction-btn.select{background:linear-gradient(135deg,#4b2f09,#c9a227 55%,#4b2f09);color:#0b0603;}
-.maction-btn.unlock{background:linear-gradient(135deg,#0f2c40,#1e6090 50%,#0f2c40);color:#c0e8ff;}
-.maction-btn.current{background:#1e1810;color:var(--dim);cursor:default;}
-.maction-btn:hover:not(.current):not(:disabled){filter:brightness(1.12);}
-.maction-btn:disabled{opacity:.38;cursor:not-allowed;}
-
-.mcard-ores{display:none;margin-top:10px;padding-top:10px;border-top:1px solid #2c2318;gap:6px;flex-direction:column;max-height:240px;overflow-y:auto;padding-right:4px;}
-.mcard.open .mcard-ores{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));}
-.oreline{display:flex;align-items:center;gap:8px;background:#0a0805;border:1px solid #2c2318;border-radius:8px;padding:6px 8px;min-width:0;}
+.mstat.expensive b{color:#F08060;}
+.mrar-chips{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:9px;}
+.rchip{font-size:.52rem;padding:2px 8px;border-radius:4px;letter-spacing:.5px;border:1px solid;font-family:'Cinzel',serif;}
+.mfeatured{font-size:.64rem;color:var(--dim2);margin-bottom:10px;line-height:1.6;}
+.mfeatured b{color:var(--dim2);opacity:.9;}
+.maction-btn{
+  width:100%;padding:10px;border:none;border-radius:7px;
+  font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;
+  font-weight:700;cursor:pointer;transition:filter .2s,box-shadow .2s;
+}
+.maction-btn.select{background:linear-gradient(135deg,#3A2208,#C9A227 50%,#3A2208);color:#0b0603;box-shadow:0 2px 10px rgba(201,162,39,.2);}
+.maction-btn.select:hover{filter:brightness(1.12);box-shadow:0 2px 20px rgba(201,162,39,.4);}
+.maction-btn.unlock{background:linear-gradient(135deg,#0A2030,#1E6090 50%,#0A2030);color:#C0E8FF;box-shadow:0 2px 10px rgba(30,96,144,.2);}
+.maction-btn.unlock:hover:not(:disabled){filter:brightness(1.12);box-shadow:0 2px 20px rgba(30,96,144,.4);}
+.maction-btn.current{background:rgba(255,255,255,.04);color:var(--dim2);cursor:default;border:1px solid var(--brd);}
+.maction-btn:disabled{opacity:.35;cursor:not-allowed;}
+.mcard-ores{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--brd);gap:5px;flex-direction:column;max-height:220px;overflow-y:auto;padding-right:4px;}
+.mcard.open .mcard-ores{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));}
+.oreline{display:flex;align-items:center;gap:8px;background:rgba(0,0,0,.25);border:1px solid var(--brd);border-radius:7px;padding:6px 8px;min-width:0;}
 .oreline canvas{flex-shrink:0;}
 .oreline-main{flex:1;min-width:0;}
-.oreline-name{font-size:.72rem;color:var(--txt);letter-spacing:.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.oreline-sub{font-size:.58rem;color:var(--dim);letter-spacing:.5px;text-transform:uppercase;}
-.oreline-pct{font-size:.66rem;color:#c9f5ff;white-space:nowrap;flex-shrink:0;}
-.oreline.unknown{opacity:.58;filter:grayscale(1) brightness(.88);}
-.oreline.unknown .oreline-name{color:var(--dim);}
-.oreline.unknown .oreline-pct{color:var(--dim);}
+.oreline-name{font-size:.7rem;color:var(--txt);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.oreline-sub{font-size:.56rem;color:var(--dim2);letter-spacing:.5px;text-transform:uppercase;font-family:'Cinzel',serif;}
+.oreline-pct{font-size:.64rem;color:var(--cyan);white-space:nowrap;flex-shrink:0;font-family:'Cinzel',serif;font-weight:600;}
+.oreline.unknown{opacity:.5;filter:grayscale(1) brightness(.8);}
 
 /* ── POPUP ── */
-#popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
-  background:var(--surf);border:1px solid var(--brd);border-radius:12px;
-  padding:18px 24px;text-align:center;z-index:9999;
-  min-width:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
-  box-shadow:0 0 28px rgba(0,0,0,.35);transition:transform .25s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}
+#popup{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);
+  background:linear-gradient(145deg,var(--surf) 0%,var(--surf2) 100%);
+  border:1px solid var(--brd2);border-radius:16px;
+  padding:22px 28px;text-align:center;z-index:9999;
+  min-width:220px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  box-shadow:0 20px 60px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04) inset;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;
+}
+#popup::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;border-radius:16px 16px 0 0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+}
 #popup.show{transform:translate(-50%,-50%) scale(1);}
-#pop-canvas{display:block;margin:0;}
-#pop-name{font-size:1.08rem;letter-spacing:1.5px;color:var(--gold);text-align:center;line-height:1.2;}
-#pop-rar{font-size:.75rem;color:var(--dim);margin-top:1px;letter-spacing:1px;text-align:center;}
+#pop-canvas{display:block;margin:0;filter:drop-shadow(0 0 12px currentColor);}
+#pop-name{font-family:'Cinzel',serif;font-size:1rem;letter-spacing:2px;color:var(--gold);line-height:1.2;font-weight:700;}
+#pop-rar{font-size:.7rem;color:var(--dim2);margin-top:2px;letter-spacing:2px;text-transform:uppercase;font-family:'Cinzel',serif;}
+
+/* ── SCROLLBAR ── */
+
+/* ── VAULT SUB-TABS ── */
+#vault-tabs{
+  display:flex;gap:4px;margin-bottom:14px;
+  background:rgba(0,0,0,.3);border:1px solid var(--brd);
+  border-radius:10px;padding:4px;flex-shrink:0;
+}
+.vtab{
+  flex:1;padding:7px 4px;border:none;border-radius:7px;cursor:pointer;
+  font-family:'Cinzel',serif;font-size:.58rem;letter-spacing:2px;text-transform:uppercase;
+  background:transparent;color:var(--dim2);
+  transition:background .2s,color .2s;
+}
+.vtab.on{background:var(--surf2);color:var(--gold);box-shadow:0 1px 6px rgba(0,0,0,.4);}
+.vtab:hover:not(.on){color:var(--txt);}
+.vault-panel{display:flex;flex-direction:column;flex:1;overflow-y:auto;padding:0 12px 14px;gap:0;scrollbar-width:thin;scrollbar-color:var(--brd2) transparent;}
+#vault-tabs{margin:12px 12px 0;}
+
+/* ── UPGRADE TRACKS ── */
+.upgrade-tracks{display:flex;flex-direction:column;gap:16px;padding-top:14px;}
+.utrack{background:var(--surf);border:1px solid var(--brd2);border-radius:12px;overflow:hidden;}
+.utrack-rail-wrap{position:relative;}
+.utrack-rail-wrap::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:40px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--surf));border-radius:0 0 12px 0;
+}
+.utrack-hdr{
+  display:flex;align-items:center;gap:11px;
+  padding:11px 14px 10px;border-bottom:1px solid var(--brd);background:rgba(0,0,0,.2);
+}
+.utrack-icon{font-size:1.1rem;line-height:1;flex-shrink:0;opacity:.8;}
+.utrack-title{font-family:'Cinzel',serif;font-size:.75rem;letter-spacing:1.5px;color:var(--txt);font-weight:600;}
+.utrack-sub{font-size:.58rem;color:var(--dim2);text-transform:uppercase;letter-spacing:1.5px;font-family:'Cinzel',serif;margin-top:1px;}
+.utrack-rail{display:flex;align-items:stretch;overflow-x:auto;scrollbar-width:none;padding:0;position:relative;}
+.utrack-rail::-webkit-scrollbar{display:none;}
+.utrack-rail::before{content:'';position:absolute;top:50%;left:0;right:0;height:1px;background:var(--brd2);transform:translateY(-50%);pointer-events:none;z-index:0;}
+.tier-node{display:flex;flex-direction:column;align-items:center;min-width:90px;flex-shrink:0;padding:14px 8px 10px;position:relative;z-index:1;}
+.tier-node.node-done{opacity:.5;}
+.tier-node.node-locked{opacity:.28;filter:grayscale(.9);}
+.tier-dot{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cinzel',serif;font-size:.6rem;font-weight:700;
+  border:2px solid var(--brd2);background:var(--bg2);
+  position:relative;z-index:1;flex-shrink:0;
+}
+.tier-node.node-done .tier-dot{background:rgba(20,40,20,.7);border-color:rgba(70,160,100,.5);color:rgba(112,200,144,.9);}
+.tier-node.node-next .tier-dot{border-color:var(--golddim);background:rgba(50,35,8,.8);color:var(--gold);box-shadow:0 0 16px rgba(201,162,39,.4);}
+.tier-node.node-locked .tier-dot{color:var(--dim);}
+.tier-name{font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:.5px;color:var(--txt);margin-top:7px;text-align:center;line-height:1.3;max-width:80px;}
+.tier-node.node-done .tier-name{color:var(--dim2);}
+.tier-node.node-locked .tier-name{color:var(--dim);}
+.tier-stat{font-size:.56rem;color:var(--dim2);margin-top:3px;text-align:center;letter-spacing:.3px;line-height:1.3;}
+.tier-node.node-next .tier-stat{color:var(--cyan);opacity:.9;}
+.tier-node.node-next{cursor:pointer;}
+.tier-node.node-next:active .tier-dot{transform:scale(.94);}
+.tier-tap-hint{font-size:.46rem;color:var(--golddim);text-transform:uppercase;letter-spacing:1px;margin-top:4px;font-family:'Cinzel',serif;}
+
+/* Slide-up craft drawer */
+.tier-craft{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:500;
+  background:linear-gradient(0deg,#08070F 0%,#0D0C1C 100%);
+  border-top:1px solid var(--brd2);
+  padding:14px 16px 24px;
+  box-shadow:0 -12px 40px rgba(0,0,0,.7);
+  animation:slideUp .22s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.tier-craft.open{display:block;}
+.tier-craft-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.tier-craft-name{font-family:'Cinzel',serif;font-size:.82rem;letter-spacing:1.5px;color:var(--gold);font-weight:600;}
+.tier-craft-close{border:1px solid var(--brd2);background:transparent;color:var(--dim2);border-radius:5px;padding:4px 10px;font-family:'Cinzel',serif;font-size:.52rem;letter-spacing:1px;cursor:pointer;}
+.tier-craft-body{display:flex;flex-direction:column;gap:10px;}
+.tier-craft-effect{font-size:.68rem;color:var(--cyan);line-height:1.4;}
+.tier-craft-cost{font-size:.64rem;color:var(--dim2);font-style:italic;}
+
+/* Auto-sell filter section */
+#autosell-filter-wrap{margin-top:12px;background:var(--surf);border:1px solid var(--brd2);border-radius:12px;overflow:hidden;}
+.afs-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--brd);background:rgba(0,0,0,.2);}
+.afs-title{font-family:'Cinzel',serif;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;color:var(--gold);}
+.afs-count{font-family:'Cinzel',serif;font-size:.6rem;color:var(--dim2);letter-spacing:1px;}
+.afs-note{padding:8px 14px;font-size:.64rem;color:var(--dim2);font-style:italic;border-bottom:1px solid var(--brd);}
+.afs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:6px;padding:10px;max-height:230px;overflow-y:auto;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--brd2);border-radius:2px;}
 </style>
 </head>
 <body>
@@ -197,17 +579,22 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
 <div id="hdr">
   <div id="ttl">⛏ Ore Gacha</div>
   <div id="cred-box">
-    <span style="color:var(--gold)">◈</span>
-    <span id="cred-count">10 / 20</span>
-    <span style="color:#7cf8ff">DD</span>
-    <span id="dd-count">0</span>
-    <span id="tmr"></span>
+    <div class="stat-pill sp-credits">
+      <span class="sp-icon">◈</span>
+      <span class="sp-val" id="cred-count">10 / 20</span>
+    </div>
+    <div class="stat-pill sp-dd">
+      <span class="sp-icon">◆</span>
+      <span class="sp-val" id="dd-count">0</span>
+      <span class="sp-icon" style="font-size:.55rem;opacity:.6">DD</span>
+    </div>
+    <div id="tmr"></div>
   </div>
 </div>
 
 <div id="tabs">
-  <div class="tab on" id="tab-game" onclick="switchTab('game')">Dispenser</div>
-  <div class="tab"    id="tab-gal"  onclick="switchTab('gal')">Inventory</div>
+  <div class="tab on" id="tab-game" onclick="switchTab('game')">⛏ Dispenser</div>
+  <div class="tab"    id="tab-gal"  onclick="switchTab('gal')">◈ Vault</div>
 </div>
 
 <div id="game">
@@ -219,32 +606,81 @@ button,.tab,.gi,#c{touch-action:manipulation;-webkit-user-select:none;user-selec
   </div>
   <div id="cwrap">
     <canvas id="c"></canvas>
-    <div id="hint">Tap a ball to collect it</div>
+    <div id="hint">Tap an ore to collect it</div>
   </div>
   <div id="rollbar">
-    <span id="rcost">◈ 1 credit per roll</span>
+    <div id="rcost">
+      <span id="rcost-label">Cost per roll</span>
+      <span id="rcost-val">◈ 1 credit</span>
+    </div>
     <button id="rbtn" onclick="roll()"><span class="rbtn-main">ROLL</span><span class="rbtn-sub" id="rbtn-sub">+1 in 10s</span></button>
   </div>
 </div>
 
 <div id="gal-view">
-  <div id="inv-top">
-    <div>
-      <div id="inv-title">Inventory</div>
-      <div id="inv-sub">Sell ores for DD. Credits stay separate and keep powering rolls. Tap a mine to see its spawn rates and ore icons.</div>
+  <div id="vault-tabs">
+    <button class="vtab on" id="vtab-ores"     onclick="switchVaultTab('ores')">Ores</button>
+    <button class="vtab"    id="vtab-upgrades"  onclick="switchVaultTab('upgrades')">Upgrades</button>
+    <button class="vtab"    id="vtab-autosell"  onclick="switchVaultTab('autosell')">Auto-Sell</button>
+  </div>
+
+  <div id="vault-ores" class="vault-panel">
+    <div id="inv-top">
+      <div class="inv-stat">
+        <span class="inv-stat-label">Deep Dust</span>
+        <span class="inv-stat-val cyan" id="dd-pill-count">0</span>
+      </div>
+      <div class="inv-stat">
+        <span class="inv-stat-label">Credit Cycle</span>
+        <span class="inv-stat-val gold" id="cycle-count">10s</span>
+      </div>
+      <div id="inv-actions">
+        <button id="sellmode-btn" class="modebtn" onclick="toggleSellMode()">Sell 1</button>
+      </div>
     </div>
-    <div id="inv-actions">
-      <div id="dd-pill">DD <b id="dd-pill-count">0</b></div>
-      <div id="cycle-pill">Cycle <b id="cycle-count">10s</b></div>
-      <button id="sellmode-btn" class="modebtn" onclick="toggleSellMode()">Sell 1</button>
+    <div class="ggrid" id="ggrid"></div>
+  </div>
+
+  <div id="vault-upgrades" class="vault-panel" style="display:none">
+    <div class="upgrade-tracks">
+      <div class="utrack">
+        <div class="utrack-hdr">
+          <span class="utrack-icon">⚙</span>
+          <div>
+            <div class="utrack-title">Workshop</div>
+            <div class="utrack-sub">Credit speed</div>
+          </div>
+        </div>
+        <div class="utrack-rail-wrap"><div class="utrack-rail" id="track-workshop"></div></div>
+      </div>
+      <div class="utrack">
+        <div class="utrack-hdr">
+          <span class="utrack-icon">◈</span>
+          <div>
+            <div class="utrack-title">Credit Vault</div>
+            <div class="utrack-sub">Max credits</div>
+          </div>
+        </div>
+        <div class="utrack-rail-wrap"><div class="utrack-rail" id="track-vault"></div></div>
+      </div>
     </div>
   </div>
-  <div class="shophead">Ore Inventory</div>
-  <div class="ggrid" id="ggrid"></div>
-  <div class="shophead">Workshop Upgrades</div>
-  <div class="shopgrid" id="shopgrid"></div>
-  <div class="shophead">Credit Capacity Upgrades</div>
-  <div class="shopgrid" id="capgrid"></div>
+
+  <div id="vault-autosell" class="vault-panel" style="display:none">
+    <div class="upgrade-tracks">
+      <div class="utrack">
+        <div class="utrack-hdr">
+          <span class="utrack-icon">⟳</span>
+          <div>
+            <div class="utrack-title">Auto Sorter</div>
+            <div class="utrack-sub">Filter slots</div>
+          </div>
+        </div>
+        <div class="utrack-rail-wrap"><div class="utrack-rail" id="track-autosell"></div></div>
+      </div>
+    </div>
+    <div id="autosell-filter-wrap"></div>
+  </div>
 </div>
 
 <!-- Mine Selector Panel -->
@@ -930,7 +1366,8 @@ function showPopup(type,opts={}){
 // ─── STATE ────────────────────────────────────────────────────────────
 const BASE_CREDIT_INTERVAL=10;
 let S={
-  credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],discoveredOres:[],sellAllMode:false,
+  credits:10,dd:0,col:{},upgrades:[],capUpgrades:[],autoSellUpgrades:[],autoSellFilters:[],
+  discoveredOres:[],sellAllMode:false,
   mysteryLock:null,lastSeen:Date.now(),nextIn:BASE_CREDIT_INTERVAL,
   mine:'shallows',unlockedMines:['shallows'],
 };
@@ -956,7 +1393,18 @@ const CAP_CREDIT_ITEMS=[
   {id:'vault7',name:'Apex Vault',    tier:'VII',max:1000,dd:360,mats:{void:1,aeon:1,starcore:1,plutonium:2,singularity:1},effect:'Raises max credits to 1000.'},
 ];
 
+const AUTOSELL_ITEMS=[
+  {id:'autofilter1',name:'Auto Sorter',      tier:'I',   slots:1, dd:10,  mats:{coal:2,iron:1,copper:1},effect:'Unlocks 1 auto-sell filter slot.'},
+  {id:'autofilter2',name:'Auto Sorter Mk II',tier:'II',  slots:2, dd:22,  mats:{tin:4,zinc:4,silver:1}, effect:'Unlocks 2 auto-sell filter slots.'},
+  {id:'autofilter3',name:'Auto Sorter Mk III',tier:'III',slots:3, dd:40,  mats:{gold:4,quartz:3,lapis:2},effect:'Unlocks 3 auto-sell filter slots.'},
+  {id:'autofilter4',name:'Auto Sorter Mk IV', tier:'IV', slots:4, dd:62,  mats:{amethyst:2,topaz:2,redstone:4},effect:'Unlocks 4 auto-sell filter slots.'},
+  {id:'autofilter5',name:'Auto Sorter Mk V',  tier:'V',   slots:5, dd:92,  mats:{diamond:2,emerald:1,titanium:1},effect:'Unlocks 5 auto-sell filter slots.'},
+  {id:'autofilter6',name:'Auto Sorter Mk VI', tier:'VI',  slots:6, dd:132, mats:{opal:1,netherite:1,void:1,celestial:1},effect:'Unlocks 6 auto-sell filter slots.'},
+  {id:'autofilter7',name:'Auto Sorter Apex',  tier:'VII', slots:7, dd:190, mats:{aeon:1,starcore:1,plutonium:2,singularity:1},effect:'Unlocks 7 auto-sell filter slots.'},
+];
+
 const CAP_CREDIT_INDEX=Object.fromEntries(CAP_CREDIT_ITEMS.map(u=>[u.id,u]));
+const AUTOSELL_INDEX=Object.fromEntries(AUTOSELL_ITEMS.map(u=>[u.id,u]));
 const UPGRADE_INDEX=Object.fromEntries(UPGRADE_ITEMS.map(u=>[u.id,u]));
 const ORE_INDEX=Object.fromEntries(TYPES.map(t=>[t.id,t]));
 function normalizeMineProgress(){
@@ -1014,21 +1462,69 @@ function getDisplayFeaturedName(label){
 
 function getCraftedCount(){return Array.isArray(S.upgrades)?S.upgrades.length:0;}
 function getCapCraftedCount(){return Array.isArray(S.capUpgrades)?S.capUpgrades.length:0;}
+function getAutoSellCraftedCount(){return Array.isArray(S.autoSellUpgrades)?S.autoSellUpgrades.length:0;}
+function getAutoSellSlots(){
+  const tier=getAutoSellCraftedCount();
+  if(tier<=0)return 0;
+  return AUTOSELL_ITEMS[Math.min(tier,AUTOSELL_ITEMS.length)-1]?.slots??0;
+}
+
+function normalizeAutoSellFilters(){
+  if(!Array.isArray(S.autoSellFilters)) S.autoSellFilters=[];
+  S.autoSellFilters=S.autoSellFilters.filter(id=>ORE_INDEX[id] && id!=='mystery' && isOreDiscovered(id));
+  const limit=getAutoSellSlots();
+  if(limit<=0){S.autoSellFilters=[];return;}
+  if(S.autoSellFilters.length>limit) S.autoSellFilters=S.autoSellFilters.slice(0,limit);
+}
+function isAutoSellSelected(id){
+  return Array.isArray(S.autoSellFilters) && S.autoSellFilters.includes(id);
+}
+function canAutoSellSelect(id){
+  if(!ORE_INDEX[id] || id==='mystery') return false;
+  if(!isOreDiscovered(id)) return false;
+  const limit=getAutoSellSlots();
+  if(limit<=0) return false;
+  if(isAutoSellSelected(id)) return true;
+  return S.autoSellFilters.length < limit;
+}
+function toggleAutoSellFilter(id){
+  if(!ORE_INDEX[id] || id==='mystery' || !isOreDiscovered(id)) return false;
+  if(!Array.isArray(S.autoSellFilters)) S.autoSellFilters=[];
+  const idx=S.autoSellFilters.indexOf(id);
+  if(idx>=0){
+    S.autoSellFilters.splice(idx,1);
+    normalizeAutoSellFilters();
+    return true;
+  }
+  if(S.autoSellFilters.length>=getAutoSellSlots()) return false;
+  S.autoSellFilters.push(id);
+  normalizeAutoSellFilters();
+  return true;
+}
+function shouldAutoSell(id){
+  return isAutoSellSelected(id) && id!=='mystery';
+}
 
 function getOwnedAmount(id){
   if(ORE_INDEX[id])return S.col[id]||0;
   if(id in UPGRADE_INDEX)return(S.upgrades||[]).includes(id)?1:0;
+  if(id in CAP_CREDIT_INDEX)return(S.capUpgrades||[]).includes(id)?1:0;
+  if(id in AUTOSELL_INDEX)return(S.autoSellUpgrades||[]).includes(id)?1:0;
   return S.col[id]||0;
 }
 function hasRequirement(id,amt){return getOwnedAmount(id)>=amt;}
 function getReqLabel(id){
   if(ORE_INDEX[id])return ORE_INDEX[id].name;
   if(id in UPGRADE_INDEX)return UPGRADE_INDEX[id].name;
+  if(id in CAP_CREDIT_INDEX)return CAP_CREDIT_INDEX[id].name;
+  if(id in AUTOSELL_INDEX)return AUTOSELL_INDEX[id].name;
   return id;
 }
 function getOreLabel(id){
   const t=TYPES.find(x=>x.id===id);if(t)return t.name;
   if(id in UPGRADE_INDEX)return UPGRADE_INDEX[id].name;
+  if(id in CAP_CREDIT_INDEX)return CAP_CREDIT_INDEX[id].name;
+  if(id in AUTOSELL_INDEX)return AUTOSELL_INDEX[id].name;
   return id;
 }
 function getCreditInterval(){
@@ -1072,6 +1568,8 @@ function load(){
       S={...S,...parsed,col:{...S.col,...(parsed.col||{})}};
       if(!Array.isArray(S.upgrades))S.upgrades=[];
       if(!Array.isArray(S.capUpgrades))S.capUpgrades=[];
+      if(!Array.isArray(S.autoSellUpgrades))S.autoSellUpgrades=[];
+      if(!Array.isArray(S.autoSellFilters))S.autoSellFilters=[];
       if(!Array.isArray(S.discoveredOres))S.discoveredOres=[];
       if(typeof S.sellAllMode!=='boolean')S.sellAllMode=false;
       if(typeof S.dd!=='number'||!Number.isFinite(S.dd))S.dd=0;
@@ -1081,6 +1579,7 @@ function load(){
       if(!S.mine)S.mine='shallows';
       if(!Array.isArray(S.unlockedMines))S.unlockedMines=['shallows'];
       normalizeMineProgress();
+      normalizeAutoSellFilters();
       if(S.mysteryLock&&typeof S.mysteryLock==='object'){
         if(!Number.isFinite(S.mysteryLock.grant)||S.mysteryLock.grant<=0||S.mysteryLock.spent>=S.mysteryLock.grant)S.mysteryLock=null;
         else if(!Number.isFinite(S.mysteryLock.spent))S.mysteryLock.spent=0;
@@ -1223,7 +1722,8 @@ function updateMineBar(){
   document.getElementById('mine-bar-name').textContent=mine.name;
   document.getElementById('mine-bar-cost').textContent=`◈ ${mine.rollCost} credit${mine.rollCost>1?'s':''} / roll`;
   const cost=mine.rollCost;
-  document.getElementById('rcost').textContent=`◈ ${cost} credit${cost>1?'s':''} per roll`;
+  const rcv=document.getElementById('rcost-val');
+  if(rcv)rcv.textContent=`◈ ${cost} credit${cost>1?'s':''}`;
   document.getElementById('rbtn').disabled=S.credits<cost;
   updateRollButton();
 }
@@ -1252,10 +1752,14 @@ function roll(){
 
 // ─── COLLECTION ───────────────────────────────────────────────────────
 function addToCollection(type){
-  S.col[type.id]=(S.col[type.id]||0)+1;
   markOreDiscovered(type.id);
+  if(shouldAutoSell(type.id)){
+    S.dd += orePrice(type);
+  }else{
+    S.col[type.id]=(S.col[type.id]||0)+1;
+  }
   save();updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){buildInventory();buildWorkshop();buildCapWorkshop();}
+  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();}
 }
 
 function sellOre(id,amount=1){
@@ -1266,7 +1770,7 @@ function sellOre(id,amount=1){
   if(S.col[id]<=0)delete S.col[id];
   S.dd+=orePrice(type)*amount;
   save();updateUI();
-  if(document.getElementById('gal-view').style.display==='block'){buildInventory();buildWorkshop();buildCapWorkshop();}
+  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();}
   return true;
 }
 
@@ -1295,7 +1799,7 @@ function craftUpgrade(id){
   if(idx!==getCraftedCount())return false;
   if(!canCraftUpgrade(up))return false;
   S.dd-=up.dd;consumeMaterials(up.mats);S.upgrades.push(id);
-  syncTimerToInterval();save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();
+  syncTimerToInterval();save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
   return true;
 }
 function canCraftCapUpgrade(up){
@@ -1312,7 +1816,25 @@ function craftCapUpgrade(id){
   if(!canCraftCapUpgrade(up))return false;
   S.dd-=up.dd;consumeMaterials(up.mats);S.capUpgrades.push(id);
   S.credits=Math.min(S.credits,getMaxCredits());
-  save();updateUI();buildInventory();buildCapWorkshop();
+  save();updateUI();buildInventory();buildCapWorkshop();buildAutoSellWorkshop();
+  return true;
+}
+
+function canCraftAutoSellUpgrade(up){
+  const idx=AUTOSELL_ITEMS.findIndex(u=>u.id===up.id);
+  if(idx!==getAutoSellCraftedCount())return false;
+  if(S.dd<up.dd)return false;
+  for(const[id,amt]of Object.entries(up.mats)){if(!hasRequirement(id,amt))return false;}
+  return true;
+}
+function craftAutoSellUpgrade(id){
+  const up=AUTOSELL_INDEX[id];if(!up)return false;
+  const idx=AUTOSELL_ITEMS.findIndex(u=>u.id===id);
+  if(idx!==getAutoSellCraftedCount())return false;
+  if(!canCraftAutoSellUpgrade(up))return false;
+  S.dd-=up.dd;consumeMaterials(up.mats);S.autoSellUpgrades.push(id);
+  normalizeAutoSellFilters();
+  save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
   return true;
 }
 
@@ -1484,9 +2006,122 @@ function buildCapWorkshop(){
   grid.appendChild(card);
 }
 
+function buildAutoSellWorkshop(){
+  const grid=document.getElementById('autosellgrid');if(!grid)return;grid.innerHTML='';
+  const idx=getAutoSellCraftedCount();
+  const up=AUTOSELL_ITEMS[idx];
+  const slots=getAutoSellSlots();
+
+  if(up){
+    const card=document.createElement('div');
+    card.className='shopcard';
+
+    const badge=document.createElement('div');
+    badge.className='shopbadge';
+    badge.textContent=`Next · Tier ${up.tier}`;
+    card.appendChild(badge);
+
+    const name=document.createElement('div');
+    name.className='shopname';
+    name.textContent=up.name;
+    card.appendChild(name);
+
+    const meta=document.createElement('div');
+    meta.className='shopmeta';
+    meta.textContent=`Tier ${up.tier} · ${up.slots} filter slot${up.slots>1?'s':''}`;
+    card.appendChild(meta);
+
+    const eff=document.createElement('div');
+    eff.className='shopeff';
+    eff.textContent=up.effect;
+    card.appendChild(eff);
+
+    const req=document.createElement('div');
+    req.className='shopreq';
+    req.appendChild(buildRecipeRow(up.mats));
+    const ml=document.createElement('div');
+    ml.className='recmeta';
+    ml.textContent=`Only the next auto-sell upgrade is shown. Cost: ${up.dd} DD`;
+    req.appendChild(ml);
+    card.appendChild(req);
+
+    const btn=document.createElement('button');
+    btn.className='craftbtn';
+    btn.textContent=`Craft for ${up.dd} DD`;
+    btn.disabled=!canCraftAutoSellUpgrade(up);
+    btn.addEventListener('click',()=>craftAutoSellUpgrade(up.id));
+    card.appendChild(btn);
+
+    grid.appendChild(card);
+  }else{
+    const done=document.createElement('div');
+    done.className='shopcard';
+    done.innerHTML='<div class="shopname">Auto Sell Maxed</div><div class="shopmeta">All auto-sell slots unlocked.</div>';
+    grid.appendChild(done);
+  }
+
+  const cfg=document.createElement('div');
+  cfg.className='autosell-config';
+  const hdr=document.createElement('div');
+  hdr.className='autosell-config-hdr';
+  const t=document.createElement('div');
+  t.className='autosell-config-title';
+  t.textContent='Auto-sell filters';
+  const c=document.createElement('div');
+  c.className='autosell-config-count';
+  c.textContent=`${Array.isArray(S.autoSellFilters)?S.autoSellFilters.length:0}/${slots} selected`;
+  hdr.appendChild(t);hdr.appendChild(c);
+  cfg.appendChild(hdr);
+
+  const note=document.createElement('div');
+  note.className='autosell-note';
+  note.textContent=slots>0 ? 'Tap a discovered ore to toggle auto-sell.' : 'Craft the next auto-sell upgrade to unlock filters.';
+  cfg.appendChild(note);
+
+  const g=document.createElement('div');
+  g.className='autosell-grid';
+  for(const type of TYPES){
+    if(type.id==='mystery') continue;
+    const chip=document.createElement('div');
+    const discovered=isOreDiscovered(type.id);
+    const active=isAutoSellSelected(type.id);
+    chip.className='autosell-chip'+(active?' on':'')+(discovered?'':' locked');
+    const ico=makeMiniBall(type.id,20);
+    chip.appendChild(ico);
+
+    const main=document.createElement('div');
+    main.className='autosell-chip-main';
+    const nm=document.createElement('div');
+    nm.className='autosell-chip-name';
+    nm.textContent=discovered ? type.name : '???';
+    const sub=document.createElement('div');
+    sub.className='autosell-chip-sub';
+    if(!slots) sub.textContent='Locked';
+    else if(!discovered) sub.textContent='Undiscovered';
+    else if(active) sub.textContent='Auto-sell on';
+    else sub.textContent='Tap to enable';
+    main.appendChild(nm);main.appendChild(sub);
+    chip.appendChild(main);
+
+    if(discovered){
+      chip.addEventListener('click',()=>{
+        const was=isAutoSellSelected(type.id);
+        if(!was && getAutoSellSlots()<=0) return;
+        if(!was && Array.isArray(S.autoSellFilters) && S.autoSellFilters.length>=getAutoSellSlots()) return;
+        toggleAutoSellFilter(type.id);
+        save();updateUI();
+        buildAutoSellWorkshop();
+      });
+    }
+    g.appendChild(chip);
+  }
+  cfg.appendChild(g);
+  grid.appendChild(cfg);
+}
+
 // Animate inventory canvases
 setInterval(()=>{
-  if(document.getElementById('gal-view').style.display==='block'){
+  if(document.getElementById('gal-view').style.display==='flex'){
     document.querySelectorAll('#ggrid canvas[data-tid]').forEach(c=>{
       const ctx=c.getContext('2d');ctx.clearRect(0,0,60,60);
       drawBall(ctx,c.dataset.tid,30,30,26,gtime);
@@ -1496,6 +2131,7 @@ setInterval(()=>{
 
 // ─── MAIN UI UPDATE ───────────────────────────────────────────────────
 function updateUI(){
+  normalizeAutoSellFilters();
   document.getElementById('cred-count').textContent=`${S.credits} / ${getMaxCredits()}`;
   document.getElementById('dd-count').textContent=S.dd;
   const pill=document.getElementById('dd-pill-count');if(pill)pill.textContent=S.dd;
@@ -1518,14 +2154,181 @@ setInterval(()=>{
   updateUI();
 },1000);
 
+
+// ─── VAULT STATE ──────────────────────────────────────────────────────
+let currentVaultTab = 'ores';
+
+function switchVaultTab(tab){
+  currentVaultTab = tab;
+  ['ores','upgrades','autosell'].forEach(t=>{
+    document.getElementById('vault-'+t).style.display = t===tab ? 'flex' : 'none';
+    document.getElementById('vtab-'+t).className = 'vtab'+(t===tab?' on':'');
+  });
+  closeCraftDrawer();
+  if(tab==='ores'){buildInventory();}
+  else if(tab==='upgrades'){buildAllTracks();}
+  else if(tab==='autosell'){buildAutoSellTrack();buildAutoSellFilters();}
+}
+
 // ─── TABS ─────────────────────────────────────────────────────────────
 function switchTab(tab){
   document.getElementById('game').style.display=tab==='game'?'flex':'none';
-  document.getElementById('gal-view').style.display=tab==='gal'?'block':'none';
+  document.getElementById('gal-view').style.display=tab==='gal'?'flex':'none';
   document.getElementById('tab-game').className='tab'+(tab==='game'?' on':'');
   document.getElementById('tab-gal').className='tab'+(tab==='gal'?' on':'');
-  if(tab==='gal'){buildInventory();buildWorkshop();buildCapWorkshop();}
+  if(tab==='gal'){switchVaultTab(currentVaultTab);}
+  closeCraftDrawer();
 }
+
+// ─── CRAFT DRAWER ─────────────────────────────────────────────────────
+let craftDrawerEl = null;
+function closeCraftDrawer(){
+  if(craftDrawerEl){craftDrawerEl.classList.remove('open');craftDrawerEl=null;}
+}
+function openCraftDrawer(up, craftFn, canFn){
+  closeCraftDrawer();
+  let drawer = document.getElementById('tier-craft-drawer');
+  if(!drawer){
+    drawer = document.createElement('div');
+    drawer.id='tier-craft-drawer';
+    drawer.className='tier-craft';
+    document.body.appendChild(drawer);
+  }
+  craftDrawerEl = drawer;
+  drawer.innerHTML='';
+
+  const hdr=document.createElement('div');hdr.className='tier-craft-hdr';
+  const nm=document.createElement('div');nm.className='tier-craft-name';nm.textContent=up.name;
+  const cls=document.createElement('button');cls.className='tier-craft-close';cls.textContent='✕ Close';
+  cls.onclick=closeCraftDrawer;
+  hdr.appendChild(nm);hdr.appendChild(cls);drawer.appendChild(hdr);
+
+  const body=document.createElement('div');body.className='tier-craft-body';
+
+  const eff=document.createElement('div');eff.className='tier-craft-effect';eff.textContent=up.effect;
+  body.appendChild(eff);
+
+  const cost=document.createElement('div');cost.className='tier-craft-cost';
+  cost.textContent='Cost: '+up.dd+' DD';
+  body.appendChild(cost);
+
+  const recipe=buildRecipeRow(up.mats);body.appendChild(recipe);
+
+  const meta=document.createElement('div');meta.className='recmeta';
+  meta.textContent='Tap ingredients to check your inventory.';
+  body.appendChild(meta);
+
+  const btn=document.createElement('button');btn.className='craftbtn';
+  btn.textContent='Craft for '+up.dd+' DD';
+  btn.disabled=!canFn(up);
+  btn.onclick=()=>{craftFn(up.id);closeCraftDrawer();buildAllTracks();buildAutoSellTrack();buildAutoSellFilters();};
+  body.appendChild(btn);
+
+  drawer.appendChild(body);
+  requestAnimationFrame(()=>drawer.classList.add('open'));
+}
+
+// ─── BUILD UPGRADE TRACK ───────────────────────────────────────────────
+function buildTrack(railId, items, getCraftedFn, canCraftFn, craftFn, getLabelFn){
+  const rail = document.getElementById(railId);
+  if(!rail) return;
+  rail.innerHTML='';
+  const done = getCraftedFn();
+  items.forEach((up, i)=>{
+    const node = document.createElement('div');
+    node.className = 'tier-node ' + (i<done ? 'node-done' : i===done ? 'node-next' : 'node-locked');
+
+    const dot = document.createElement('div');
+    dot.className='tier-dot';
+    if(i>=done) dot.textContent = up.tier;
+    node.appendChild(dot);
+
+    const nm = document.createElement('div');
+    nm.className='tier-name';
+    nm.textContent = up.name;
+    node.appendChild(nm);
+
+    const st = document.createElement('div');
+    st.className='tier-stat';
+    st.textContent = getLabelFn(up);
+    node.appendChild(st);
+
+    if(i===done){
+      const hint=document.createElement('div');
+      hint.className='tier-tap-hint';
+      hint.textContent='Tap to craft';
+      node.appendChild(hint);
+      node.addEventListener('click',()=>openCraftDrawer(up,craftFn,canCraftFn));
+    }
+    rail.appendChild(node);
+  });
+  // scroll to current
+  const nextNode = rail.children[done];
+  if(nextNode) setTimeout(()=>nextNode.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'}),50);
+}
+
+function buildAllTracks(){
+  buildTrack('track-workshop', UPGRADE_ITEMS, getCraftedCount, canCraftUpgrade, craftUpgrade, up=>`−${up.pct}% wait`);
+  buildTrack('track-vault', CAP_CREDIT_ITEMS, getCapCraftedCount, canCraftCapUpgrade, craftCapUpgrade, up=>`${up.max} max`);
+}
+
+function buildAutoSellTrack(){
+  buildTrack('track-autosell', AUTOSELL_ITEMS, getAutoSellCraftedCount, canCraftAutoSellUpgrade, craftAutoSellUpgrade, up=>`${up.slots} slot${up.slots>1?'s':''}`);
+}
+
+// ─── BUILD AUTOSELL FILTERS ────────────────────────────────────────────
+function buildAutoSellFilters(){
+  const wrap = document.getElementById('autosell-filter-wrap');
+  if(!wrap) return;
+  wrap.innerHTML='';
+  const slots = getAutoSellSlots();
+  const active = Array.isArray(S.autoSellFilters)?S.autoSellFilters.length:0;
+
+  const hdr=document.createElement('div');hdr.className='afs-hdr';
+  const t=document.createElement('div');t.className='afs-title';t.textContent='Auto-sell filters';
+  const c=document.createElement('div');c.className='afs-count';c.textContent=`${active} / ${slots} slots`;
+  hdr.appendChild(t);hdr.appendChild(c);wrap.appendChild(hdr);
+
+  const note=document.createElement('div');note.className='afs-note';
+  note.textContent=slots>0?'Tap a discovered ore to toggle auto-sell.':'Craft the Auto Sorter above to unlock filter slots.';
+  wrap.appendChild(note);
+
+  const g=document.createElement('div');g.className='afs-grid';
+  for(const type of TYPES){
+    if(type.id==='mystery') continue;
+    const chip=document.createElement('div');
+    const discovered=isOreDiscovered(type.id);
+    const isOn=isAutoSellSelected(type.id);
+    chip.className='autosell-chip'+(isOn?' on':'')+(discovered?'':' locked');
+    const ico=makeMiniBall(type.id,20);chip.appendChild(ico);
+    const main=document.createElement('div');main.className='autosell-chip-main';
+    const nm=document.createElement('div');nm.className='autosell-chip-name';
+    nm.textContent=discovered?type.name:'???';
+    const sub=document.createElement('div');sub.className='autosell-chip-sub';
+    if(!slots) sub.textContent='Locked';
+    else if(!discovered) sub.textContent='Undiscovered';
+    else if(isOn) sub.textContent='Auto-selling';
+    else sub.textContent='Tap to enable';
+    main.appendChild(nm);main.appendChild(sub);chip.appendChild(main);
+    if(discovered){
+      chip.addEventListener('click',()=>{
+        const was=isAutoSellSelected(type.id);
+        if(!was&&getAutoSellSlots()<=0) return;
+        if(!was&&Array.isArray(S.autoSellFilters)&&S.autoSellFilters.length>=getAutoSellSlots()) return;
+        toggleAutoSellFilter(type.id);
+        save();updateUI();buildAutoSellFilters();
+      });
+    }
+    g.appendChild(chip);
+  }
+  wrap.appendChild(g);
+}
+
+// Stub out the old build functions so existing calls don't break
+function buildWorkshop(){if(currentVaultTab==='upgrades')buildAllTracks();}
+function buildCapWorkshop(){if(currentVaultTab==='upgrades')buildAllTracks();}
+function buildAutoSellWorkshop(){if(currentVaultTab==='autosell'){buildAutoSellTrack();buildAutoSellFilters();}}
+
 
 // ─── PWA ──────────────────────────────────────────────────────────────
 const mf={name:'Ore Gacha',short_name:'OreGacha',start_url:'.',display:'standalone',
