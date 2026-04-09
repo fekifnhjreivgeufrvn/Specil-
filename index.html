@@ -1476,6 +1476,26 @@ cv.addEventListener('touchstart',e=>{
   cv.dispatchEvent(new MouseEvent('click',{clientX:t.clientX,clientY:t.clientY}));
 },{passive:false});
 
+// ─── FAST TAP HELPERS ───────────────────────────────────────────────
+// Fire button/tab actions on pointerdown so taps feel instant on mobile.
+function wireFastTap(selector){
+  document.querySelectorAll(selector).forEach(el=>{
+    if(el.dataset.fastTap==='1') return;
+    el.dataset.fastTap='1';
+    el.addEventListener('pointerdown', (e)=>{
+      if(e.button!==0) return;
+      if(el.disabled) return;
+      // Prevent the browser from waiting for the normal click synthesis.
+      e.preventDefault();
+      e.stopPropagation();
+      el.click();
+    }, {passive:false});
+  });
+}
+function refreshFastTap(){
+  wireFastTap('button, .tab, .vtab, .tier-node.node-next, .autosell-chip');
+}
+
 // ─── POPUP ────────────────────────────────────────────────────────────
 let popTimer=null;
 function showPopup(type,opts={}){
@@ -1725,7 +1745,7 @@ function load(){
 }
 
 // ─── MINE PANEL ───────────────────────────────────────────────────────
-function openMinePanel(){buildMinePanel();document.getElementById('mine-panel').classList.add('open');}
+function openMinePanel(){buildMinePanel();refreshFastTap();document.getElementById('mine-panel').classList.add('open');}
 function closeMinePanel(){document.getElementById('mine-panel').classList.remove('open');}
 
 function getMineRaritySet(mine){
@@ -1845,6 +1865,7 @@ function unlockMine(id){
   S.mine=id;
   save();updateUI();updateMineBar();
   buildMinePanel(); // refresh panel
+  refreshFastTap();
 }
 
 function updateMineBar(){
@@ -1891,7 +1912,8 @@ function addToCollection(type){
     S.col[type.id]=(S.col[type.id]||0)+1;
   }
   save();saveBalls();updateUI();
-  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();}
+  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
+  refreshFastTap();}
 }
 
 function sellOre(id,amount=1){
@@ -1902,12 +1924,14 @@ function sellOre(id,amount=1){
   if(S.col[id]<=0)delete S.col[id];
   S.dd+=orePrice(type)*amount;
   save();updateUI();
-  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();}
+  if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
+  refreshFastTap();}
   return true;
 }
 
 function toggleSellMode(){
   S.sellAllMode=!S.sellAllMode;save();updateUI();buildInventory();
+  refreshFastTap();
 }
 
 // ─── CRAFTING ─────────────────────────────────────────────────────────
@@ -1932,6 +1956,7 @@ function craftUpgrade(id){
   if(!canCraftUpgrade(up))return false;
   S.dd-=up.dd;consumeMaterials(up.mats);S.upgrades.push(id);
   syncTimerToInterval();save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
+  refreshFastTap();
   return true;
 }
 function canCraftCapUpgrade(up){
@@ -1967,6 +1992,7 @@ function craftAutoSellUpgrade(id){
   S.dd-=up.dd;consumeMaterials(up.mats);S.autoSellUpgrades.push(id);
   normalizeAutoSellFilters();
   save();updateUI();buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();
+  refreshFastTap();
   return true;
 }
 
@@ -2252,6 +2278,8 @@ function buildAutoSellWorkshop(){
 }
 
 // Animate inventory canvases
+refreshFastTap();
+
 setInterval(()=>{
   if(document.getElementById('gal-view').style.display==='flex'){
     document.querySelectorAll('#ggrid canvas[data-tid]').forEach(c=>{
@@ -2353,7 +2381,8 @@ function openCraftDrawer(up, craftFn, canFn){
   const btn=document.createElement('button');btn.className='craftbtn';
   btn.textContent='Craft for '+up.dd+' DD';
   btn.disabled=!canFn(up);
-  btn.onclick=()=>{craftFn(up.id);closeCraftDrawer();buildAllTracks();buildAutoSellTrack();buildAutoSellFilters();};
+  btn.onclick=()=>{craftFn(up.id);closeCraftDrawer();buildAllTracks();buildAutoSellTrack();buildAutoSellFilters();
+      refreshFastTap();};
   body.appendChild(btn);
 
   drawer.appendChild(body);
