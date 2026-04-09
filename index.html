@@ -1238,7 +1238,7 @@ function drawBall(ctx,id,cx,cy,R,t=0){
   }
 }
 
-// ─── PHYSICS ──────────────────────────────────────────────────────────
+// ─── PHYSICS ───────────────────────
 const GR=0.46,BNC=0.46,FRC=0.984,BR=26;
 let balls=[],gtime=0;
 
@@ -1246,12 +1246,118 @@ const cv=document.getElementById('c');
 function logW(){return cv.width/(window.devicePixelRatio||1);}
 function logH(){return cv.height/(window.devicePixelRatio||1);}
 
-function mkBall(type){
-  return{type,x:logW()/2+(Math.random()-.5)*8,y:88,vx:(Math.random()-.5)*1.5,vy:.5,r:BR,collected:false};
+// Save/restore balls so reload doesn't wipe them
+function saveBalls(){
+  try{
+    const data=balls.filter(b=>!b.collected).map(b=>({id:b.type.id,x:b.x,y:b.y,vx:b.vx,vy:b.vy}));
+    localStorage.setItem('ore_balls',JSON.stringify(data));
+  }catch(e){}
+}
+function loadBalls(){
+  try{
+    const raw=localStorage.getItem('ore_balls');
+    if(!raw) return;
+    const data=JSON.parse(raw);
+    // Defer actual positioning until canvas has real dimensions
+    balls=data.map(d=>{
+      const type=TYPES.find(t=>t.id===d.id)||TYPES[0];
+      return{type,x:d.x||150,y:d.y||100,vx:d.vx||0,vy:d.vy||0,r:BR,collected:false,_pending:true};
+    });
+  }catch(e){}
+}
+// Called once canvas has real W/H to clamp restored balls into bounds
+function fixPendingBalls(){
+  const W=logW(),H=logH(),floor=H-BR-8;
+  for(const b of balls){
+    if(b._pending){
+      b.x=Math.max(BR,Math.min(W-BR,b.x));
+      b.y=Math.max(BR,Math.min(floor,b.y));
+      delete b._pending;
+    }
+  }
 }
 
+function mkBall(type){
+  const W=logW();
+  return{type,x:W/2+(Math.random()-.5)*8,y:88,vx:(Math.random()-.5)*1.5,vy:.5,r:BR,collected:false};
+}
+
+// Spatial-grid collision: O(n) instead of O(n²)
+function stepCollisions(balls,W,H){
+  const D=BR*2+2;
+  const cols=Math.max(1,Math.ceil(W/D)+1);
+  const rows=Math.max(1,Math.ceil(H/D)+1);
+  // Build cell -> ball list
+  const grid=[];
+  for(let i=0;i<cols*rows;i++) grid.push([]);
+  for(const b of balls){
+    if(b.collected) continue;
+    const gx=Math.max(0,Math.min(cols-1,Math.floor(b.x/D)));
+    const gy=Math.max(0,Math.min(rows-1,Math.floor(b.y/D)));
+    grid[gy*cols+gx].push(b);
+  }
+  // Check collisions only within same + neighbouring cells
+  for(let cy=0;cy<rows;cy++){
+    for(let cx=0;cx<cols;cx++){
+      const cell=grid[cy*cols+cx];
+      // Same-cell pairs
+      for(let i=0;i<cell.length;i++){
+        const b=cell[i];
+        for(let j=i+1;j<cell.length;j++){
+          resolveCollision(b,cell[j]);
+        }
+      }
+      // Right neighbour
+      if(cx+1<cols){
+        const right=grid[cy*cols+cx+1];
+        for(const b of cell) for(const b2 of right) resolveCollision(b,b2);
+      }
+      // Below neighbour
+      if(cy+1<rows){
+        const below=grid[(cy+1)*cols+cx];
+        for(const b of cell) for(const b2 of below) resolveCollision(b,b2);
+      }
+      // Below-right neighbour
+      if(cx+1<cols&&cy+1<rows){
+        const br=grid[(cy+1)*cols+cx+1];
+        for(const b of cell) for(const b2 of br) resolveCollision(b,b2);
+      }
+    }
+  }
+}
+function resolveCollision(b,b2){
+  if(b.collected||b2.collected) return;
+  const dx=b2.x-b.x,dy=b2.y-b.y,dist2=dx*dx+dy*dy;
+  const minD=b.r+b2.r;
+  if(dist2>=minD*minD||dist2===0) return;
+  const dist=Math.sqrt(dist2);
+  const nx=dx/dist,ny=dy/dist,ov=(minD-dist)/2;
+  b.x-=nx*ov;b.y-=ny*ov;b2.x+=nx*ov;b2.y+=ny*ov;
+  const rv=(b.vx-b2.vx)*nx+(b.vy-b2.vy)*ny;
+  if(rv>0){b.vx-=rv*nx*.5;b.vy-=rv*ny*.5;b2.vx+=rv*nx*.5;b2.vy+=rv*ny*.5;}
+}
+
+// Track last known canvas size to reposition balls proportionally on resize
+let prevW=0,prevH=0;
+
 function step(){
-  const W=logW(),H=logH(),floor=H-BR-8;
+  const W=logW(),H=logH();
+  if(W<10||H<10) return; // canvas hidden, skip physics entirely
+  const floor=H-BR-8;
+
+  // First frame with real size: clamp any pending restored balls
+  fixPendingBalls();
+
+  // Proportional reposition when canvas size changes (fixes left-teleport bug)
+  if(prevW>10&&prevH>10&&(Math.abs(W-prevW)>1||Math.abs(H-prevH)>1)){
+    const sx=W/prevW,sy=H/prevH;
+    for(const b of balls){
+      b.x=Math.max(BR,Math.min(W-BR,b.x*sx));
+      b.y=Math.max(BR,Math.min(floor,b.y*sy));
+    }
+  }
+  prevW=W;prevH=H;
+
   for(const b of balls){
     if(b.collected)continue;
     b.vy+=GR;b.x+=b.vx;b.y+=b.vy;
@@ -1259,28 +1365,19 @@ function step(){
     if(b.x-b.r<0){b.x=b.r;b.vx=Math.abs(b.vx)*.65;}
     if(b.x+b.r>W){b.x=W-b.r;b.vx=-Math.abs(b.vx)*.65;}
     if(b.y-b.r<0){b.y=b.r;b.vy=Math.abs(b.vy)*.5;}
-    for(const b2 of balls){
-      if(b2===b||b2.collected)continue;
-      const dx=b2.x-b.x,dy=b2.y-b.y,dist=Math.sqrt(dx*dx+dy*dy);
-      if(dist<b.r+b2.r&&dist>0){
-        const nx=dx/dist,ny=dy/dist,ov=(b.r+b2.r-dist)/2;
-        b.x-=nx*ov;b.y-=ny*ov;b2.x+=nx*ov;b2.y+=ny*ov;
-        const rv=(b.vx-b2.vx)*nx+(b.vy-b2.vy)*ny;
-        if(rv>0){b.vx-=rv*nx*.5;b.vy-=rv*ny*.5;b2.vx+=rv*nx*.5;b2.vy+=rv*ny*.5;}
-      }
-    }
   }
+  stepCollisions(balls,W,H);
   balls=balls.filter(b=>!b.collected);
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────
-function render(){
-  const ctx=cv.getContext('2d');
-  const dpr=window.devicePixelRatio||1;
-  const W=logW(),H=logH();
-  const th=getCurrentMine().theme;
-  ctx.save();ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
+// ─── RENDER ───────────────────────
+// Cache background+grid per mine/dimensions so we only rebuild it when needed
+let bgCache=null,bgCacheW=0,bgCacheH=0,bgCacheMine=null;
+function getBgCanvas(W,H,th,mineId){
+  if(bgCache&&bgCacheW===W&&bgCacheH===H&&bgCacheMine===mineId) return bgCache;
+  bgCache=document.createElement('canvas');
+  bgCache.width=W;bgCache.height=H;
+  const ctx=bgCache.getContext('2d');
   ctx.fillStyle=th.bg;ctx.fillRect(0,0,W,H);
   ctx.strokeStyle=th.grid;ctx.lineWidth=1;
   for(let x=0;x<W;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke();}
@@ -1296,7 +1393,36 @@ function render(){
   ctx.beginPath();ctx.moveTo(dx+18,0);ctx.lineTo(dx+18,88);ctx.stroke();
   ctx.fillStyle=th.chuteBox;ctx.fillRect(dx-22,-4,44,20);
   ctx.strokeStyle=th.chuteStroke;ctx.lineWidth=2;ctx.strokeRect(dx-22,-4,44,20);
-  for(const b of balls)drawBall(ctx,b.type.id,b.x,b.y,b.r,gtime);
+  bgCacheW=W;bgCacheH=H;bgCacheMine=mineId;
+  return bgCache;
+}
+
+// Per-type sprite cache: quantise animation time to ~8fps visual update
+const spriteCache=new Map();
+function getSprite(id,R,t){
+  const tBucket=Math.round(t*8);
+  const key=`${id}_${tBucket}`;
+  if(spriteCache.has(key)) return spriteCache.get(key);
+  if(spriteCache.size>300) spriteCache.clear();
+  const sz=(R+4)*2;
+  const oc=document.createElement('canvas');oc.width=sz;oc.height=sz;
+  drawBall(oc.getContext('2d'),id,R+4,R+4,R,t);
+  spriteCache.set(key,oc);
+  return oc;
+}
+
+function render(){
+  const ctx=cv.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const W=logW(),H=logH();
+  if(W<10||H<10) return;
+  const mine=getCurrentMine();
+  ctx.save();ctx.scale(dpr,dpr);
+  ctx.drawImage(getBgCanvas(W,H,mine.theme,mine.id),0,0);
+  for(const b of balls){
+    if(b.collected) continue;
+    ctx.drawImage(getSprite(b.type.id,b.r,gtime),b.x-b.r-4,b.y-b.r-4);
+  }
   ctx.restore();
   gtime+=0.016;
 }
@@ -1305,7 +1431,12 @@ function resizeCv(){
   const dpr=window.devicePixelRatio||1;
   const wrap=document.getElementById('cwrap');
   const W=wrap.clientWidth,H=wrap.clientHeight;
-  if(cv.width!==W*dpr||cv.height!==H*dpr){cv.width=W*dpr;cv.height=H*dpr;}
+  if(W<10||H<10) return; // hidden - don't resize, prevents left-teleport
+  const pw=Math.round(W*dpr),ph=Math.round(H*dpr);
+  if(cv.width!==pw||cv.height!==ph){
+    cv.width=pw;cv.height=ph;
+    bgCacheMine=null; // invalidate bg cache
+  }
 }
 function loop(){resizeCv();step();render();requestAnimationFrame(loop);}
 
@@ -1748,6 +1879,7 @@ function roll(){
   }
   save();updateUI();
   balls.push(mkBall(pickFromMine()));
+  saveBalls();
 }
 
 // ─── COLLECTION ───────────────────────────────────────────────────────
@@ -1758,7 +1890,7 @@ function addToCollection(type){
   }else{
     S.col[type.id]=(S.col[type.id]||0)+1;
   }
-  save();updateUI();
+  save();saveBalls();updateUI();
   if(document.getElementById('gal-view').style.display==='flex'){buildInventory();buildWorkshop();buildCapWorkshop();buildAutoSellWorkshop();}
 }
 
@@ -2348,7 +2480,7 @@ document.addEventListener('selectstart',e=>e.preventDefault());
 document.addEventListener('dblclick',e=>e.preventDefault());
 
 // ─── INIT ─────────────────────────────────────────────────────────────
-load();updateUI();loop();
+load();updateUI();loadBalls();loop();
 </script>
 </body>
 </html>
